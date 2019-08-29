@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import {BrowserRouter as Router, Route, Switch} from 'react-router-dom';
 import LoginView from './loginview';
 import HomeView from '../views/homeview';
+import DataGridEditTrackingInfo from '../components/dataGridEditTrackingInfo';
 
 class App extends Component{
     render(){

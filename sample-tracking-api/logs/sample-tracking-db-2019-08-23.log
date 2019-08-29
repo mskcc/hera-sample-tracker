@@ -1,0 +1,698 @@
+2019-08-23 09:13:56,446  INFO       MainProcess  werkzeug  * Running on http://127.0.0.1:5000/ (Press CTRL+C to quit)
+2019-08-23 09:13:56,448  INFO       MainProcess  werkzeug  * Restarting with stat
+2019-08-23 09:13:56,974  WARNING    MainProcess  werkzeug  * Debugger is active!
+2019-08-23 09:13:56,982  INFO       MainProcess  werkzeug  * Debugger PIN: 888-317-198
+2019-08-23 09:14:29,978  INFO       MainProcess  werkzeug  * Running on http://127.0.0.1:5000/ (Press CTRL+C to quit)
+2019-08-23 09:14:29,978  INFO       MainProcess  werkzeug  * Restarting with stat
+2019-08-23 09:14:30,437  WARNING    MainProcess  werkzeug  * Debugger is active!
+2019-08-23 09:14:30,444  INFO       MainProcess  werkzeug  * Debugger PIN: 888-317-198
+2019-08-23 09:23:48,304  INFO       MainProcess  werkzeug  * Detected change in '/Users/sharmaa1/Desktop/My_Scripts/sample-tracking-db/sample-tracking-api/app.py', reloading
+2019-08-23 09:23:48,366  INFO       MainProcess  werkzeug  * Restarting with stat
+2019-08-23 09:23:48,831  WARNING    MainProcess  werkzeug  * Debugger is active!
+2019-08-23 09:23:48,838  INFO       MainProcess  werkzeug  * Debugger PIN: 888-317-198
+2019-08-23 09:24:15,613  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 09:24:15] "GET /get_wes_data HTTP/1.1" 500 -
+2019-08-23 09:24:15,682  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 09:24:15] "GET /get_wes_data?__debugger__=yes&cmd=resource&f=style.css HTTP/1.1" 200 -
+2019-08-23 09:24:15,683  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 09:24:15] "GET /get_wes_data?__debugger__=yes&cmd=resource&f=jquery.js HTTP/1.1" 200 -
+2019-08-23 09:24:15,684  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 09:24:15] "GET /get_wes_data?__debugger__=yes&cmd=resource&f=debugger.js HTTP/1.1" 200 -
+2019-08-23 09:24:15,927  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 09:24:15] "GET /get_wes_data?__debugger__=yes&cmd=resource&f=ubuntu.ttf HTTP/1.1" 200 -
+2019-08-23 09:24:15,959  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 09:24:15] "GET /get_wes_data?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1" 200 -
+2019-08-23 09:24:16,005  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 09:24:16] "GET /get_wes_data?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1" 200 -
+2019-08-23 09:25:29,741  INFO       MainProcess  werkzeug  * Detected change in '/Users/sharmaa1/Desktop/My_Scripts/sample-tracking-db/sample-tracking-api/app.py', reloading
+2019-08-23 09:25:29,827  INFO       MainProcess  werkzeug  * Restarting with stat
+2019-08-23 09:25:30,310  WARNING    MainProcess  werkzeug  * Debugger is active!
+2019-08-23 09:25:30,317  INFO       MainProcess  werkzeug  * Debugger PIN: 888-317-198
+2019-08-23 09:25:36,341  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 09:25:36] "GET /get_wes_data HTTP/1.1" 500 -
+2019-08-23 09:25:36,362  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 09:25:36] "GET /get_wes_data?__debugger__=yes&cmd=resource&f=style.css HTTP/1.1" 200 -
+2019-08-23 09:25:36,367  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 09:25:36] "GET /get_wes_data?__debugger__=yes&cmd=resource&f=debugger.js HTTP/1.1" 200 -
+2019-08-23 09:25:36,368  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 09:25:36] "GET /get_wes_data?__debugger__=yes&cmd=resource&f=jquery.js HTTP/1.1" 200 -
+2019-08-23 09:25:36,456  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 09:25:36] "GET /get_wes_data?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1" 200 -
+2019-08-23 09:25:36,466  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 09:25:36] "GET /get_wes_data?__debugger__=yes&cmd=resource&f=ubuntu.ttf HTTP/1.1" 200 -
+2019-08-23 09:25:36,500  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 09:25:36] "GET /get_wes_data?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1" 200 -
+2019-08-23 09:26:18,244  INFO       MainProcess  werkzeug  * Detected change in '/Users/sharmaa1/Desktop/My_Scripts/sample-tracking-db/sample-tracking-api/app.py', reloading
+2019-08-23 09:26:18,320  INFO       MainProcess  werkzeug  * Restarting with stat
+2019-08-23 09:26:18,828  WARNING    MainProcess  werkzeug  * Debugger is active!
+2019-08-23 09:26:18,834  INFO       MainProcess  werkzeug  * Debugger PIN: 888-317-198
+2019-08-23 09:36:11,004  INFO       MainProcess  werkzeug  * Detected change in '/Users/sharmaa1/Desktop/My_Scripts/sample-tracking-db/sample-tracking-api/app.py', reloading
+2019-08-23 09:36:11,098  INFO       MainProcess  werkzeug  * Restarting with stat
+2019-08-23 09:36:11,572  WARNING    MainProcess  werkzeug  * Debugger is active!
+2019-08-23 09:36:11,578  INFO       MainProcess  werkzeug  * Debugger PIN: 888-317-198
+2019-08-23 09:36:37,873  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 09:36:37] "GET /get_wes_data HTTP/1.1" 500 -
+2019-08-23 09:36:37,895  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 09:36:37] "GET /get_wes_data?__debugger__=yes&cmd=resource&f=style.css HTTP/1.1" 200 -
+2019-08-23 09:36:37,902  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 09:36:37] "GET /get_wes_data?__debugger__=yes&cmd=resource&f=jquery.js HTTP/1.1" 200 -
+2019-08-23 09:36:37,908  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 09:36:37] "GET /get_wes_data?__debugger__=yes&cmd=resource&f=debugger.js HTTP/1.1" 200 -
+2019-08-23 09:36:38,000  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 09:36:37] "GET /get_wes_data?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1" 200 -
+2019-08-23 09:36:38,009  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 09:36:38] "GET /get_wes_data?__debugger__=yes&cmd=resource&f=ubuntu.ttf HTTP/1.1" 200 -
+2019-08-23 09:36:38,033  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 09:36:38] "GET /get_wes_data?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1" 200 -
+2019-08-23 09:37:05,119  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 09:37:05] "GET /get_wes_data HTTP/1.1" 500 -
+2019-08-23 09:37:05,153  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 09:37:05] "GET /get_wes_data?__debugger__=yes&cmd=resource&f=style.css HTTP/1.1" 200 -
+2019-08-23 09:37:05,166  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 09:37:05] "GET /get_wes_data?__debugger__=yes&cmd=resource&f=jquery.js HTTP/1.1" 200 -
+2019-08-23 09:37:05,168  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 09:37:05] "GET /get_wes_data?__debugger__=yes&cmd=resource&f=debugger.js HTTP/1.1" 200 -
+2019-08-23 09:37:05,254  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 09:37:05] "GET /get_wes_data?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1" 200 -
+2019-08-23 09:37:05,259  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 09:37:05] "GET /get_wes_data?__debugger__=yes&cmd=resource&f=ubuntu.ttf HTTP/1.1" 200 -
+2019-08-23 09:37:05,293  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 09:37:05] "GET /get_wes_data?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1" 200 -
+2019-08-23 09:37:08,236  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 09:37:08] "GET /get_wes_data HTTP/1.1" 500 -
+2019-08-23 09:37:08,261  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 09:37:08] "GET /get_wes_data?__debugger__=yes&cmd=resource&f=style.css HTTP/1.1" 200 -
+2019-08-23 09:37:08,268  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 09:37:08] "GET /get_wes_data?__debugger__=yes&cmd=resource&f=debugger.js HTTP/1.1" 200 -
+2019-08-23 09:37:08,269  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 09:37:08] "GET /get_wes_data?__debugger__=yes&cmd=resource&f=jquery.js HTTP/1.1" 200 -
+2019-08-23 09:37:08,350  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 09:37:08] "GET /get_wes_data?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1" 200 -
+2019-08-23 09:37:08,359  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 09:37:08] "GET /get_wes_data?__debugger__=yes&cmd=resource&f=ubuntu.ttf HTTP/1.1" 200 -
+2019-08-23 09:37:56,431  INFO       MainProcess  werkzeug  * Running on http://127.0.0.1:5000/ (Press CTRL+C to quit)
+2019-08-23 09:37:56,431  INFO       MainProcess  werkzeug  * Restarting with stat
+2019-08-23 09:37:56,890  WARNING    MainProcess  werkzeug  * Debugger is active!
+2019-08-23 09:37:56,897  INFO       MainProcess  werkzeug  * Debugger PIN: 888-317-198
+2019-08-23 09:38:00,910  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 09:38:00] "GET /get_wes_data HTTP/1.1" 500 -
+2019-08-23 09:38:00,929  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 09:38:00] "GET /get_wes_data?__debugger__=yes&cmd=resource&f=style.css HTTP/1.1" 200 -
+2019-08-23 09:38:00,941  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 09:38:00] "GET /get_wes_data?__debugger__=yes&cmd=resource&f=jquery.js HTTP/1.1" 200 -
+2019-08-23 09:38:00,947  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 09:38:00] "GET /get_wes_data?__debugger__=yes&cmd=resource&f=debugger.js HTTP/1.1" 200 -
+2019-08-23 09:38:01,021  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 09:38:01] "GET /get_wes_data?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1" 200 -
+2019-08-23 09:38:01,049  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 09:38:01] "GET /get_wes_data?__debugger__=yes&cmd=resource&f=ubuntu.ttf HTTP/1.1" 200 -
+2019-08-23 09:38:01,078  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 09:38:01] "GET /get_wes_data?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1" 200 -
+2019-08-23 09:39:36,800  INFO       MainProcess  werkzeug  * Detected change in '/Users/sharmaa1/Desktop/My_Scripts/sample-tracking-db/sample-tracking-api/app.py', reloading
+2019-08-23 09:39:36,863  INFO       MainProcess  werkzeug  * Restarting with stat
+2019-08-23 09:39:37,332  WARNING    MainProcess  werkzeug  * Debugger is active!
+2019-08-23 09:39:37,339  INFO       MainProcess  werkzeug  * Debugger PIN: 888-317-198
+2019-08-23 09:39:42,616  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 09:39:42] "GET /get_wes_data HTTP/1.1" 500 -
+2019-08-23 09:39:42,641  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 09:39:42] "GET /get_wes_data?__debugger__=yes&cmd=resource&f=style.css HTTP/1.1" 200 -
+2019-08-23 09:39:42,659  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 09:39:42] "GET /get_wes_data?__debugger__=yes&cmd=resource&f=jquery.js HTTP/1.1" 200 -
+2019-08-23 09:39:42,660  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 09:39:42] "GET /get_wes_data?__debugger__=yes&cmd=resource&f=debugger.js HTTP/1.1" 200 -
+2019-08-23 09:39:42,758  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 09:39:42] "GET /get_wes_data?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1" 200 -
+2019-08-23 09:39:42,764  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 09:39:42] "GET /get_wes_data?__debugger__=yes&cmd=resource&f=ubuntu.ttf HTTP/1.1" 200 -
+2019-08-23 09:39:42,787  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 09:39:42] "GET /get_wes_data?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1" 200 -
+2019-08-23 09:43:46,963  INFO       MainProcess  werkzeug  * Detected change in '/Users/sharmaa1/Desktop/My_Scripts/sample-tracking-db/sample-tracking-api/app.py', reloading
+2019-08-23 09:43:47,026  INFO       MainProcess  werkzeug  * Restarting with stat
+2019-08-23 09:43:47,522  WARNING    MainProcess  werkzeug  * Debugger is active!
+2019-08-23 09:43:47,529  INFO       MainProcess  werkzeug  * Debugger PIN: 888-317-198
+2019-08-23 09:43:53,575  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 09:43:53] "GET /get_wes_data HTTP/1.1" 500 -
+2019-08-23 09:43:53,597  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 09:43:53] "GET /get_wes_data?__debugger__=yes&cmd=resource&f=style.css HTTP/1.1" 200 -
+2019-08-23 09:43:53,614  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 09:43:53] "GET /get_wes_data?__debugger__=yes&cmd=resource&f=jquery.js HTTP/1.1" 200 -
+2019-08-23 09:43:53,615  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 09:43:53] "GET /get_wes_data?__debugger__=yes&cmd=resource&f=debugger.js HTTP/1.1" 200 -
+2019-08-23 09:43:53,689  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 09:43:53] "GET /get_wes_data?__debugger__=yes&cmd=resource&f=ubuntu.ttf HTTP/1.1" 200 -
+2019-08-23 09:43:53,712  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 09:43:53] "GET /get_wes_data?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1" 200 -
+2019-08-23 09:43:53,753  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 09:43:53] "GET /get_wes_data?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1" 200 -
+2019-08-23 09:44:51,711  INFO       MainProcess  werkzeug  * Detected change in '/Users/sharmaa1/Desktop/My_Scripts/sample-tracking-db/sample-tracking-api/app.py', reloading
+2019-08-23 09:44:51,782  INFO       MainProcess  werkzeug  * Restarting with stat
+2019-08-23 09:44:52,322  WARNING    MainProcess  werkzeug  * Debugger is active!
+2019-08-23 09:44:52,329  INFO       MainProcess  werkzeug  * Debugger PIN: 888-317-198
+2019-08-23 09:44:55,432  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 09:44:55] "GET /get_wes_data HTTP/1.1" 500 -
+2019-08-23 09:44:55,456  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 09:44:55] "GET /get_wes_data?__debugger__=yes&cmd=resource&f=style.css HTTP/1.1" 200 -
+2019-08-23 09:44:55,466  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 09:44:55] "GET /get_wes_data?__debugger__=yes&cmd=resource&f=jquery.js HTTP/1.1" 200 -
+2019-08-23 09:44:55,469  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 09:44:55] "GET /get_wes_data?__debugger__=yes&cmd=resource&f=debugger.js HTTP/1.1" 200 -
+2019-08-23 09:44:55,568  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 09:44:55] "GET /get_wes_data?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1" 200 -
+2019-08-23 09:44:55,575  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 09:44:55] "GET /get_wes_data?__debugger__=yes&cmd=resource&f=ubuntu.ttf HTTP/1.1" 200 -
+2019-08-23 09:44:55,596  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 09:44:55] "GET /get_wes_data?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1" 200 -
+2019-08-23 09:48:59,995  INFO       MainProcess  werkzeug  * Detected change in '/Users/sharmaa1/Desktop/My_Scripts/sample-tracking-db/sample-tracking-api/app.py', reloading
+2019-08-23 09:49:00,078  INFO       MainProcess  werkzeug  * Restarting with stat
+2019-08-23 09:49:00,592  WARNING    MainProcess  werkzeug  * Debugger is active!
+2019-08-23 09:49:00,599  INFO       MainProcess  werkzeug  * Debugger PIN: 888-317-198
+2019-08-23 09:49:05,951  INFO       MainProcess  root Starting WES Sample query after calculating time: 2019-08-22 07:25:05.950909, provided to the endpoint query
+2019-08-23 09:49:05,968  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 09:49:05] "GET /get_wes_data HTTP/1.1" 500 -
+2019-08-23 09:49:05,992  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 09:49:05] "GET /get_wes_data?__debugger__=yes&cmd=resource&f=style.css HTTP/1.1" 200 -
+2019-08-23 09:49:05,994  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 09:49:05] "GET /get_wes_data?__debugger__=yes&cmd=resource&f=jquery.js HTTP/1.1" 200 -
+2019-08-23 09:49:05,996  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 09:49:05] "GET /get_wes_data?__debugger__=yes&cmd=resource&f=debugger.js HTTP/1.1" 200 -
+2019-08-23 09:49:06,103  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 09:49:06] "GET /get_wes_data?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1" 200 -
+2019-08-23 09:49:06,112  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 09:49:06] "GET /get_wes_data?__debugger__=yes&cmd=resource&f=ubuntu.ttf HTTP/1.1" 200 -
+2019-08-23 09:49:06,134  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 09:49:06] "GET /get_wes_data?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1" 200 -
+2019-08-23 09:50:48,711  INFO       MainProcess  werkzeug  * Detected change in '/Users/sharmaa1/Desktop/My_Scripts/sample-tracking-db/sample-tracking-api/app.py', reloading
+2019-08-23 09:50:48,787  INFO       MainProcess  werkzeug  * Restarting with stat
+2019-08-23 09:50:49,265  WARNING    MainProcess  werkzeug  * Debugger is active!
+2019-08-23 09:50:49,271  INFO       MainProcess  werkzeug  * Debugger PIN: 888-317-198
+2019-08-23 09:50:52,734  INFO       MainProcess  root Starting WES Sample query after calculating time: 1566473212, provided to the endpoint query
+2019-08-23 09:50:52,749  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 09:50:52] "GET /get_wes_data HTTP/1.1" 500 -
+2019-08-23 09:50:52,769  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 09:50:52] "GET /get_wes_data?__debugger__=yes&cmd=resource&f=style.css HTTP/1.1" 200 -
+2019-08-23 09:50:52,784  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 09:50:52] "GET /get_wes_data?__debugger__=yes&cmd=resource&f=jquery.js HTTP/1.1" 200 -
+2019-08-23 09:50:52,784  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 09:50:52] "GET /get_wes_data?__debugger__=yes&cmd=resource&f=debugger.js HTTP/1.1" 200 -
+2019-08-23 09:50:52,879  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 09:50:52] "GET /get_wes_data?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1" 200 -
+2019-08-23 09:50:52,885  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 09:50:52] "GET /get_wes_data?__debugger__=yes&cmd=resource&f=ubuntu.ttf HTTP/1.1" 200 -
+2019-08-23 09:50:52,907  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 09:50:52] "GET /get_wes_data?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1" 200 -
+2019-08-23 09:51:13,693  INFO       MainProcess  werkzeug  * Detected change in '/Users/sharmaa1/Desktop/My_Scripts/sample-tracking-db/sample-tracking-api/app.py', reloading
+2019-08-23 09:51:13,760  INFO       MainProcess  werkzeug  * Restarting with stat
+2019-08-23 09:51:14,218  WARNING    MainProcess  werkzeug  * Debugger is active!
+2019-08-23 09:51:14,224  INFO       MainProcess  werkzeug  * Debugger PIN: 888-317-198
+2019-08-23 09:51:58,036  INFO       MainProcess  werkzeug  * Detected change in '/Users/sharmaa1/Desktop/My_Scripts/sample-tracking-db/sample-tracking-api/app.py', reloading
+2019-08-23 09:51:58,129  INFO       MainProcess  werkzeug  * Restarting with stat
+2019-08-23 09:51:58,598  WARNING    MainProcess  werkzeug  * Debugger is active!
+2019-08-23 09:51:58,604  INFO       MainProcess  werkzeug  * Debugger PIN: 888-317-198
+2019-08-23 09:52:03,502  INFO       MainProcess  root Starting WES Sample query after calculating time: 1566473283, provided to the endpoint query
+2019-08-23 09:52:03,502  INFO       MainProcess  root Starting query : http://localhost:8080/LimsRest/getWESSampleData?time=1566473283
+2019-08-23 09:59:04,202  INFO       MainProcess  werkzeug  * Detected change in '/Users/sharmaa1/Desktop/My_Scripts/sample-tracking-db/sample-tracking-api/app.py', reloading
+2019-08-23 09:59:04,289  INFO       MainProcess  werkzeug  * Restarting with stat
+2019-08-23 09:59:04,901  WARNING    MainProcess  werkzeug  * Debugger is active!
+2019-08-23 09:59:04,907  INFO       MainProcess  werkzeug  * Debugger PIN: 888-317-198
+2019-08-23 10:03:01,321  INFO       MainProcess  root Starting WES Sample query after calculating time: 1566473941000, provided to the endpoint query
+2019-08-23 10:03:01,321  INFO       MainProcess  root Starting query : http://localhost:8080/LimsRest/getWESSampleData?time=1566473941000
+2019-08-23 10:03:01,377  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 10:03:01] "GET /get_wes_data HTTP/1.1" 500 -
+2019-08-23 10:03:01,431  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 10:03:01] "GET /get_wes_data?__debugger__=yes&cmd=resource&f=style.css HTTP/1.1" 200 -
+2019-08-23 10:03:01,434  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 10:03:01] "GET /get_wes_data?__debugger__=yes&cmd=resource&f=debugger.js HTTP/1.1" 200 -
+2019-08-23 10:03:01,435  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 10:03:01] "GET /get_wes_data?__debugger__=yes&cmd=resource&f=jquery.js HTTP/1.1" 200 -
+2019-08-23 10:03:01,702  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 10:03:01] "GET /get_wes_data?__debugger__=yes&cmd=resource&f=ubuntu.ttf HTTP/1.1" 200 -
+2019-08-23 10:03:01,773  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 10:03:01] "GET /get_wes_data?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1" 200 -
+2019-08-23 10:03:01,871  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 10:03:01] "GET /get_wes_data?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1" 200 -
+2019-08-23 10:03:52,952  INFO       MainProcess  werkzeug  * Detected change in '/Users/sharmaa1/Desktop/My_Scripts/sample-tracking-db/sample-tracking-api/app.py', reloading
+2019-08-23 10:03:53,033  INFO       MainProcess  werkzeug  * Restarting with stat
+2019-08-23 10:03:53,513  WARNING    MainProcess  werkzeug  * Debugger is active!
+2019-08-23 10:03:53,523  INFO       MainProcess  werkzeug  * Debugger PIN: 888-317-198
+2019-08-23 10:05:56,941  INFO       MainProcess  root Starting WES Sample query after calculating time: 1566474116000, provided to the endpoint query
+2019-08-23 10:05:56,941  INFO       MainProcess  root Starting query : http://localhost:8080/LimsRest/getWESSampleData?time=1566474116000
+2019-08-23 10:05:56,954  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 10:05:56] "GET /get_wes_data HTTP/1.1" 500 -
+2019-08-23 10:05:56,982  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 10:05:56] "GET /get_wes_data?__debugger__=yes&cmd=resource&f=style.css HTTP/1.1" 200 -
+2019-08-23 10:05:56,983  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 10:05:56] "GET /get_wes_data?__debugger__=yes&cmd=resource&f=jquery.js HTTP/1.1" 200 -
+2019-08-23 10:05:56,988  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 10:05:56] "GET /get_wes_data?__debugger__=yes&cmd=resource&f=debugger.js HTTP/1.1" 200 -
+2019-08-23 10:05:57,061  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 10:05:57] "GET /get_wes_data?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1" 200 -
+2019-08-23 10:05:57,067  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 10:05:57] "GET /get_wes_data?__debugger__=yes&cmd=resource&f=ubuntu.ttf HTTP/1.1" 200 -
+2019-08-23 10:05:57,095  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 10:05:57] "GET /get_wes_data?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1" 200 -
+2019-08-23 10:16:11,943  ERROR      MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 10:16:11] code 400, message Bad request version ("×Yê\x03}\x99ë\x00\x00nÀ/À+À0À,\x00\x9eÀ'\x00gÀ(\x00kÀ$À\x14À")
+2019-08-23 10:16:11,943  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 10:16:11] "  ýã×d9ñ±6k&e4ùª`ËÑß.×Yê}ë  nÀ/À+À0À, À' gÀ( kÀ$ÀÀ" HTTPStatus.BAD_REQUEST -
+2019-08-23 10:16:47,077  INFO       MainProcess  werkzeug  * Detected change in '/Users/sharmaa1/Desktop/My_Scripts/sample-tracking-db/sample-tracking-api/app.py', reloading
+2019-08-23 10:16:47,187  INFO       MainProcess  werkzeug  * Restarting with stat
+2019-08-23 10:16:47,689  WARNING    MainProcess  werkzeug  * Debugger is active!
+2019-08-23 10:16:47,695  INFO       MainProcess  werkzeug  * Debugger PIN: 888-317-198
+2019-08-23 10:16:52,961  ERROR      MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 10:16:52] code 400, message Bad HTTP/0.9 request type ('\x16\x03\x01\x01\x01\x01\x00\x00ý\x03\x03\x01\x91¡»MÝö\x1bÔM')
+2019-08-23 10:16:52,961  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 10:16:52] "  ý¡»MÝöÔM6V³sâêúGvkÃ}ÆjQ  nÀ/À+À0À, À' gÀ( kÀ$ÀÀ" HTTPStatus.BAD_REQUEST -
+2019-08-23 10:18:50,203  ERROR      MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 10:18:50] code 400, message Bad HTTP/0.9 request type ('\x16\x03\x01\x01\x01\x01\x00\x00ý\x03\x03\x1b|Ñ\x7f\x80TÝ»pk`´0ÀÌvÍøðÑ\x98ç\x91á\x93}\x93')
+2019-08-23 10:18:50,203  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 10:18:50] "  ý|ÑTÝ»pk`´0ÀÌvÍøðÑçá}:Y  nÀ/À+À0À, À' gÀ( kÀ$ÀÀ" HTTPStatus.BAD_REQUEST -
+2019-08-23 10:21:05,301  INFO       MainProcess  werkzeug  * Detected change in '/Users/sharmaa1/Desktop/My_Scripts/sample-tracking-db/sample-tracking-api/app.py', reloading
+2019-08-23 10:21:05,371  INFO       MainProcess  werkzeug  * Restarting with stat
+2019-08-23 10:21:05,892  WARNING    MainProcess  werkzeug  * Debugger is active!
+2019-08-23 10:21:05,899  INFO       MainProcess  werkzeug  * Debugger PIN: 888-317-198
+2019-08-23 10:21:12,110  INFO       MainProcess  werkzeug  * Running on http://127.0.0.1:5000/ (Press CTRL+C to quit)
+2019-08-23 10:21:12,110  INFO       MainProcess  werkzeug  * Restarting with stat
+2019-08-23 10:21:12,554  WARNING    MainProcess  werkzeug  * Debugger is active!
+2019-08-23 10:21:12,560  INFO       MainProcess  werkzeug  * Debugger PIN: 888-317-198
+2019-08-23 10:21:23,667  ERROR      MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 10:21:23] code 400, message Bad HTTP/0.9 request type ('\x16\x03\x01\x01\x01\x01\x00\x00ý\x03\x03ö\x82\x8a;üi/Æ\x98Ì\x06.CÈ/Q¡9"jV\x05\x9fYîÒæï\x18')
+2019-08-23 10:21:23,668  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 10:21:23] "  ýö;üi/ÆÌ.CÈ/Q¡9"jVYîÒæïZ  nÀ/À+À0À, À' gÀ( kÀ$ÀÀ" HTTPStatus.BAD_REQUEST -
+2019-08-23 10:22:24,881  INFO       MainProcess  werkzeug  * Detected change in '/Users/sharmaa1/Desktop/My_Scripts/sample-tracking-db/sample-tracking-api/app.py', reloading
+2019-08-23 10:22:24,947  INFO       MainProcess  werkzeug  * Restarting with stat
+2019-08-23 10:22:25,434  WARNING    MainProcess  werkzeug  * Debugger is active!
+2019-08-23 10:22:25,441  INFO       MainProcess  werkzeug  * Debugger PIN: 888-317-198
+2019-08-23 10:22:30,470  ERROR      MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 10:22:30] code 400, message Bad HTTP/0.9 request type ('\x16\x03\x01\x01\x01\x01\x00\x00ý\x03\x03Ïæf\x8eW$\x8aÙ')
+2019-08-23 10:22:30,470  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 10:22:30] "  ýÏæfW$Ùº'«àôµD§fÇþ(ø­gC9  nÀ/À+À0À, À' gÀ( kÀ$ÀÀ" HTTPStatus.BAD_REQUEST -
+2019-08-23 10:23:18,403  INFO       MainProcess  werkzeug  * Detected change in '/Users/sharmaa1/Desktop/My_Scripts/sample-tracking-db/sample-tracking-api/app.py', reloading
+2019-08-23 10:23:18,472  INFO       MainProcess  werkzeug  * Restarting with stat
+2019-08-23 10:23:18,933  WARNING    MainProcess  werkzeug  * Debugger is active!
+2019-08-23 10:23:18,939  INFO       MainProcess  werkzeug  * Debugger PIN: 888-317-198
+2019-08-23 10:23:26,191  ERROR      MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 10:23:26] code 400, message Bad request syntax ('\x16\x03\x01\x01\x01\x01\x00\x00ý\x03\x03.çÀÄÞO\x0e\x82\x08\x83Û\x0fÆêk')
+2019-08-23 10:23:26,191  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 10:23:26] "  ý.çÀÄÞOÛÆêk" HTTPStatus.BAD_REQUEST -
+2019-08-23 10:24:37,089  ERROR      MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 10:24:37] code 400, message Bad request syntax ("\x16\x03\x01\x01\x01\x01\x00\x00ý\x03\x03\x10`ãTÍ\x7ft\x00\x89~r`h%)ÎÞûKWå[¬'\x17ÁVVÅo\x0f\x16\x00\x00nÀ/À+À0À,\x00\x9eÀ'\x00gÀ(\x00kÀ$À\x14À")
+2019-08-23 10:24:37,089  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 10:24:37] "  ý`ãTÍt ~r`h%)ÎÞûKWå[¬'ÁVVÅo  nÀ/À+À0À, À' gÀ( kÀ$ÀÀ" HTTPStatus.BAD_REQUEST -
+2019-08-23 10:24:47,861  INFO       MainProcess  root Starting WES Sample query using time stamp: 1561987068000, provided to the endpoint query
+2019-08-23 10:24:47,863  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 10:24:47] "GET /get_wes_data?timestamp=1561987068000 HTTP/1.1" 200 -
+2019-08-23 10:24:48,000  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 10:24:48] "GET /favicon.ico HTTP/1.1" 404 -
+2019-08-23 10:25:17,127  INFO       MainProcess  werkzeug  * Detected change in '/Users/sharmaa1/Desktop/My_Scripts/sample-tracking-db/sample-tracking-api/app.py', reloading
+2019-08-23 10:25:17,194  INFO       MainProcess  werkzeug  * Restarting with stat
+2019-08-23 10:25:17,657  WARNING    MainProcess  werkzeug  * Debugger is active!
+2019-08-23 10:25:17,663  INFO       MainProcess  werkzeug  * Debugger PIN: 888-317-198
+2019-08-23 10:25:21,721  INFO       MainProcess  root Starting WES Sample query using time stamp: 1561987068000, provided to the endpoint query
+2019-08-23 10:25:21,738  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 10:25:21] "GET /get_wes_data?timestamp=1561987068000 HTTP/1.1" 500 -
+2019-08-23 10:25:21,765  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 10:25:21] "GET /get_wes_data?__debugger__=yes&cmd=resource&f=style.css HTTP/1.1" 200 -
+2019-08-23 10:25:21,774  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 10:25:21] "GET /get_wes_data?__debugger__=yes&cmd=resource&f=jquery.js HTTP/1.1" 200 -
+2019-08-23 10:25:21,779  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 10:25:21] "GET /get_wes_data?__debugger__=yes&cmd=resource&f=debugger.js HTTP/1.1" 200 -
+2019-08-23 10:25:21,875  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 10:25:21] "GET /get_wes_data?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1" 200 -
+2019-08-23 10:25:21,883  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 10:25:21] "GET /get_wes_data?__debugger__=yes&cmd=resource&f=ubuntu.ttf HTTP/1.1" 200 -
+2019-08-23 10:26:28,938  INFO       MainProcess  werkzeug  * Detected change in '/Users/sharmaa1/Desktop/My_Scripts/sample-tracking-db/sample-tracking-api/app.py', reloading
+2019-08-23 10:26:29,039  INFO       MainProcess  werkzeug  * Restarting with stat
+2019-08-23 10:26:29,523  WARNING    MainProcess  werkzeug  * Debugger is active!
+2019-08-23 10:26:29,529  INFO       MainProcess  werkzeug  * Debugger PIN: 888-317-198
+2019-08-23 10:26:35,334  INFO       MainProcess  root Starting WES Sample query using time stamp: 1561987068000, provided to the endpoint query
+2019-08-23 10:26:35,334  INFO       MainProcess  root Starting query : http://localhost:8080/LimsRest/getWESSampleData?time=1561987068000
+2019-08-23 10:26:35,392  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 10:26:35] "GET /get_wes_data?timestamp=1561987068000 HTTP/1.1" 500 -
+2019-08-23 10:26:35,426  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 10:26:35] "GET /get_wes_data?__debugger__=yes&cmd=resource&f=jquery.js HTTP/1.1" 200 -
+2019-08-23 10:26:35,427  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 10:26:35] "GET /get_wes_data?__debugger__=yes&cmd=resource&f=style.css HTTP/1.1" 200 -
+2019-08-23 10:26:35,430  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 10:26:35] "GET /get_wes_data?__debugger__=yes&cmd=resource&f=debugger.js HTTP/1.1" 200 -
+2019-08-23 10:26:35,506  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 10:26:35] "GET /get_wes_data?__debugger__=yes&cmd=resource&f=ubuntu.ttf HTTP/1.1" 200 -
+2019-08-23 10:26:35,511  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 10:26:35] "GET /get_wes_data?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1" 200 -
+2019-08-23 10:28:05,277  INFO       MainProcess  werkzeug  * Detected change in '/Users/sharmaa1/Desktop/My_Scripts/sample-tracking-db/sample-tracking-api/app.py', reloading
+2019-08-23 10:28:05,347  INFO       MainProcess  werkzeug  * Restarting with stat
+2019-08-23 10:28:05,842  WARNING    MainProcess  werkzeug  * Debugger is active!
+2019-08-23 10:28:05,849  INFO       MainProcess  werkzeug  * Debugger PIN: 888-317-198
+2019-08-23 10:28:23,796  INFO       MainProcess  root Starting WES Sample query using time stamp: 1561987068000, provided to the endpoint query
+2019-08-23 10:28:23,796  INFO       MainProcess  root Starting query : http://localhost:8080/LimsRest/getWESSampleData?time=1561987068000
+2019-08-23 10:28:23,838  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 10:28:23] "GET /get_wes_data?timestamp=1561987068000 HTTP/1.1" 500 -
+2019-08-23 10:28:23,856  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 10:28:23] "GET /get_wes_data?__debugger__=yes&cmd=resource&f=style.css HTTP/1.1" 200 -
+2019-08-23 10:28:23,860  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 10:28:23] "GET /get_wes_data?__debugger__=yes&cmd=resource&f=debugger.js HTTP/1.1" 200 -
+2019-08-23 10:28:23,861  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 10:28:23] "GET /get_wes_data?__debugger__=yes&cmd=resource&f=jquery.js HTTP/1.1" 200 -
+2019-08-23 10:28:23,951  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 10:28:23] "GET /get_wes_data?__debugger__=yes&cmd=resource&f=ubuntu.ttf HTTP/1.1" 200 -
+2019-08-23 10:28:23,961  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 10:28:23] "GET /get_wes_data?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1" 200 -
+2019-08-23 10:29:20,213  INFO       MainProcess  werkzeug  * Detected change in '/Users/sharmaa1/Desktop/My_Scripts/sample-tracking-db/sample-tracking-api/app.py', reloading
+2019-08-23 10:29:20,286  INFO       MainProcess  werkzeug  * Restarting with stat
+2019-08-23 10:29:20,736  WARNING    MainProcess  werkzeug  * Debugger is active!
+2019-08-23 10:29:20,742  INFO       MainProcess  werkzeug  * Debugger PIN: 888-317-198
+2019-08-23 10:29:23,872  INFO       MainProcess  root Starting WES Sample query using time stamp: 1561987068000, provided to the endpoint query
+2019-08-23 10:29:23,872  INFO       MainProcess  root Starting query : http://localhost:8080/LimsRest/getWESSampleData?time=1561987068000
+2019-08-23 10:29:23,910  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 10:29:23] "GET /get_wes_data?timestamp=1561987068000 HTTP/1.1" 500 -
+2019-08-23 10:29:23,937  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 10:29:23] "GET /get_wes_data?__debugger__=yes&cmd=resource&f=style.css HTTP/1.1" 200 -
+2019-08-23 10:29:23,940  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 10:29:23] "GET /get_wes_data?__debugger__=yes&cmd=resource&f=jquery.js HTTP/1.1" 200 -
+2019-08-23 10:29:23,944  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 10:29:23] "GET /get_wes_data?__debugger__=yes&cmd=resource&f=debugger.js HTTP/1.1" 200 -
+2019-08-23 10:29:24,028  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 10:29:24] "GET /get_wes_data?__debugger__=yes&cmd=resource&f=ubuntu.ttf HTTP/1.1" 200 -
+2019-08-23 10:29:24,037  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 10:29:24] "GET /get_wes_data?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1" 200 -
+2019-08-23 10:29:24,163  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 10:29:24] "GET /get_wes_data?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1" 200 -
+2019-08-23 10:30:45,285  INFO       MainProcess  werkzeug  * Detected change in '/Users/sharmaa1/Desktop/My_Scripts/sample-tracking-db/sample-tracking-api/app.py', reloading
+2019-08-23 10:30:45,382  INFO       MainProcess  werkzeug  * Restarting with stat
+2019-08-23 10:30:45,918  WARNING    MainProcess  werkzeug  * Debugger is active!
+2019-08-23 10:30:45,926  INFO       MainProcess  werkzeug  * Debugger PIN: 888-317-198
+2019-08-23 10:30:49,936  INFO       MainProcess  root Starting WES Sample query using time stamp: 1561987068000, provided to the endpoint query
+2019-08-23 10:30:49,936  INFO       MainProcess  root Starting query : http://localhost:8080/LimsRest/getWESSampleData?time=1561987068000
+2019-08-23 10:31:05,890  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 10:31:05] "GET /get_wes_data?timestamp=1561987068000 HTTP/1.1" 200 -
+2019-08-23 10:35:47,314  INFO       MainProcess  werkzeug  * Running on http://127.0.0.1:5000/ (Press CTRL+C to quit)
+2019-08-23 10:35:47,315  INFO       MainProcess  werkzeug  * Restarting with stat
+2019-08-23 10:35:47,764  WARNING    MainProcess  werkzeug  * Debugger is active!
+2019-08-23 10:35:47,770  INFO       MainProcess  werkzeug  * Debugger PIN: 888-317-198
+2019-08-23 10:35:59,506  INFO       MainProcess  root Starting WES Sample query using time stamp: 1561987068000, provided to the endpoint query
+2019-08-23 10:35:59,506  INFO       MainProcess  root Starting query : http://localhost:8080/LimsRest/getWESSampleData?time=1561987068000
+2019-08-23 10:36:14,205  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 10:36:14] "GET /get_wes_data?timestamp=1561987068000 HTTP/1.1" 200 -
+2019-08-23 10:40:13,562  INFO       MainProcess  werkzeug  * Detected change in '/Users/sharmaa1/Desktop/My_Scripts/sample-tracking-db/sample-tracking-api/app.py', reloading
+2019-08-23 10:40:13,633  INFO       MainProcess  werkzeug  * Restarting with stat
+2019-08-23 10:40:14,083  WARNING    MainProcess  werkzeug  * Debugger is active!
+2019-08-23 10:40:14,089  INFO       MainProcess  werkzeug  * Debugger PIN: 888-317-198
+2019-08-23 10:42:43,888  INFO       MainProcess  werkzeug  * Detected change in '/Users/sharmaa1/Desktop/My_Scripts/sample-tracking-db/sample-tracking-api/app.py', reloading
+2019-08-23 10:42:43,966  INFO       MainProcess  werkzeug  * Restarting with stat
+2019-08-23 10:42:44,442  WARNING    MainProcess  werkzeug  * Debugger is active!
+2019-08-23 10:42:44,448  INFO       MainProcess  werkzeug  * Debugger PIN: 888-317-198
+2019-08-23 10:42:49,008  INFO       MainProcess  root Starting WES Sample query after calculating time: 1566476329000.0, provided to the endpoint by user.
+2019-08-23 10:42:49,027  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 10:42:49] "GET /get_wes_data HTTP/1.1" 500 -
+2019-08-23 10:42:49,081  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 10:42:49] "GET /get_wes_data?__debugger__=yes&cmd=resource&f=style.css HTTP/1.1" 200 -
+2019-08-23 10:42:49,093  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 10:42:49] "GET /get_wes_data?__debugger__=yes&cmd=resource&f=jquery.js HTTP/1.1" 200 -
+2019-08-23 10:42:49,094  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 10:42:49] "GET /get_wes_data?__debugger__=yes&cmd=resource&f=debugger.js HTTP/1.1" 200 -
+2019-08-23 10:42:49,161  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 10:42:49] "GET /get_wes_data?__debugger__=yes&cmd=resource&f=ubuntu.ttf HTTP/1.1" 200 -
+2019-08-23 10:42:49,184  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 10:42:49] "GET /get_wes_data?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1" 200 -
+2019-08-23 10:42:49,218  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 10:42:49] "GET /get_wes_data?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1" 200 -
+2019-08-23 10:43:11,927  INFO       MainProcess  werkzeug  * Detected change in '/Users/sharmaa1/Desktop/My_Scripts/sample-tracking-db/sample-tracking-api/app.py', reloading
+2019-08-23 10:43:12,007  INFO       MainProcess  werkzeug  * Restarting with stat
+2019-08-23 10:43:13,511  WARNING    MainProcess  werkzeug  * Debugger is active!
+2019-08-23 10:43:13,518  INFO       MainProcess  werkzeug  * Debugger PIN: 888-317-198
+2019-08-23 10:43:18,897  INFO       MainProcess  root Starting WES Sample query after calculating time: 1566476358000.0, provided to the endpoint by user.
+2019-08-23 10:43:18,898  INFO       MainProcess  root Starting query : http://localhost:8080/LimsRest/getWESSampleData?time=1566476358000.0
+2019-08-23 10:43:18,952  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 10:43:18] "GET /get_wes_data HTTP/1.1" 200 -
+2019-08-23 10:44:38,078  INFO       MainProcess  werkzeug  * Detected change in '/Users/sharmaa1/Desktop/My_Scripts/sample-tracking-db/sample-tracking-api/app.py', reloading
+2019-08-23 10:44:38,152  INFO       MainProcess  werkzeug  * Restarting with stat
+2019-08-23 10:44:38,612  WARNING    MainProcess  werkzeug  * Debugger is active!
+2019-08-23 10:44:38,618  INFO       MainProcess  werkzeug  * Debugger PIN: 888-317-198
+2019-08-23 10:44:50,827  INFO       MainProcess  werkzeug  * Detected change in '/Users/sharmaa1/Desktop/My_Scripts/sample-tracking-db/sample-tracking-api/app.py', reloading
+2019-08-23 10:44:50,889  INFO       MainProcess  werkzeug  * Restarting with stat
+2019-08-23 10:44:51,617  WARNING    MainProcess  werkzeug  * Debugger is active!
+2019-08-23 10:44:51,623  INFO       MainProcess  werkzeug  * Debugger PIN: 888-317-198
+2019-08-23 10:44:54,714  INFO       MainProcess  root Starting WES Sample query after calculating time: 1566476454000.0, provided to the endpoint by user.
+2019-08-23 10:44:54,715  INFO       MainProcess  root Starting query : http://localhost:8080/LimsRest/getWESSampleData?time=1566476454000
+2019-08-23 10:44:56,405  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 10:44:56] "GET /get_wes_data HTTP/1.1" 200 -
+2019-08-23 10:49:35,026  INFO       MainProcess  root Starting WES Sample query using time stamp: 1561987068000, provided to the endpoint query
+2019-08-23 10:49:35,027  INFO       MainProcess  root Starting query : http://localhost:8080/LimsRest/getWESSampleData?time=1561987068000
+2019-08-23 10:49:49,099  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 10:49:49] "GET /get_wes_data?timestamp=1561987068000 HTTP/1.1" 200 -
+2019-08-23 10:51:27,919  INFO       MainProcess  werkzeug  * Detected change in '/Users/sharmaa1/Desktop/My_Scripts/sample-tracking-db/sample-tracking-api/app.py', reloading
+2019-08-23 10:51:28,005  INFO       MainProcess  werkzeug  * Restarting with stat
+2019-08-23 10:51:28,524  WARNING    MainProcess  werkzeug  * Debugger is active!
+2019-08-23 10:51:28,530  INFO       MainProcess  werkzeug  * Debugger PIN: 888-317-198
+2019-08-23 10:51:32,047  INFO       MainProcess  root Starting WES Sample query using time stamp: 1561987068000, provided to the endpoint query
+2019-08-23 10:51:32,047  INFO       MainProcess  root Starting query : http://localhost:8080/LimsRest/getWESSampleData?time=1561987068000
+2019-08-23 10:51:54,100  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 10:51:54] "GET /get_wes_data?timestamp=1561987068000 HTTP/1.1" 500 -
+2019-08-23 10:51:54,149  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 10:51:54] "GET /get_wes_data?__debugger__=yes&cmd=resource&f=style.css HTTP/1.1" 200 -
+2019-08-23 10:51:54,150  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 10:51:54] "GET /get_wes_data?__debugger__=yes&cmd=resource&f=jquery.js HTTP/1.1" 200 -
+2019-08-23 10:51:54,152  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 10:51:54] "GET /get_wes_data?__debugger__=yes&cmd=resource&f=debugger.js HTTP/1.1" 200 -
+2019-08-23 10:51:54,254  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 10:51:54] "GET /get_wes_data?__debugger__=yes&cmd=resource&f=ubuntu.ttf HTTP/1.1" 200 -
+2019-08-23 10:51:54,299  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 10:51:54] "GET /get_wes_data?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1" 200 -
+2019-08-23 10:51:54,364  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 10:51:54] "GET /get_wes_data?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1" 200 -
+2019-08-23 10:53:39,140  INFO       MainProcess  werkzeug  * Detected change in '/Users/sharmaa1/Desktop/My_Scripts/sample-tracking-db/sample-tracking-api/app.py', reloading
+2019-08-23 10:53:39,231  INFO       MainProcess  werkzeug  * Restarting with stat
+2019-08-23 10:53:39,695  WARNING    MainProcess  werkzeug  * Debugger is active!
+2019-08-23 10:53:39,702  INFO       MainProcess  werkzeug  * Debugger PIN: 888-317-198
+2019-08-23 10:53:41,841  INFO       MainProcess  root Starting WES Sample query using time stamp: 1561987068000, provided to the endpoint query
+2019-08-23 10:53:41,841  INFO       MainProcess  root Starting query : http://localhost:8080/LimsRest/getWESSampleData?time=1561987068000
+2019-08-23 10:53:58,007  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 10:53:58] "GET /get_wes_data?timestamp=1561987068000 HTTP/1.1" 500 -
+2019-08-23 10:53:58,039  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 10:53:58] "GET /get_wes_data?__debugger__=yes&cmd=resource&f=style.css HTTP/1.1" 200 -
+2019-08-23 10:53:58,043  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 10:53:58] "GET /get_wes_data?__debugger__=yes&cmd=resource&f=jquery.js HTTP/1.1" 200 -
+2019-08-23 10:53:58,044  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 10:53:58] "GET /get_wes_data?__debugger__=yes&cmd=resource&f=debugger.js HTTP/1.1" 200 -
+2019-08-23 10:53:58,125  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 10:53:58] "GET /get_wes_data?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1" 200 -
+2019-08-23 10:53:58,133  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 10:53:58] "GET /get_wes_data?__debugger__=yes&cmd=resource&f=ubuntu.ttf HTTP/1.1" 200 -
+2019-08-23 10:53:58,151  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 10:53:58] "GET /get_wes_data?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1" 200 -
+2019-08-23 10:54:19,541  INFO       MainProcess  werkzeug  * Detected change in '/Users/sharmaa1/Desktop/My_Scripts/sample-tracking-db/sample-tracking-api/app.py', reloading
+2019-08-23 10:54:19,613  INFO       MainProcess  werkzeug  * Restarting with stat
+2019-08-23 10:54:20,068  WARNING    MainProcess  werkzeug  * Debugger is active!
+2019-08-23 10:54:20,075  INFO       MainProcess  werkzeug  * Debugger PIN: 888-317-198
+2019-08-23 10:54:23,306  INFO       MainProcess  root Starting WES Sample query using time stamp: 1561987068000, provided to the endpoint query
+2019-08-23 10:54:23,306  INFO       MainProcess  root Starting query : http://localhost:8080/LimsRest/getWESSampleData?time=1561987068000
+2019-08-23 10:54:38,578  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 10:54:38] "GET /get_wes_data?timestamp=1561987068000 HTTP/1.1" 200 -
+2019-08-23 10:55:54,392  ERROR      MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 10:55:54] code 400, message Bad request version ("¿ÝRe¼¡¿©\x14®5\x7f,\x0fP\x9dÞTÒ²\x9e\x00\x00nÀ/À+À0À,\x00\x9eÀ'\x00gÀ(\x00kÀ$À\x14À")
+2019-08-23 10:55:54,392  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 10:55:54] "  ýZúeÅs	>¡¿ÝRe¼¡¿©®5,PÞTÒ²  nÀ/À+À0À, À' gÀ( kÀ$ÀÀ" HTTPStatus.BAD_REQUEST -
+2019-08-23 10:59:28,810  ERROR      MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 10:59:28] code 400, message Bad request version ("ý\x00\x00nÀ/À+À0À,\x00\x9eÀ'\x00gÀ(\x00kÀ$À\x14À")
+2019-08-23 10:59:28,810  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 10:59:28] "  ý¤­Ê^¡#©¦H >9ûþ ½g|ûaÉ¦jý  nÀ/À+À0À, À' gÀ( kÀ$ÀÀ" HTTPStatus.BAD_REQUEST -
+2019-08-23 11:01:10,328  ERROR      MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 11:01:10] code 400, message Bad HTTP/0.9 request type ('\x16\x03\x01\x01\x01\x01\x00\x00ý\x03\x03¬dyMµ\\È<O¼ß+`Rò')
+2019-08-23 11:01:10,328  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 11:01:10] "  ý¬dyMµ\È<O¼ß+`Ròób±%FÜsõù}ÌOîñj  nÀ/À+À0À, À' gÀ( kÀ$ÀÀ" HTTPStatus.BAD_REQUEST -
+2019-08-23 11:02:38,687  INFO       MainProcess  root Starting WES Sample query using time stamp: 156198706800, provided to the endpoint query
+2019-08-23 11:02:38,687  INFO       MainProcess  root Starting query : http://localhost:8080/LimsRest/getWESSampleData?time=156198706800
+2019-08-23 11:03:25,923  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 11:03:25] "GET /get_wes_data?timestamp=156198706800 HTTP/1.1" 500 -
+2019-08-23 11:03:25,969  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 11:03:25] "GET /get_wes_data?__debugger__=yes&cmd=resource&f=style.css HTTP/1.1" 200 -
+2019-08-23 11:03:25,970  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 11:03:25] "GET /get_wes_data?__debugger__=yes&cmd=resource&f=jquery.js HTTP/1.1" 200 -
+2019-08-23 11:03:25,981  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 11:03:25] "GET /get_wes_data?__debugger__=yes&cmd=resource&f=debugger.js HTTP/1.1" 200 -
+2019-08-23 11:03:26,019  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 11:03:26] "GET /get_wes_data?__debugger__=yes&cmd=resource&f=ubuntu.ttf HTTP/1.1" 200 -
+2019-08-23 11:03:26,885  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 11:03:26] "GET /get_wes_data?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1" 200 -
+2019-08-23 11:03:26,908  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 11:03:26] "GET /get_wes_data?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1" 200 -
+2019-08-23 11:07:24,408  INFO       MainProcess  werkzeug  * Detected change in '/Users/sharmaa1/Desktop/My_Scripts/sample-tracking-db/sample-tracking-api/app.py', reloading
+2019-08-23 11:07:24,489  INFO       MainProcess  werkzeug  * Restarting with stat
+2019-08-23 11:07:25,267  WARNING    MainProcess  werkzeug  * Debugger is active!
+2019-08-23 11:07:25,274  INFO       MainProcess  werkzeug  * Debugger PIN: 888-317-198
+2019-08-23 11:07:40,577  INFO       MainProcess  werkzeug  * Detected change in '/Users/sharmaa1/Desktop/My_Scripts/sample-tracking-db/sample-tracking-api/app.py', reloading
+2019-08-23 11:07:40,667  INFO       MainProcess  werkzeug  * Restarting with stat
+2019-08-23 11:07:41,147  WARNING    MainProcess  werkzeug  * Debugger is active!
+2019-08-23 11:07:41,153  INFO       MainProcess  werkzeug  * Debugger PIN: 888-317-198
+2019-08-23 11:08:44,183  INFO       MainProcess  root Starting WES Sample query using time stamp: 156198706800, provided to the endpoint query
+2019-08-23 11:08:44,183  INFO       MainProcess  root Starting query : http://localhost:8080/LimsRest/getWESSampleData?time=156198706800
+2019-08-23 11:08:53,738  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 11:08:53] "GET /get_wes_data?timestamp=156198706800 HTTP/1.1" 500 -
+2019-08-23 11:08:53,761  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 11:08:53] "GET /get_wes_data?__debugger__=yes&cmd=resource&f=style.css HTTP/1.1" 200 -
+2019-08-23 11:08:53,773  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 11:08:53] "GET /get_wes_data?__debugger__=yes&cmd=resource&f=jquery.js HTTP/1.1" 200 -
+2019-08-23 11:08:53,784  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 11:08:53] "GET /get_wes_data?__debugger__=yes&cmd=resource&f=debugger.js HTTP/1.1" 200 -
+2019-08-23 11:08:53,893  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 11:08:53] "GET /get_wes_data?__debugger__=yes&cmd=resource&f=ubuntu.ttf HTTP/1.1" 200 -
+2019-08-23 11:08:53,947  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 11:08:53] "GET /get_wes_data?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1" 200 -
+2019-08-23 11:11:07,999  INFO       MainProcess  werkzeug  * Detected change in '/Users/sharmaa1/Desktop/My_Scripts/sample-tracking-db/sample-tracking-api/app.py', reloading
+2019-08-23 11:11:08,070  INFO       MainProcess  werkzeug  * Restarting with stat
+2019-08-23 11:11:08,546  WARNING    MainProcess  werkzeug  * Debugger is active!
+2019-08-23 11:11:08,554  INFO       MainProcess  werkzeug  * Debugger PIN: 888-317-198
+2019-08-23 11:11:30,312  INFO       MainProcess  root Starting WES Sample query using time stamp: 156198706800, provided to the endpoint query
+2019-08-23 11:11:30,313  INFO       MainProcess  root Starting query : http://localhost:8080/LimsRest/getWESSampleData?time=156198706800
+2019-08-23 11:12:06,505  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 11:12:06] "GET /get_wes_data?timestamp=156198706800 HTTP/1.1" 500 -
+2019-08-23 11:12:06,547  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 11:12:06] "GET /get_wes_data?__debugger__=yes&cmd=resource&f=style.css HTTP/1.1" 200 -
+2019-08-23 11:12:06,553  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 11:12:06] "GET /get_wes_data?__debugger__=yes&cmd=resource&f=jquery.js HTTP/1.1" 200 -
+2019-08-23 11:12:06,559  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 11:12:06] "GET /get_wes_data?__debugger__=yes&cmd=resource&f=debugger.js HTTP/1.1" 200 -
+2019-08-23 11:12:06,671  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 11:12:06] "GET /get_wes_data?__debugger__=yes&cmd=resource&f=ubuntu.ttf HTTP/1.1" 200 -
+2019-08-23 11:12:06,683  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 11:12:06] "GET /get_wes_data?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1" 200 -
+2019-08-23 11:12:06,758  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 11:12:06] "GET /get_wes_data?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1" 200 -
+2019-08-23 11:12:42,465  INFO       MainProcess  werkzeug  * Detected change in '/Users/sharmaa1/Desktop/My_Scripts/sample-tracking-db/sample-tracking-api/app.py', reloading
+2019-08-23 11:12:42,559  INFO       MainProcess  werkzeug  * Restarting with stat
+2019-08-23 11:12:43,013  WARNING    MainProcess  werkzeug  * Debugger is active!
+2019-08-23 11:12:43,019  INFO       MainProcess  werkzeug  * Debugger PIN: 888-317-198
+2019-08-23 11:12:59,875  INFO       MainProcess  root Starting WES Sample query using time stamp: 156198706800, provided to the endpoint query
+2019-08-23 11:12:59,875  INFO       MainProcess  root Starting query : http://localhost:8080/LimsRest/getWESSampleData?time=156198706800
+2019-08-23 11:13:33,930  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 11:13:33] "GET /get_wes_data?timestamp=156198706800 HTTP/1.1" 500 -
+2019-08-23 11:13:33,978  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 11:13:33] "GET /get_wes_data?__debugger__=yes&cmd=resource&f=style.css HTTP/1.1" 200 -
+2019-08-23 11:13:33,979  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 11:13:33] "GET /get_wes_data?__debugger__=yes&cmd=resource&f=jquery.js HTTP/1.1" 200 -
+2019-08-23 11:13:33,981  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 11:13:33] "GET /get_wes_data?__debugger__=yes&cmd=resource&f=debugger.js HTTP/1.1" 200 -
+2019-08-23 11:13:34,093  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 11:13:34] "GET /get_wes_data?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1" 200 -
+2019-08-23 11:13:34,109  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 11:13:34] "GET /get_wes_data?__debugger__=yes&cmd=resource&f=ubuntu.ttf HTTP/1.1" 200 -
+2019-08-23 11:13:34,153  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 11:13:34] "GET /get_wes_data?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1" 200 -
+2019-08-23 11:16:34,152  INFO       MainProcess  werkzeug  * Detected change in '/Users/sharmaa1/Desktop/My_Scripts/sample-tracking-db/sample-tracking-api/app.py', reloading
+2019-08-23 11:16:34,244  INFO       MainProcess  werkzeug  * Restarting with stat
+2019-08-23 11:16:34,981  WARNING    MainProcess  werkzeug  * Debugger is active!
+2019-08-23 11:16:34,989  INFO       MainProcess  werkzeug  * Debugger PIN: 888-317-198
+2019-08-23 11:21:41,462  INFO       MainProcess  root Starting WES Sample query using time stamp: 156198706800, provided to the endpoint query
+2019-08-23 11:21:41,462  INFO       MainProcess  root Starting query : http://localhost:8080/LimsRest/getWESSampleData?time=156198706800
+2019-08-23 11:22:23,118  ERROR      MainProcess  root Expecting value: line 1 column 1 (char 0)
+Traceback (most recent call last):
+  File "/Users/sharmaa1/Desktop/My_Scripts/sample-tracking-db/sample-tracking-api/app.py", line 145, in get_wes_data
+    ids = save_to_db(data)
+  File "/Users/sharmaa1/Desktop/My_Scripts/sample-tracking-db/sample-tracking-api/app.py", line 100, in save_to_db
+    data_to_json = json.loads(data)
+  File "/usr/local/Cellar/python/3.7.3/Frameworks/Python.framework/Versions/3.7/lib/python3.7/json/__init__.py", line 348, in loads
+    return _default_decoder.decode(s)
+  File "/usr/local/Cellar/python/3.7.3/Frameworks/Python.framework/Versions/3.7/lib/python3.7/json/decoder.py", line 337, in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+  File "/usr/local/Cellar/python/3.7.3/Frameworks/Python.framework/Versions/3.7/lib/python3.7/json/decoder.py", line 355, in raw_decode
+    raise JSONDecodeError("Expecting value", s, err.value) from None
+json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+2019-08-23 11:22:23,139  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 11:22:23] "GET /get_wes_data?timestamp=156198706800 HTTP/1.1" 500 -
+2019-08-23 11:22:23,166  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 11:22:23] "GET /get_wes_data?__debugger__=yes&cmd=resource&f=style.css HTTP/1.1" 200 -
+2019-08-23 11:22:23,173  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 11:22:23] "GET /get_wes_data?__debugger__=yes&cmd=resource&f=debugger.js HTTP/1.1" 200 -
+2019-08-23 11:22:23,174  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 11:22:23] "GET /get_wes_data?__debugger__=yes&cmd=resource&f=jquery.js HTTP/1.1" 200 -
+2019-08-23 11:22:23,287  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 11:22:23] "GET /get_wes_data?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1" 200 -
+2019-08-23 11:22:23,299  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 11:22:23] "GET /get_wes_data?__debugger__=yes&cmd=resource&f=ubuntu.ttf HTTP/1.1" 200 -
+2019-08-23 11:41:37,946  INFO       MainProcess  werkzeug  * Detected change in '/Users/sharmaa1/Desktop/My_Scripts/sample-tracking-db/sample-tracking-api/app.py', reloading
+2019-08-23 11:41:38,026  INFO       MainProcess  werkzeug  * Restarting with stat
+2019-08-23 11:41:38,935  WARNING    MainProcess  werkzeug  * Debugger is active!
+2019-08-23 11:41:38,943  INFO       MainProcess  werkzeug  * Debugger PIN: 888-317-198
+2019-08-23 11:50:01,160  INFO       MainProcess  werkzeug  * Detected change in '/Users/sharmaa1/Desktop/My_Scripts/sample-tracking-db/sample-tracking-api/app.py', reloading
+2019-08-23 11:50:01,253  INFO       MainProcess  werkzeug  * Restarting with stat
+2019-08-23 11:50:02,098  WARNING    MainProcess  werkzeug  * Debugger is active!
+2019-08-23 11:50:02,109  INFO       MainProcess  werkzeug  * Debugger PIN: 888-317-198
+2019-08-23 11:51:31,834  INFO       MainProcess  werkzeug  * Detected change in '/Users/sharmaa1/Desktop/My_Scripts/sample-tracking-db/sample-tracking-api/app.py', reloading
+2019-08-23 11:51:31,927  INFO       MainProcess  werkzeug  * Restarting with stat
+2019-08-23 13:44:00,683  INFO       MainProcess  werkzeug  * Running on http://127.0.0.1:5000/ (Press CTRL+C to quit)
+2019-08-23 13:44:00,686  INFO       MainProcess  werkzeug  * Restarting with stat
+2019-08-23 13:44:01,196  WARNING    MainProcess  werkzeug  * Debugger is active!
+2019-08-23 13:44:01,204  INFO       MainProcess  werkzeug  * Debugger PIN: 888-317-198
+2019-08-23 13:44:35,443  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 13:44:35] "OPTIONS /login HTTP/1.1" 200 -
+2019-08-23 13:44:35,635  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 13:44:35] "POST /login HTTP/1.1" 200 -
+2019-08-23 13:44:53,125  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 13:44:53] "OPTIONS /search_data HTTP/1.1" 200 -
+2019-08-23 13:44:53,143  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 13:44:53] "POST /search_data HTTP/1.1" 200 -
+2019-08-23 13:48:48,428  INFO       MainProcess  werkzeug  * Detected change in '/Users/sharmaa1/Desktop/My_Scripts/sample-tracking-db/sample-tracking-api/app.py', reloading
+2019-08-23 13:48:48,506  INFO       MainProcess  werkzeug  * Restarting with stat
+2019-08-23 13:48:49,279  WARNING    MainProcess  werkzeug  * Debugger is active!
+2019-08-23 13:48:49,287  INFO       MainProcess  werkzeug  * Debugger PIN: 888-317-198
+2019-08-23 13:49:08,684  INFO       MainProcess  werkzeug  * Detected change in '/Users/sharmaa1/Desktop/My_Scripts/sample-tracking-db/sample-tracking-api/app.py', reloading
+2019-08-23 13:49:08,762  INFO       MainProcess  werkzeug  * Restarting with stat
+2019-08-23 13:49:09,232  WARNING    MainProcess  werkzeug  * Debugger is active!
+2019-08-23 13:49:09,239  INFO       MainProcess  werkzeug  * Debugger PIN: 888-317-198
+2019-08-23 13:49:22,545  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 13:49:22] "OPTIONS /search_data HTTP/1.1" 200 -
+2019-08-23 13:49:22,585  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 13:49:22] "POST /search_data HTTP/1.1" 500 -
+2019-08-23 13:49:57,166  INFO       MainProcess  werkzeug  * Detected change in '/Users/sharmaa1/Desktop/My_Scripts/sample-tracking-db/sample-tracking-api/app.py', reloading
+2019-08-23 13:49:57,260  INFO       MainProcess  werkzeug  * Restarting with stat
+2019-08-23 13:49:57,772  WARNING    MainProcess  werkzeug  * Debugger is active!
+2019-08-23 13:49:57,780  INFO       MainProcess  werkzeug  * Debugger PIN: 888-317-198
+2019-08-23 13:50:00,248  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 13:50:00] "OPTIONS /search_data HTTP/1.1" 200 -
+2019-08-23 13:50:00,296  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 13:50:00] "POST /search_data HTTP/1.1" 500 -
+2019-08-23 13:51:15,293  INFO       MainProcess  werkzeug  * Detected change in '/Users/sharmaa1/Desktop/My_Scripts/sample-tracking-db/sample-tracking-api/app.py', reloading
+2019-08-23 13:51:15,374  INFO       MainProcess  werkzeug  * Restarting with stat
+2019-08-23 13:51:15,883  WARNING    MainProcess  werkzeug  * Debugger is active!
+2019-08-23 13:51:15,889  INFO       MainProcess  werkzeug  * Debugger PIN: 888-317-198
+2019-08-23 13:51:21,897  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 13:51:21] "OPTIONS /search_data HTTP/1.1" 200 -
+2019-08-23 13:51:21,919  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 13:51:21] "POST /search_data HTTP/1.1" 500 -
+2019-08-23 13:51:54,353  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 13:51:54] "OPTIONS /search_data HTTP/1.1" 200 -
+2019-08-23 13:51:54,371  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 13:51:54] "POST /search_data HTTP/1.1" 500 -
+2019-08-23 13:52:11,897  INFO       MainProcess  werkzeug  * Detected change in '/Users/sharmaa1/Desktop/My_Scripts/sample-tracking-db/sample-tracking-api/app.py', reloading
+2019-08-23 13:52:12,008  INFO       MainProcess  werkzeug  * Restarting with stat
+2019-08-23 13:52:12,803  WARNING    MainProcess  werkzeug  * Debugger is active!
+2019-08-23 13:52:12,811  INFO       MainProcess  werkzeug  * Debugger PIN: 888-317-198
+2019-08-23 13:56:34,649  INFO       MainProcess  werkzeug  * Detected change in '/Users/sharmaa1/Desktop/My_Scripts/sample-tracking-db/sample-tracking-api/app.py', reloading
+2019-08-23 13:56:34,733  INFO       MainProcess  werkzeug  * Restarting with stat
+2019-08-23 13:56:35,489  WARNING    MainProcess  werkzeug  * Debugger is active!
+2019-08-23 13:56:35,499  INFO       MainProcess  werkzeug  * Debugger PIN: 888-317-198
+2019-08-23 13:56:41,565  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 13:56:41] "OPTIONS /search_data HTTP/1.1" 200 -
+2019-08-23 13:56:41,625  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 13:56:41] "POST /search_data HTTP/1.1" 500 -
+2019-08-23 13:57:16,338  INFO       MainProcess  werkzeug  * Detected change in '/Users/sharmaa1/Desktop/My_Scripts/sample-tracking-db/sample-tracking-api/app.py', reloading
+2019-08-23 13:57:16,430  INFO       MainProcess  werkzeug  * Restarting with stat
+2019-08-23 13:57:16,970  WARNING    MainProcess  werkzeug  * Debugger is active!
+2019-08-23 13:57:16,977  INFO       MainProcess  werkzeug  * Debugger PIN: 888-317-198
+2019-08-23 13:57:25,863  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 13:57:25] "OPTIONS /search_data HTTP/1.1" 200 -
+2019-08-23 13:57:25,913  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 13:57:25] "POST /search_data HTTP/1.1" 500 -
+2019-08-23 14:02:48,886  INFO       MainProcess  werkzeug  * Detected change in '/Users/sharmaa1/Desktop/My_Scripts/sample-tracking-db/sample-tracking-api/app.py', reloading
+2019-08-23 14:02:48,986  INFO       MainProcess  werkzeug  * Restarting with stat
+2019-08-23 14:02:49,762  WARNING    MainProcess  werkzeug  * Debugger is active!
+2019-08-23 14:02:49,770  INFO       MainProcess  werkzeug  * Debugger PIN: 888-317-198
+2019-08-23 14:02:53,374  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 14:02:53] "OPTIONS /search_data HTTP/1.1" 200 -
+2019-08-23 14:02:53,419  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 14:02:53] "POST /search_data HTTP/1.1" 500 -
+2019-08-23 14:03:51,002  INFO       MainProcess  werkzeug  * Detected change in '/Users/sharmaa1/Desktop/My_Scripts/sample-tracking-db/sample-tracking-api/app.py', reloading
+2019-08-23 14:03:51,082  INFO       MainProcess  werkzeug  * Restarting with stat
+2019-08-23 14:03:51,582  WARNING    MainProcess  werkzeug  * Debugger is active!
+2019-08-23 14:03:51,590  INFO       MainProcess  werkzeug  * Debugger PIN: 888-317-198
+2019-08-23 14:03:55,362  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 14:03:55] "OPTIONS /search_data HTTP/1.1" 200 -
+2019-08-23 14:03:55,405  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 14:03:55] "POST /search_data HTTP/1.1" 500 -
+2019-08-23 14:04:21,187  INFO       MainProcess  werkzeug  * Detected change in '/Users/sharmaa1/Desktop/My_Scripts/sample-tracking-db/sample-tracking-api/app.py', reloading
+2019-08-23 14:04:21,264  INFO       MainProcess  werkzeug  * Restarting with stat
+2019-08-23 14:04:21,726  WARNING    MainProcess  werkzeug  * Debugger is active!
+2019-08-23 14:04:21,733  INFO       MainProcess  werkzeug  * Debugger PIN: 888-317-198
+2019-08-23 14:04:30,896  INFO       MainProcess  werkzeug  * Detected change in '/Users/sharmaa1/Desktop/My_Scripts/sample-tracking-db/sample-tracking-api/app.py', reloading
+2019-08-23 14:04:30,992  INFO       MainProcess  werkzeug  * Restarting with stat
+2019-08-23 14:04:31,493  WARNING    MainProcess  werkzeug  * Debugger is active!
+2019-08-23 14:04:31,501  INFO       MainProcess  werkzeug  * Debugger PIN: 888-317-198
+2019-08-23 14:04:35,627  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 14:04:35] "OPTIONS /search_data HTTP/1.1" 200 -
+2019-08-23 14:04:35,670  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 14:04:35] "POST /search_data HTTP/1.1" 500 -
+2019-08-23 14:07:57,327  INFO       MainProcess  werkzeug  * Detected change in '/Users/sharmaa1/Desktop/My_Scripts/sample-tracking-db/sample-tracking-api/database/models.py', reloading
+2019-08-23 14:07:57,406  INFO       MainProcess  werkzeug  * Restarting with stat
+2019-08-23 14:07:58,165  WARNING    MainProcess  werkzeug  * Debugger is active!
+2019-08-23 14:07:58,172  INFO       MainProcess  werkzeug  * Debugger PIN: 888-317-198
+2019-08-23 14:08:03,609  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 14:08:03] "OPTIONS /search_data HTTP/1.1" 200 -
+2019-08-23 14:08:03,649  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 14:08:03] "POST /search_data HTTP/1.1" 500 -
+2019-08-23 14:08:22,686  INFO       MainProcess  werkzeug  * Detected change in '/Users/sharmaa1/Desktop/My_Scripts/sample-tracking-db/sample-tracking-api/app.py', reloading
+2019-08-23 14:08:22,775  INFO       MainProcess  werkzeug  * Restarting with stat
+2019-08-23 14:08:23,473  WARNING    MainProcess  werkzeug  * Debugger is active!
+2019-08-23 14:08:23,480  INFO       MainProcess  werkzeug  * Debugger PIN: 888-317-198
+2019-08-23 14:08:26,355  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 14:08:26] "OPTIONS /search_data HTTP/1.1" 200 -
+2019-08-23 14:08:26,402  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 14:08:26] "POST /search_data HTTP/1.1" 500 -
+2019-08-23 14:09:18,575  INFO       MainProcess  werkzeug  * Detected change in '/Users/sharmaa1/Desktop/My_Scripts/sample-tracking-db/sample-tracking-api/database/models.py', reloading
+2019-08-23 14:09:18,658  INFO       MainProcess  werkzeug  * Restarting with stat
+2019-08-23 14:09:19,134  WARNING    MainProcess  werkzeug  * Debugger is active!
+2019-08-23 14:09:19,142  INFO       MainProcess  werkzeug  * Debugger PIN: 888-317-198
+2019-08-23 14:09:21,397  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 14:09:21] "OPTIONS /search_data HTTP/1.1" 200 -
+2019-08-23 14:09:21,440  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 14:09:21] "POST /search_data HTTP/1.1" 500 -
+2019-08-23 14:10:51,874  INFO       MainProcess  werkzeug  * Detected change in '/Users/sharmaa1/Desktop/My_Scripts/sample-tracking-db/sample-tracking-api/database/models.py', reloading
+2019-08-23 14:10:51,954  INFO       MainProcess  werkzeug  * Restarting with stat
+2019-08-23 14:10:53,460  WARNING    MainProcess  werkzeug  * Debugger is active!
+2019-08-23 14:10:53,466  INFO       MainProcess  werkzeug  * Debugger PIN: 888-317-198
+2019-08-23 14:11:03,707  INFO       MainProcess  werkzeug  * Detected change in '/Users/sharmaa1/Desktop/My_Scripts/sample-tracking-db/sample-tracking-api/app.py', reloading
+2019-08-23 14:11:03,776  INFO       MainProcess  werkzeug  * Restarting with stat
+2019-08-23 14:11:04,239  WARNING    MainProcess  werkzeug  * Debugger is active!
+2019-08-23 14:11:04,245  INFO       MainProcess  werkzeug  * Debugger PIN: 888-317-198
+2019-08-23 14:11:09,588  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 14:11:09] "OPTIONS /search_data HTTP/1.1" 200 -
+2019-08-23 14:11:09,628  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 14:11:09] "POST /search_data HTTP/1.1" 500 -
+2019-08-23 14:13:16,807  INFO       MainProcess  werkzeug  * Detected change in '/Users/sharmaa1/Desktop/My_Scripts/sample-tracking-db/sample-tracking-api/database/models.py', reloading
+2019-08-23 14:13:16,912  INFO       MainProcess  werkzeug  * Restarting with stat
+2019-08-23 14:13:17,409  WARNING    MainProcess  werkzeug  * Debugger is active!
+2019-08-23 14:13:17,415  INFO       MainProcess  werkzeug  * Debugger PIN: 888-317-198
+2019-08-23 14:13:24,552  INFO       MainProcess  werkzeug  * Detected change in '/Users/sharmaa1/Desktop/My_Scripts/sample-tracking-db/sample-tracking-api/database/models.py', reloading
+2019-08-23 14:13:24,634  INFO       MainProcess  werkzeug  * Restarting with stat
+2019-08-23 14:13:25,093  WARNING    MainProcess  werkzeug  * Debugger is active!
+2019-08-23 14:13:25,101  INFO       MainProcess  werkzeug  * Debugger PIN: 888-317-198
+2019-08-23 14:13:52,624  INFO       MainProcess  werkzeug  * Detected change in '/Users/sharmaa1/Desktop/My_Scripts/sample-tracking-db/sample-tracking-api/app.py', reloading
+2019-08-23 14:13:52,709  INFO       MainProcess  werkzeug  * Restarting with stat
+2019-08-23 14:13:53,247  WARNING    MainProcess  werkzeug  * Debugger is active!
+2019-08-23 14:13:53,255  INFO       MainProcess  werkzeug  * Debugger PIN: 888-317-198
+2019-08-23 14:13:57,045  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 14:13:57] "OPTIONS /search_data HTTP/1.1" 200 -
+2019-08-23 14:13:57,084  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 14:13:57] "POST /search_data HTTP/1.1" 500 -
+2019-08-23 14:14:18,785  INFO       MainProcess  werkzeug  * Detected change in '/Users/sharmaa1/Desktop/My_Scripts/sample-tracking-db/sample-tracking-api/app.py', reloading
+2019-08-23 14:14:18,877  INFO       MainProcess  werkzeug  * Restarting with stat
+2019-08-23 14:14:19,440  WARNING    MainProcess  werkzeug  * Debugger is active!
+2019-08-23 14:14:19,447  INFO       MainProcess  werkzeug  * Debugger PIN: 888-317-198
+2019-08-23 14:14:22,615  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 14:14:22] "OPTIONS /search_data HTTP/1.1" 200 -
+2019-08-23 14:14:22,638  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 14:14:22] "POST /search_data HTTP/1.1" 200 -
+2019-08-23 14:14:52,118  INFO       MainProcess  werkzeug  * Detected change in '/Users/sharmaa1/Desktop/My_Scripts/sample-tracking-db/sample-tracking-api/app.py', reloading
+2019-08-23 14:14:52,200  INFO       MainProcess  werkzeug  * Restarting with stat
+2019-08-23 14:14:52,664  WARNING    MainProcess  werkzeug  * Debugger is active!
+2019-08-23 14:14:52,670  INFO       MainProcess  werkzeug  * Debugger PIN: 888-317-198
+2019-08-23 14:14:55,269  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 14:14:55] "OPTIONS /search_data HTTP/1.1" 200 -
+2019-08-23 14:14:55,292  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 14:14:55] "POST /search_data HTTP/1.1" 200 -
+2019-08-23 14:15:14,150  INFO       MainProcess  werkzeug  * Detected change in '/Users/sharmaa1/Desktop/My_Scripts/sample-tracking-db/sample-tracking-api/app.py', reloading
+2019-08-23 14:15:14,236  INFO       MainProcess  werkzeug  * Restarting with stat
+2019-08-23 14:15:14,690  WARNING    MainProcess  werkzeug  * Debugger is active!
+2019-08-23 14:15:14,696  INFO       MainProcess  werkzeug  * Debugger PIN: 888-317-198
+2019-08-23 14:15:23,312  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 14:15:23] "OPTIONS /search_data HTTP/1.1" 200 -
+2019-08-23 14:15:23,352  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 14:15:23] "POST /search_data HTTP/1.1" 500 -
+2019-08-23 14:15:48,365  INFO       MainProcess  werkzeug  * Detected change in '/Users/sharmaa1/Desktop/My_Scripts/sample-tracking-db/sample-tracking-api/app.py', reloading
+2019-08-23 14:15:48,452  INFO       MainProcess  werkzeug  * Restarting with stat
+2019-08-23 14:15:48,935  WARNING    MainProcess  werkzeug  * Debugger is active!
+2019-08-23 14:15:48,942  INFO       MainProcess  werkzeug  * Debugger PIN: 888-317-198
+2019-08-23 14:15:51,744  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 14:15:51] "OPTIONS /search_data HTTP/1.1" 200 -
+2019-08-23 14:15:51,789  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 14:15:51] "POST /search_data HTTP/1.1" 500 -
+2019-08-23 14:16:03,196  INFO       MainProcess  werkzeug  * Detected change in '/Users/sharmaa1/Desktop/My_Scripts/sample-tracking-db/sample-tracking-api/app.py', reloading
+2019-08-23 14:16:03,280  INFO       MainProcess  werkzeug  * Restarting with stat
+2019-08-23 14:16:03,766  WARNING    MainProcess  werkzeug  * Debugger is active!
+2019-08-23 14:16:03,772  INFO       MainProcess  werkzeug  * Debugger PIN: 888-317-198
+2019-08-23 14:16:06,263  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 14:16:06] "OPTIONS /search_data HTTP/1.1" 200 -
+2019-08-23 14:16:06,306  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 14:16:06] "POST /search_data HTTP/1.1" 500 -
+2019-08-23 14:16:24,113  INFO       MainProcess  werkzeug  * Detected change in '/Users/sharmaa1/Desktop/My_Scripts/sample-tracking-db/sample-tracking-api/app.py', reloading
+2019-08-23 14:16:24,179  INFO       MainProcess  werkzeug  * Restarting with stat
+2019-08-23 14:16:24,650  WARNING    MainProcess  werkzeug  * Debugger is active!
+2019-08-23 14:16:24,656  INFO       MainProcess  werkzeug  * Debugger PIN: 888-317-198
+2019-08-23 14:16:26,898  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 14:16:26] "OPTIONS /search_data HTTP/1.1" 200 -
+2019-08-23 14:16:26,942  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 14:16:26] "POST /search_data HTTP/1.1" 500 -
+2019-08-23 14:17:36,979  INFO       MainProcess  werkzeug  * Detected change in '/Users/sharmaa1/Desktop/My_Scripts/sample-tracking-db/sample-tracking-api/app.py', reloading
+2019-08-23 14:17:37,073  INFO       MainProcess  werkzeug  * Restarting with stat
+2019-08-23 14:18:05,085  INFO       MainProcess  werkzeug  * Running on http://127.0.0.1:5000/ (Press CTRL+C to quit)
+2019-08-23 14:18:05,086  INFO       MainProcess  werkzeug  * Restarting with stat
+2019-08-23 14:18:05,536  WARNING    MainProcess  werkzeug  * Debugger is active!
+2019-08-23 14:18:05,545  INFO       MainProcess  werkzeug  * Debugger PIN: 888-317-198
+2019-08-23 14:18:08,828  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 14:18:08] "OPTIONS /search_data HTTP/1.1" 200 -
+2019-08-23 14:18:08,867  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 14:18:08] "POST /search_data HTTP/1.1" 200 -
+2019-08-23 14:20:32,341  INFO       MainProcess  werkzeug  * Detected change in '/Users/sharmaa1/Desktop/My_Scripts/sample-tracking-db/sample-tracking-api/app.py', reloading
+2019-08-23 14:20:32,406  INFO       MainProcess  werkzeug  * Restarting with stat
+2019-08-23 14:20:32,870  WARNING    MainProcess  werkzeug  * Debugger is active!
+2019-08-23 14:20:32,877  INFO       MainProcess  werkzeug  * Debugger PIN: 888-317-198
+2019-08-23 14:20:37,675  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 14:20:37] "OPTIONS /search_data HTTP/1.1" 200 -
+2019-08-23 14:20:37,704  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 14:20:37] "POST /search_data HTTP/1.1" 200 -
+2019-08-23 14:20:49,182  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 14:20:49] "OPTIONS /search_data HTTP/1.1" 200 -
+2019-08-23 14:20:49,194  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 14:20:49] "POST /search_data HTTP/1.1" 200 -
+2019-08-23 14:22:27,088  INFO       MainProcess  werkzeug  * Detected change in '/Users/sharmaa1/Desktop/My_Scripts/sample-tracking-db/sample-tracking-api/app.py', reloading
+2019-08-23 14:22:27,182  INFO       MainProcess  werkzeug  * Restarting with stat
+2019-08-23 14:22:46,688  INFO       MainProcess  werkzeug  * Running on http://127.0.0.1:5000/ (Press CTRL+C to quit)
+2019-08-23 14:22:46,689  INFO       MainProcess  werkzeug  * Restarting with stat
+2019-08-23 14:22:47,157  WARNING    MainProcess  werkzeug  * Debugger is active!
+2019-08-23 14:22:47,166  INFO       MainProcess  werkzeug  * Debugger PIN: 888-317-198
+2019-08-23 14:22:55,601  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 14:22:55] "OPTIONS /search_data HTTP/1.1" 200 -
+2019-08-23 14:22:55,632  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 14:22:55] "POST /search_data HTTP/1.1" 200 -
+2019-08-23 14:26:02,102  INFO       MainProcess  werkzeug  * Detected change in '/Users/sharmaa1/Desktop/My_Scripts/sample-tracking-db/sample-tracking-api/app.py', reloading
+2019-08-23 14:26:02,200  INFO       MainProcess  werkzeug  * Restarting with stat
+2019-08-23 14:26:02,671  WARNING    MainProcess  werkzeug  * Debugger is active!
+2019-08-23 14:26:02,678  INFO       MainProcess  werkzeug  * Debugger PIN: 888-317-198
+2019-08-23 14:26:10,420  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 14:26:10] "OPTIONS /search_data HTTP/1.1" 200 -
+2019-08-23 14:26:10,446  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 14:26:10] "POST /search_data HTTP/1.1" 200 -
+2019-08-23 14:27:37,554  INFO       MainProcess  werkzeug  * Detected change in '/Users/sharmaa1/Desktop/My_Scripts/sample-tracking-db/sample-tracking-api/app.py', reloading
+2019-08-23 14:27:37,637  INFO       MainProcess  werkzeug  * Restarting with stat
+2019-08-23 14:29:24,391  INFO       MainProcess  werkzeug  * Running on http://127.0.0.1:5000/ (Press CTRL+C to quit)
+2019-08-23 14:29:24,392  INFO       MainProcess  werkzeug  * Restarting with stat
+2019-08-23 14:29:24,847  WARNING    MainProcess  werkzeug  * Debugger is active!
+2019-08-23 14:29:24,857  INFO       MainProcess  werkzeug  * Debugger PIN: 888-317-198
+2019-08-23 14:29:27,284  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 14:29:27] "OPTIONS /search_data HTTP/1.1" 200 -
+2019-08-23 14:29:27,311  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 14:29:27] "POST /search_data HTTP/1.1" 500 -
+2019-08-23 14:29:45,245  INFO       MainProcess  werkzeug  * Detected change in '/Users/sharmaa1/Desktop/My_Scripts/sample-tracking-db/sample-tracking-api/app.py', reloading
+2019-08-23 14:29:45,333  INFO       MainProcess  werkzeug  * Restarting with stat
+2019-08-23 14:29:45,854  WARNING    MainProcess  werkzeug  * Debugger is active!
+2019-08-23 14:29:45,860  INFO       MainProcess  werkzeug  * Debugger PIN: 888-317-198
+2019-08-23 14:29:50,219  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 14:29:50] "OPTIONS /search_data HTTP/1.1" 200 -
+2019-08-23 14:29:50,241  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 14:29:50] "POST /search_data HTTP/1.1" 200 -
+2019-08-23 14:30:26,624  INFO       MainProcess  werkzeug  * Detected change in '/Users/sharmaa1/Desktop/My_Scripts/sample-tracking-db/sample-tracking-api/app.py', reloading
+2019-08-23 14:30:26,716  INFO       MainProcess  werkzeug  * Restarting with stat
+2019-08-23 14:30:27,191  WARNING    MainProcess  werkzeug  * Debugger is active!
+2019-08-23 14:30:27,198  INFO       MainProcess  werkzeug  * Debugger PIN: 888-317-198
+2019-08-23 14:30:39,121  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 14:30:39] "OPTIONS /search_data HTTP/1.1" 200 -
+2019-08-23 14:30:39,139  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 14:30:39] "POST /search_data HTTP/1.1" 200 -
+2019-08-23 14:31:06,952  INFO       MainProcess  werkzeug  * Detected change in '/Users/sharmaa1/Desktop/My_Scripts/sample-tracking-db/sample-tracking-api/app.py', reloading
+2019-08-23 14:31:07,040  INFO       MainProcess  werkzeug  * Restarting with stat
+2019-08-23 14:31:07,499  WARNING    MainProcess  werkzeug  * Debugger is active!
+2019-08-23 14:31:07,506  INFO       MainProcess  werkzeug  * Debugger PIN: 888-317-198
+2019-08-23 14:31:16,009  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 14:31:16] "OPTIONS /search_data HTTP/1.1" 200 -
+2019-08-23 14:31:16,032  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 14:31:16] "POST /search_data HTTP/1.1" 200 -
+2019-08-23 14:31:57,437  INFO       MainProcess  werkzeug  * Detected change in '/Users/sharmaa1/Desktop/My_Scripts/sample-tracking-db/sample-tracking-api/app.py', reloading
+2019-08-23 14:31:57,518  INFO       MainProcess  werkzeug  * Restarting with stat
+2019-08-23 14:31:58,035  WARNING    MainProcess  werkzeug  * Debugger is active!
+2019-08-23 14:31:58,041  INFO       MainProcess  werkzeug  * Debugger PIN: 888-317-198
+2019-08-23 14:32:06,792  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 14:32:06] "OPTIONS /search_data HTTP/1.1" 200 -
+2019-08-23 14:32:06,815  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 14:32:06] "POST /search_data HTTP/1.1" 200 -
+2019-08-23 14:33:32,782  INFO       MainProcess  werkzeug  * Detected change in '/Users/sharmaa1/Desktop/My_Scripts/sample-tracking-db/sample-tracking-api/app.py', reloading
+2019-08-23 14:33:32,854  INFO       MainProcess  werkzeug  * Restarting with stat
+2019-08-23 14:33:33,355  WARNING    MainProcess  werkzeug  * Debugger is active!
+2019-08-23 14:33:33,362  INFO       MainProcess  werkzeug  * Debugger PIN: 888-317-198
+2019-08-23 14:33:49,018  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 14:33:49] "OPTIONS /search_data HTTP/1.1" 200 -
+2019-08-23 14:33:49,035  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 14:33:49] "POST /search_data HTTP/1.1" 200 -
+2019-08-23 14:36:44,081  INFO       MainProcess  werkzeug  * Detected change in '/Users/sharmaa1/Desktop/My_Scripts/sample-tracking-db/sample-tracking-api/app.py', reloading
+2019-08-23 14:36:44,143  INFO       MainProcess  werkzeug  * Restarting with stat
+2019-08-23 14:36:44,612  WARNING    MainProcess  werkzeug  * Debugger is active!
+2019-08-23 14:36:44,618  INFO       MainProcess  werkzeug  * Debugger PIN: 888-317-198
+2019-08-23 14:36:55,877  INFO       MainProcess  werkzeug  * Detected change in '/Users/sharmaa1/Desktop/My_Scripts/sample-tracking-db/sample-tracking-api/app.py', reloading
+2019-08-23 14:36:55,945  INFO       MainProcess  werkzeug  * Restarting with stat
+2019-08-23 14:36:56,473  WARNING    MainProcess  werkzeug  * Debugger is active!
+2019-08-23 14:36:56,479  INFO       MainProcess  werkzeug  * Debugger PIN: 888-317-198
+2019-08-23 14:37:05,291  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 14:37:05] "OPTIONS /search_data HTTP/1.1" 200 -
+2019-08-23 14:37:05,313  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 14:37:05] "POST /search_data HTTP/1.1" 200 -
+2019-08-23 14:45:58,968  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 14:45:58] "OPTIONS /search_data HTTP/1.1" 200 -
+2019-08-23 14:45:58,977  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 14:45:58] "POST /search_data HTTP/1.1" 200 -
+2019-08-23 14:47:50,725  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 14:47:50] "OPTIONS /search_data HTTP/1.1" 200 -
+2019-08-23 14:47:50,747  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 14:47:50] "POST /search_data HTTP/1.1" 200 -
+2019-08-23 14:48:07,203  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 14:48:07] "OPTIONS /search_data HTTP/1.1" 200 -
+2019-08-23 14:48:07,225  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 14:48:07] "POST /search_data HTTP/1.1" 200 -
+2019-08-23 14:50:43,765  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 14:50:43] "OPTIONS /search_data HTTP/1.1" 200 -
+2019-08-23 14:50:43,787  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 14:50:43] "POST /search_data HTTP/1.1" 200 -
+2019-08-23 14:51:47,472  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 14:51:47] "OPTIONS /search_data HTTP/1.1" 200 -
+2019-08-23 14:51:47,494  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 14:51:47] "POST /search_data HTTP/1.1" 200 -
+2019-08-23 14:52:16,181  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 14:52:16] "OPTIONS /search_data HTTP/1.1" 200 -
+2019-08-23 14:52:16,201  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 14:52:16] "POST /search_data HTTP/1.1" 200 -
+2019-08-23 14:52:19,594  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 14:52:19] "POST /search_data HTTP/1.1" 200 -
+2019-08-23 14:58:38,145  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 14:58:38] "OPTIONS /search_data HTTP/1.1" 200 -
+2019-08-23 14:58:38,165  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 14:58:38] "POST /search_data HTTP/1.1" 200 -
+2019-08-23 14:59:43,427  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 14:59:43] "OPTIONS /search_data HTTP/1.1" 200 -
+2019-08-23 14:59:43,453  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 14:59:43] "POST /search_data HTTP/1.1" 200 -
+2019-08-23 15:01:55,399  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 15:01:55] "OPTIONS /search_data HTTP/1.1" 200 -
+2019-08-23 15:01:55,423  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 15:01:55] "POST /search_data HTTP/1.1" 200 -
+2019-08-23 15:39:10,855  INFO       MainProcess  werkzeug  * Detected change in '/Users/sharmaa1/Desktop/My_Scripts/sample-tracking-db/sample-tracking-api/app.py', reloading
+2019-08-23 15:39:10,956  INFO       MainProcess  werkzeug  * Restarting with stat
+2019-08-23 15:39:11,761  WARNING    MainProcess  werkzeug  * Debugger is active!
+2019-08-23 15:39:11,770  INFO       MainProcess  werkzeug  * Debugger PIN: 888-317-198
+2019-08-23 15:39:48,714  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 15:39:48] "OPTIONS /search_data HTTP/1.1" 200 -
+2019-08-23 15:39:48,738  INFO       MainProcess  werkzeug 127.0.0.1 - - [23/Aug/2019 15:39:48] "POST /search_data HTTP/1.1" 200 -
+2019-08-23 15:42:14,233  INFO       MainProcess  werkzeug  * Detected change in '/Users/sharmaa1/Desktop/My_Scripts/sample-tracking-db/sample-tracking-api/app.py', reloading
+2019-08-23 15:42:14,310  INFO       MainProcess  werkzeug  * Restarting with stat
+2019-08-23 15:42:14,773  WARNING    MainProcess  werkzeug  * Debugger is active!
+2019-08-23 15:42:14,780  INFO       MainProcess  werkzeug  * Debugger PIN: 888-317-198
+2019-08-23 15:42:59,670  INFO       MainProcess  werkzeug  * Detected change in '/Users/sharmaa1/Desktop/My_Scripts/sample-tracking-db/sample-tracking-api/app.py', reloading
+2019-08-23 15:42:59,745  INFO       MainProcess  werkzeug  * Restarting with stat
+2019-08-23 15:43:00,239  WARNING    MainProcess  werkzeug  * Debugger is active!
+2019-08-23 15:43:00,246  INFO       MainProcess  werkzeug  * Debugger PIN: 888-317-198
+2019-08-23 15:57:32,447  INFO       MainProcess  werkzeug  * Detected change in '/Users/sharmaa1/Desktop/My_Scripts/sample-tracking-db/sample-tracking-api/app.py', reloading
+2019-08-23 15:57:32,534  INFO       MainProcess  werkzeug  * Restarting with stat
+2019-08-23 15:57:33,393  WARNING    MainProcess  werkzeug  * Debugger is active!
+2019-08-23 15:57:33,401  INFO       MainProcess  werkzeug  * Debugger PIN: 888-317-198
+2019-08-23 16:42:51,235  INFO       MainProcess  werkzeug  * Detected change in '/Users/sharmaa1/Desktop/My_Scripts/sample-tracking-db/sample-tracking-api/app.py', reloading
+2019-08-23 16:42:51,360  INFO       MainProcess  werkzeug  * Restarting with stat
+2019-08-23 16:42:52,277  WARNING    MainProcess  werkzeug  * Debugger is active!
+2019-08-23 16:42:52,289  INFO       MainProcess  werkzeug  * Debugger PIN: 888-317-198
+2019-08-23 16:44:22,061  INFO       MainProcess  werkzeug  * Detected change in '/Users/sharmaa1/Desktop/My_Scripts/sample-tracking-db/sample-tracking-api/app.py', reloading
+2019-08-23 16:44:22,139  INFO       MainProcess  werkzeug  * Restarting with stat
+2019-08-23 16:44:22,616  WARNING    MainProcess  werkzeug  * Debugger is active!
+2019-08-23 16:44:22,623  INFO       MainProcess  werkzeug  * Debugger PIN: 888-317-198
+2019-08-23 16:55:18,216  INFO       MainProcess  werkzeug  * Detected change in '/Users/sharmaa1/Desktop/My_Scripts/sample-tracking-db/sample-tracking-api/app.py', reloading
+2019-08-23 16:55:18,292  INFO       MainProcess  werkzeug  * Restarting with stat
+2019-08-23 16:55:18,751  WARNING    MainProcess  werkzeug  * Debugger is active!
+2019-08-23 16:55:18,757  INFO       MainProcess  werkzeug  * Debugger PIN: 888-317-198

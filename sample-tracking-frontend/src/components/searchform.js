@@ -3,8 +3,7 @@ import React, {Component} from 'react';
 import { Form, Icon, Input, Button, Select , Row, Col, Spin, AutoComplete} from 'antd';
 import {search_data} from '../actions/mainActions';
 import {connect} from 'react-redux';
-import DataTableTest from '../components/datatable';
-import ReactGridDataTable from '../components/reactGridDataTable';
+import DataTable from '../components/datatable';
 import DevTools from '../components/devtools';
 
 
@@ -23,7 +22,8 @@ class SearchForm extends Component {
         this.props.form.validateFields((err, values) => {
         if (!err) {
             this.props.searchData(values);
-            console.log(Object.entries(this.props.data));
+            console.log(values);
+            //console.log(Object.entries(this.props.data));
             }
         });
     };
@@ -90,16 +90,13 @@ class SearchForm extends Component {
 
             </Form>
             {this.props.isFetching ? <div style={{marginLeft: '47%', marginTop:'15%', marginRight:'47%'}}><Spin tip="Loading..." size='large'/></div> : 
-                this.props.data && 
-                <ReactGridDataTable/>
-            //     <DataTableTest/>}
+                this.props.data && <DataTable data = {this.props.data}/>
             // /* <DevTools/> */}
                     }
             </div>
         );
     }
 }
-
 const mapStateToProps = state => ({
         data: state.searchResult.data,
         isFetching:state.searchResult.isFetching,
