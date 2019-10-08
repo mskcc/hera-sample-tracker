@@ -43,6 +43,7 @@ export const operation_error = (error) => {
   export const login = (data, history) => {
     return dispatch => {
       dispatch(user_login());
+      console.log(requestHeaders);
       axios.post(BASE_URL + "login",data, requestHeaders)
         .then(res => {
           if (res.data.valid){

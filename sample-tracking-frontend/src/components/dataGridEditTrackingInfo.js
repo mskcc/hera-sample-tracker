@@ -1,31 +1,22 @@
 import React from 'react';
 import { HotTable } from '@handsontable/react';
-import Handsontable from 'handsontable';
-import { Paper } from '@material-ui/core';
+import { Paper, Button } from '@material-ui/core';
+import { makeStyles } from '@material-ui/core/styles';
+
+
+let styles = {
+  button: {
+    backgroundColor: '#C24D00',
+    margin: 15
+  }
+}
+
 
 class DataGridEditTrackingInfo extends React.Component {
   constructor(props) {
     super(props);
-    this.data = this.jsonToArray(this.props.rowdata);
-    this.headers = ["Hello", "How","are", "you","by"];
-  }
-  
-  jsonToArray(jsonData){
-      var jData = JSON.parse(jsonData);
-      console.log(jData);
-      var gridData = [];
-      var sampledata = [];
-    for (var i = 0; i < jData.length; i++){
-        sampledata.push(jData[i]["sampleid"]);
-        sampledata.push(jData[i]["other_sampleid"]);
-        sampledata.push(jData[i]["pi"]);
-        sampledata.push(jData[i]["request_id"]);
-        sampledata.push(jData[i]["date_igo_complete"]);
-        gridData.push(sampledata);
-        sampledata = [];
-        
-    }
-    return gridData;
+    this.data=this.props.rowdata;
+    this.gridData = JSON.parse(this.data.data);
   }
 
   setGridHeight(data){
@@ -33,21 +24,37 @@ class DataGridEditTrackingInfo extends React.Component {
   }
 
   render() {
-    console.log(this.data);
     return (
       <div style={{height:'100%', marginTop:'15px', marginLeft:'15px', marginRight:'15px', alignContent:'center'}}>
             <Paper>
+            <div>
+              <Button variant="contained" color='primary' style = {styles.button} >Save Changes</Button>
+            </div>
                 <HotTable
-                    data = {this.data}
-                    colHeaders={this.headers}
+                    data = {this.gridData}
+                    colHeaders={this.data.colHeaders}
+                    columns={this.data.columns}
+                    settings={this.data.settings}
                     stretchH= 'all'
                     licenseKey = "non-commercial-and-evaluation"
-                    height={this.setGridHeight(this.data)}
+                    height={this.setGridHeight(this.gridData)}
                 />
             </Paper>
+            
       </div>
     );
   }
 }
+
+// const mapStateToProps = state => ({
+//   data: state.searchResult.data,
+//   colHeaders: state.searchResult.colHeaders,
+//   columns: state.searchResults.columns,
+//   settings: state.searchResult.settings,
+//   isFetching:state.searchResult.isFetching,
+//   error: state.searchResult.error,
+//   message:  state.searchResult.message,
+//   user : state.user.userData
+// });
 
 export default DataGridEditTrackingInfo;

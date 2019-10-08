@@ -1,6 +1,6 @@
 
 import React, {Component} from 'react';
-import { Form, Icon, Input, Button, Select , Row, Col, Spin, AutoComplete} from 'antd';
+import { Form, Icon, Input, Button, Select , Row, Col, Spin} from 'antd';
 import {search_data} from '../actions/mainActions';
 import {connect} from 'react-redux';
 import DataTable from '../components/datatable';
@@ -21,7 +21,8 @@ class SearchForm extends Component {
         e.preventDefault();
         this.props.form.validateFields((err, values) => {
         if (!err) {
-            this.props.searchData(values);
+            this.props.searchData(values, this.props.user.access_token);
+            console.log(this.props.data);
             console.log(values);
             //console.log(Object.entries(this.props.data));
             }
@@ -40,6 +41,7 @@ class SearchForm extends Component {
 
     render() {
         const { getFieldDecorator } = this.props.form;
+        console.log(this.props.state);
         //console.log(this.props.data)
         return (
 
@@ -91,8 +93,8 @@ class SearchForm extends Component {
             </Form>
             {this.props.isFetching ? <div style={{marginLeft: '47%', marginTop:'15%', marginRight:'47%'}}><Spin tip="Loading..." size='large'/></div> : 
                 this.props.data && <DataTable data = {this.props.data}/>
-            // /* <DevTools/> */}
                     }
+                    {/* <DevTools/> */}
             </div>
         );
     }
@@ -101,7 +103,8 @@ const mapStateToProps = state => ({
         data: state.searchResult.data,
         isFetching:state.searchResult.isFetching,
         error: state.searchResult.error,
-        message:  state.searchResult.message
+        message:  state.searchResult.message,
+        user : state.user.userData
     });
 
 const mapDispatchToProps = dispatch => ({

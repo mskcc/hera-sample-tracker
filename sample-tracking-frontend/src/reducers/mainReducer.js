@@ -15,9 +15,12 @@ const initialState = {
           });
 
         case 'SEARCH_DATA_SUCCESS':
-          //console.log(action)
+          console.log(action);
           return Object.assign({}, state,{
             data: action.data,
+            colHeaders: action.colHeaders,
+            columns: action.columns,
+            settings: action.settings,
             isFetching: false,
             isError: false,
             message:''

@@ -75,6 +75,9 @@ export const CustomTableRow = withStyles(styles)(CustomTableRowBase);
 class DataGridSampleInfo extends React.PureComponent {
     constructor(props) {
         super(props);
+        console.log(this.props.rowdata.columns);
+        console.log(this.props.rowdata.colHeaders);
+        console.log(this.props.rowdata.settings);
         this.state = {
         defaultColumnWidths: [
                 {
@@ -199,9 +202,8 @@ class DataGridSampleInfo extends React.PureComponent {
                     name: 'date_igo_complete',    
                 }
             ],
-            rows : JSON.parse(this.props.rowdata),
+            rows : JSON.parse(this.props.rowdata.data),
             pageSizes: [25, 50, 100, 250, 500],
-
         }
     }
 

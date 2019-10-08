@@ -18,7 +18,7 @@ const initialState = {
             userData: action.data,
             isFetching: false,
             isError: false,
-            error:action.error
+            error:action.error,
           });
         case 'LOGIN_USER_FAILURE':
           return Object.assign({}, state,{

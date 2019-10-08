@@ -80,6 +80,7 @@ export const CustomTableRow = withStyles(styles)(CustomTableRowBase);
 class DataGridTrackingInfo extends React.PureComponent {
     constructor(props) {
         super(props);
+        console.log(this.props.rowdata);
         this.state = {
         defaultColumnWidths: [
                 {   columnName: 'sampleid',
@@ -243,7 +244,7 @@ class DataGridTrackingInfo extends React.PureComponent {
                     name: "pipeline_requested", 
                 },
             ],
-            rows : JSON.parse(this.props.rowdata),
+            rows : JSON.parse(this.props.rowdata.data),
             pageSizes: [25, 50, 100, 250, 500],
 
         }

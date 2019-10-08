@@ -79,6 +79,7 @@ export const CustomTableRow = withStyles(styles)(CustomTableRowBase);
 class DataGridClinicalInfo extends React.Component {
     constructor(props) {
         super(props);
+        console.log(this.props.rowdata);
         this.state = {
         defaultColumnWidths: [
                 {   columnName: 'sampleid',
@@ -243,9 +244,8 @@ class DataGridClinicalInfo extends React.Component {
                 }
                 
             ],
-            rows : JSON.parse(this.props.rowdata),
+            rows : JSON.parse(this.props.rowdata.data),
             pageSizes: [25, 50, 100, 250, 500],
-
         }
     }
 

@@ -1,22 +1,30 @@
 import datetime
 import decimal
 import json
-import pickle
 import time
 from datetime import timedelta
 import logging as LOG
 import ldap
-from flask import Flask, request, make_response, jsonify
 from flask_cors import CORS
+from flask import Flask, request, make_response, jsonify
+from flask_jwt_extended import (
+    JWTManager, jwt_required, get_jwt_identity,
+    create_access_token, create_refresh_token,
+    jwt_refresh_token_required, get_raw_jwt
+)
 from requests.adapters import HTTPAdapter
 from urllib3 import PoolManager
 import ssl
 import requests
 import os, yaml
-from database.models import db, User, Samples
+from database.models import db, User, Sample, AppLog, BlacklistToken
+import clientsideconfigs.gridconfigs as gridconfigs
+
 
 app = Flask(__name__)
 app.config['PROPAGATE_EXCEPTIONS'] = True
+
+CORS(app)
 
 class MyAdapter(HTTPAdapter):
     def init_poolmanager(self, connections, maxsize, block=False):
@@ -40,13 +48,19 @@ PORT = config_options['port']
 LIMS_API_ROOT =config_options['lims_end_point']
 AUTH_LDAP_URL = config_options['auth_ldap_url']
 ldap.set_option(ldap.OPT_X_TLS_REQUIRE_CERT, ldap.OPT_X_TLS_NEVER)
+app.config['SECRET_KEY'] = 'the quick brown fox jumps over the lazy dog'
 app.config['SQLALCHEMY_DATABASE_URI'] = config_options['db_uri']
 app.config['SQLALCHEMY_ECHO'] = False
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-app.config['SECRET_KEY'] = 'the quick brown fox jumps over the lazy   dog'
+app.config['JWT_SECRET_KEY'] = 'super-secret'  # Change this!
+app.config['JWT_BLACKLIST_ENABLED'] = True
+app.config['JWT_BLACKLIST_TOKEN_CHECKS'] = ['access', 'refresh']
+
+jwt = JWTManager(app)
 CORS(app)
 
+blacklist= set()
 ##################################### Logging settings ###############################################
 
 LOG.basicConfig(level = LOG.INFO,
@@ -62,7 +76,9 @@ with app.app_context():
 
 @app.route("/")
 def index():
-    return ""
+    log_entry = LOG.info("testing")
+    AppLog.log(AppLog(level="INFO", process="Root", user="Admin", message="Testing the logging to db."))
+    return jsonify(columnHeaders = gridconfigs.clinicalColdHeaders, columns = gridconfigs.clinicalColumns, settings=gridconfigs.settings), 200
 
 
 def get_ldap_connection():
@@ -90,13 +106,80 @@ def login():
             )
             print(result)
             conn.unbind_s()
-            response = make_response(jsonify(valid=True), 200, None)
+            AppLog.log(AppLog(level="INFO", process="Root", user=username,
+                              message="Successfully authenticated and logged into the app."))
+            access_token = create_access_token(identity=username)
+            refresh_token = create_refresh_token(identity=username)
+            response = make_response(jsonify(valid=True, username=username, access_token=access_token, refresh_token=refresh_token), 200, None)
             response.headers.add('Access-Control-Allow-Origin', '*')
             return response
         except ldap.INVALID_CREDENTIALS:
-            return make_response(jsonify(valid=False), 200, None)
-        except ldap.OPERATIONS_ERROR :
-            return make_response(jsonify(valid=False), 200, None)
+            response = make_response(jsonify(valid=False), 200, None)
+            response.headers.add('Access-Control-Allow-Origin' , '*')
+            AppLog.log(AppLog(level="WARNING", process="Root", user=username,
+                              message="Invalid username or password."))
+            return make_response(response)
+        except ldap.OPERATIONS_ERROR as e:
+            response = make_response(jsonify(valid=False) , 200 , None)
+            response.headers.add('Access-Control-Allow-Origin' , '*')
+            AppLog.log(AppLog(level="ERROR", process="Root", user=username,
+                              message="ldap OPERATION ERROR occured. {}".format(e)))
+            return make_response(response)
+
+
+@jwt.token_in_blacklist_loader
+def check_if_token_in_blacklist(decrypted_token):
+    jti = decrypted_token['jti']
+    return jti in blacklist
+
+
+@app.route('/refresh_token', methods=['POST'])
+@jwt_refresh_token_required
+def refresh():
+    try:
+        current_user = get_jwt_identity()
+        response = {
+            'access_token': create_access_token(identity=current_user),
+            'refresh_token': create_refresh_token(identity=current_user)
+        }
+        AppLog.log(AppLog(level="INFO", process="Root", user=current_user,
+                          message="Successfully refreshed jwt token for user "+ current_user))
+        return jsonify(response), 200
+    except Exception as e:
+        AppLog.log(AppLog(level="ERROR", process="Root", user=current_user,
+                          message="Failed to refresh access token for user " + current_user))
+        response = {
+            'access_token': "",
+            'refresh_token': "",
+            'error': True,
+            'message': "Failed to refresh access token. Please try to refresh page and login again."
+        }
+        return jsonify(response), 200
+
+
+
+@app.route('/logout', methods=['DELETE'])
+@jwt_required
+def logout():
+    try:
+        current_user = get_jwt_identity()
+        jti = get_raw_jwt()['jti']
+        blacklist.add(jti)
+        AppLog.log(AppLog(level="INFO", process="Root", user=current_user,
+                          message="Successfully logged out user " + current_user))
+        return jsonify({"message": "Successfully logged out"}), 200
+    except Exception as e:
+        AppLog.log(AppLog(level="ERROR", process="Root", user=current_user,
+                          message="Error while logging out user " + current_user))
+        return jsonify({"message": "Error while logging out user " + current_user,
+                        "error": repr(e)}), 200
+
+
+@jwt_refresh_token_required
+def logout2():
+    jti = get_raw_jwt()['jti']
+    blacklist.add(jti)
+    return jsonify({"msg": "Successfully logged out"}), 200
 
 
 def save_to_db(data):
@@ -108,28 +191,36 @@ def save_to_db(data):
         print(item.get("recordId"))
         record_ids = []
         db.session.autoflush = False
-        existing = Samples.query.filter_by(sampleid=item.get("sampleId")).first()
+        existing = Sample.query.filter_by(sampleid=item.get("sampleId")).first()
         if existing is None:
-            print("True")
-            sample = Samples(item.get("sampleId"), item.get("otherSampleId"), item.get("correctedCmoId"), item.get("requestId"), item.get("currentStatusIGO"), item.get("pi"),
-                             item.get("investigator"), item.get("dateCreated"), item.get("dateIgoReceived"), item.get("dateIGOComplete"), item.get("recordId"), item.get("baitset"),
-                             item.get("investigatorSampleId"), item.get("patientId"), item.get("dataAnalyst"), item.get("sample_type"), item.get("tumor_type"), item.get("sample_class"),
-                             item.get("tumor_site"), item.get("tissue_location"), item.get("sex"), item.get("mrn"), item.get("m_accession_number"), item.get("oncotree_code"), item.get("parental_tumortype"),
-                             item.get("collection_year"), item.get("dmp_sampleid"), item.get("dmp_patientid"), item.get("registration_12_245AC"), item.get("vaf"), item.get("facets")
+            print(" Not Existing True")
+            sample = Sample(item.get("sampleId"), item.get("userSampleId"), item.get("cmoSampleId"), item.get("cmoPatientId"), item.get("dmpSampleId"), item.get("dmpPatientId"),
+                             item.get("mrn"), item.get("sex"), item.get("sampleType"), item.get("sampleClass"), item.get("tumorType"), item.get("parentalTumorType"),
+                             item.get("tissueSite"), item.get("molecularAccessionNum"), item.get("collectionYear"), item.get("dateDmpRequest"), item.get("dmpRequestId"), item.get("igoRequestId"),
+                             item.get("dateIgoReceived"), item.get("igoCompleteDate"), item.get("applicationRequested"), item.get("baitsetUsed"), item.get("sequencerType"), item.get("projectTitle"),
+                             item.get("labHead"), item.get("ccFund"), item.get("scientificPi"), item.get("consentPartAStatus"), item.get("consentPartCStatus"), item.get("sampleStatus"),
+                             item.get("accessLevel"), item.get("clinicalTrial"), item.get("sequencingSite"), item.get("piRequestDate"), item.get("pipeline"), item.get("tissueType"), item.get("collaborationCenter"), item.get("limsRecordId")
             )
             db.session.add(sample)
-            db.session.commit()
-            db.session.flush()
             record_ids.append(item.get("recordId"))
-    return record_ids
+
+        elif existing:
+            print("existing true")
+            api_update_sample(db, item)
+    db.session.commit()
+    db.session.flush()
+    AppLog.log(AppLog(level="INFO", process="werkzeug",
+                          message="Added {0} new records to the Sample Tracking Database".format(len(record_ids))))
+    response = make_response(jsonify(data=(str(record_ids))), 200 , None)
+
+    return len(record_ids)
 
 
 @app.route("/get_wes_data", methods=['GET'])
 def get_wes_data():
-
     """
     End point to get WES Sample data from LIMS using timestamp. User can either pass "timestamp" parameter (miliseconds) to this endpoint
-    to fetch sample data that was created after the timestamp provided. Or use can call the endpoint without any parameters and the
+    to fetch sample data that was created after the timestamp provided. Or use can call the endpoint without any parameters and the end point will fetch data for last 24 hours.
     :return:
     """
     try:
@@ -137,19 +228,101 @@ def get_wes_data():
         if request.args.get("timestamp") is not None:
             timestamp = request.args.get("timestamp")
             LOG.info("Starting WES Sample query using time stamp: " + timestamp + ", provided to the endpoint query")
+            AppLog.log(AppLog(level="INFO", process="werkzeug", message="Starting WES Sample query using time stamp: " + timestamp + ", provided to the endpoint query"))
         else:
             timestamp = time.mktime((datetime.datetime.today() - timedelta(days=1.1)).timetuple()) * 1000 # 1.1 to account for lost during the firing of query. It is better to have some time overlap to get all the data.
             LOG.info("Starting WES Sample query after calculating time: " + str(timestamp) + ", provided to the endpoint by user.")
+            AppLog.log(AppLog(level="INFO", process="werkzeug", message="Starting WES Sample query after calculating time: " + str(timestamp) + ", provided to the endpoint by user."))
         if int(timestamp) > 0:
             print(timestamp)
-            LOG.info("Starting query : " + "http://localhost:8080" + "/LimsRest/getWESSampleData?time=" + str(int(timestamp)))
-            r = s.get("http://localhost:8080" + "/LimsRest/getWESSampleData?time=" + str(int(timestamp)), auth=(USER, PASSW), verify=False)
+            LOG.info("Starting query : " + "http://localhost:5007" + "/timestamp=" + str(int(timestamp)))
+            r = s.get("http://localhost:5007" + "/getWESSampleData?timestamp=" + str(int(timestamp)), auth=(USER, PASSW), verify=False)
             data = r.content.decode("utf-8", "strict")
             ids = save_to_db(data)
-            LOG.info("Added '" + len(ids) + "' new records to the Sample Tracking Database")
-            return str(ids)
+            LOG.info("Added {0} new records to the Sample Tracking Database".format(ids))
+            AppLog.log(AppLog(level="INFO", process="werkzeug", message="Added {0} new records to the Sample Tracking Database".format(ids)))
+            response = make_response(jsonify(data=(str(ids))), 200 , None)
+            return response
     except Exception as e:
-        print(e)
+        AppLog.log(AppLog(level="ERROR", process="werkzeug", message=repr(e)))
+        LOG.error(e, exc_info=True)
+        response = make_response(jsonify(data="" , error="There was a problem processing the request."), 200 , None)
+        return response
+
+def api_update_sample(db, item):
+    try:
+        print (item.get("sampleId"))
+        sample = db.session.query(Sample).filter_by(sampleid=item.get("sampleId"), lims_recordId=item.get("limsRecordId")).first()
+        sample.sampleid=item.get("sampleId")
+        sample.user_sampleid=item.get("userSampleId")
+        sample.cmo_sampleid = item.get("cmoSampleId")
+        sample.cmo_patientid= item.get("cmoPatientId")
+        sample.dmp_sampleid= item.get("dmpSampleId")
+        sample.dmp_patientid= item.get("dmpPatientId")
+        sample.mrn= item.get("mrn")
+        sample.sex= item.get("sex")
+        sample.sample_type= item.get("sampleType")
+        sample.sample_class= item.get("sampleClass")
+        sample.tumor_type= item.get("tumorType")
+        sample.parental_tumortype= item.get("parentalTumorType")
+        sample.tumor_site= item.get("tissueSite")
+        sample.molecular_accession_num= item.get("molecularAccessionNum")
+        sample.collection_year= item.get("collectionYear")
+        sample.date_dmp_request= item.get("dateDmpRequest")
+        sample.dmp_requestid= item.get("dmpRequestId")
+        sample.igo_requestid= item.get("igoRequestId")
+        sample.date_igo_received= item.get("dateIgoReceived")
+        sample.date_igo_complete= item.get("igoCompleteDate")
+        sample.application_requested= item.get("applicationRequested")
+        sample.baitset_used= item.get("baitsetUsed")
+        sample.sequencer_type= item.get("sequencerType")
+        sample.project_title= item.get("projectTitle")
+        sample.lab_head= item.get("labHead")
+        sample.cc_fund= item.get("ccFund")
+        sample.consent_parta_status= item.get("consentPartAStatus")
+        sample.consent_partc_status= item.get("consentPartCStatus")
+        sample.sample_status= item.get("sampleStatus")
+        db.session.commit()
+    except Exception as e:
+        LOG.error(e, exc_info=True)
+
+
+@app.route("/update", methods=['POST'])
+@jwt_required
+def user_update_sample(session, item):
+    try:
+      sample = session.query(Sample).filter_by(sampleid=item.get("sampleId"), lims_recordId=item.get("limsRecordId")).first()
+      sample.sampleid=item.get("sampleId")
+      sample.user_sampleid=item.get("userSampleId")
+      sample.cmo_sampleid = item.get("cmoSampleId")
+      sample.cmo_patientid= item.get("cmoPatientId")
+      sample.dmp_sampleid= item.get("dmpSampleId")
+      sample.dmp_patientid= item.get("dmpPatientId")
+      sample.mrn= item.get("mrn")
+      sample.sex= item.get("sex")
+      sample.sample_type= item.get("sampleType")
+      sample.sample_class= item.get("sampleClass")
+      sample.tumor_type= item.get("tumorType")
+      sample.parental_tumortype= item.get("parentalTumorType")
+      sample.tumor_site= item.get("tissueSite")
+      sample.molecular_accession_num= item.get("molecularAccessionNum")
+      sample.collection_year= item.get("collectionYear")
+      sample.date_dmp_request= item.get("dateDmpRequest")
+      sample.dmp_requestid= item.get("dmpRequestId")
+      sample.igo_requestid= item.get("igoRequestId")
+      sample.date_igo_received= item.get("dateIgoReceived")
+      sample.date_igo_complete= item.get("igoCompleteDate")
+      sample.application_requested= item.get("applicationRequested")
+      sample.baitset_used= item.get("baitsetUsed")
+      sample.sequencer_type= item.get("sequencerType")
+      sample.project_title= item.get("projectTitle")
+      sample.lab_head= item.get("labHead")
+      sample.cc_fund= item.get("ccFund")
+      sample.consent_parta_status= item.get("consentPartAStatus")
+      sample.consent_partc_status= item.get("consentPartCStatus")
+      sample.sample_status= item.get("sampleStatus")
+      session.commit()
+    except Exception as e:
         LOG.error(e, exc_info=True)
 
 
@@ -160,10 +333,17 @@ def alchemy_encoder(obj):
     elif isinstance(obj, decimal.Decimal):
         return float(obj)
 
+def get_column_configs(role):
+    if role is 'clinical':
+        return gridconfigs.clinicalColdHeaders, gridconfigs.clinicalColumns, gridconfigs.settings
+    if role is 'admin':
+        return gridconfigs.adminColdHeaders, gridconfigs.adminColumns , gridconfigs.settings
+    else:
+        return gridconfigs.nonClinicalColdHeaders, gridconfigs.nonClinicalColumns , gridconfigs.settings
 
-@app.route("/search_data", methods=['GET', 'POST'])
+@app.route("/search_data", methods=['POST'])
+@jwt_required
 def search_data():
-
     """
     From the client_side, user will search for samples using either "MRN's" or "Tumor_Type". Along with search words,
     "search_type (MRN || Tumor Type)" is also passed to this api route. The logic is to call different LIMSRest end points
@@ -172,26 +352,30 @@ def search_data():
     """
     if request.method == "POST":
         query_data = request.get_json(silent=True)
+        print(query_data)
+        print(request.headers['Authorization'])
         search_keywords = query_data.get('searchtext')
         search_type = query_data.get('searchtype')
-        print(search_keywords)
-        print(search_type)
+        colHeaders, columns, settings = get_column_configs("admin")
 
         if search_keywords is not None and search_type.lower() == "mrn":
             search_keywords = [x.strip() for x in search_keywords.split(',')]
-            result = db.session.query(Samples).filter(Samples.other_sampleid.in_((search_keywords))).all()
-            response_object = json.dumps([r.__dict__ for r in result], default=alchemy_encoder, sort_keys=True, indent=4,
-                                        separators=(',', ': '))
-            return make_response(jsonify(response_object), 200)
+            result = db.session.query(Sample).filter(Sample.mrn.in_((search_keywords))).all()
+            response = make_response(jsonify(data=(json.dumps([r.__dict__ for r in result], default=alchemy_encoder, sort_keys=True, indent=4,
+                                        separators=(',', ': '))), colHeaders=colHeaders, columns=columns, settings=settings, ), 200, None)
+            response.headers.add('Access-Control-Allow-Origin' , '*')
+            return make_response(response)
         elif search_keywords is not None and search_type.lower() == "tumor type":
             search_keywords = search_keywords.split(",")
-            result = db.session.query(Samples).filter(Samples.tumor_type.in_((search_keywords))).all()
-            response_object = json.dumps([r.__dict__ for r in result], default=alchemy_encoder, sort_keys=True, indent=4,
-                                        separators=(',', ': '))
-            return make_response(jsonify(response_object), 200)
+            result = db.session.query(Sample).filter(Sample.tumor_type.in_((search_keywords))).all()
+            response = make_response(jsonify(data=(json.dumps([r.__dict__ for r in result], default=alchemy_encoder, sort_keys=True, indent=4,
+                                        separators=(',', ': '))), colHeaders=colHeaders, columns=columns, settings=settings), 200, None)
+            response.headers.add('Access-Control-Allow-Origin', '*')
+            return make_response(response)
         else:
-            return make_response(jsonify(data="Sorry, 'Search Type' '{}' is not supported.".format(search_type)), 200, None)
-
+            response = make_response(jsonify(json.dumps(data="Sorry, 'Search Type' '{}' is not supported.".format(search_type)), 200, None))
+            response.headers.add('Access-Control-Allow-Origin', '*')
+            return make_response(response)
 
 if __name__ == '__main__':
     app.run(debug=True)
