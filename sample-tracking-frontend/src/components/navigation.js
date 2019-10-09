@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
 import { Row,Col, Menu, Icon } from 'antd';
-import MenuItem from 'antd/lib/menu/MenuItem';
 
 export default class Navigation extends Component {
   state = {

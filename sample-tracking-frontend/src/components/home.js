@@ -15,7 +15,7 @@ constructor(props) {
   render() {
     return (
         <div>
-          <Navigation/>
+          {/* <Navigation/> */}
           <SearchForm/>
         </div>
     );

@@ -607,5 +607,5 @@ settings = {
     'autoColumnSize' : True,
     'colWidths': [200, 200, 200,200, 200, 200,200, 200, 200, 200,200, 200, 200,200, 200, 200, 200,200, 200, 200,200, 200, 200, 200,200, 200, 200,200, 200, 200, 200,200, 200, 200,200, 200, 200],
     'manualColumnResize': True,
-    'dropdownMenu' : ['filter_by_condition' , 'filter_action_bar']
+    'dropdownMenu' : ['filter_by_condition' , 'filter_action_bar'],
     }

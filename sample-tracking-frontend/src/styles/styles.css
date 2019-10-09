@@ -1,0 +1,7 @@
+.handsontable table thead th{
+    background-color: #007CBA;
+    color:black;
+    font-weight:bold;
+    font-size:12px;
+    overflow: hidden;
+}
