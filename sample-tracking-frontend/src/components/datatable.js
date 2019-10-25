@@ -1,6 +1,8 @@
 import React, {Component} from 'react';
 import DataGridEditTrackingInfo from './dataGridEditTrackingInfo';
 
+
+
 class DataTable extends Component {
     constructor(props) {
         super(props);
@@ -17,6 +19,8 @@ class DataTable extends Component {
         );
     }
     }
+
+    
     export default DataTable;
 
 

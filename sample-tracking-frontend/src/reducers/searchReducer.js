@@ -5,7 +5,7 @@ const initialState = {
     message:''
   };
   
-  const mainReducer = (state = initialState, action) => {
+  const searchReducer = (state = initialState, action) => {
       switch (action.type) {
         case 'SEARCH_DATA_BEGIN':
           return Object.assign({}, state,{
@@ -53,5 +53,5 @@ const initialState = {
           return state;
       }
     };
-  export default mainReducer;
+  export default searchReducer;
   

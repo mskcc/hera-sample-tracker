@@ -2,6 +2,8 @@ import React from 'react';
 import { HotTable } from '@handsontable/react';
 import { Paper, Button } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
+import { save_changes } from '../actions/saveActions';
+import { connect } from 'react-redux';
 import '../styles/styles.css';
 
 
@@ -28,6 +30,7 @@ class DataGridEditTrackingInfo extends React.Component {
   }
   saveChanges = () =>{
     console.log(this.gridData);
+    this.props.save_changes(this.gridData, this.props.user.access_token);
   }
 
   cancelChanges = () => {
@@ -63,7 +66,13 @@ class DataGridEditTrackingInfo extends React.Component {
     );
   }
 }
+const mapStateToProps = state => ({
+  user: state.user.userData
+});
 
+const mapDispatchToProps = dispatch => ({
+  save_changes: (data, token) => dispatch(save_changes(data, token))
+});
 // const mapStateToProps = state => ({
 //   data: state.searchResult.data,
 //   colHeaders: state.searchResult.colHeaders,
@@ -75,4 +84,4 @@ class DataGridEditTrackingInfo extends React.Component {
 //   user : state.user.userData
 // });
 
-export default DataGridEditTrackingInfo;
+export default connect(mapStateToProps, mapDispatchToProps)(DataGridEditTrackingInfo);

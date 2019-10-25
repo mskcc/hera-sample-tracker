@@ -445,14 +445,13 @@ nonClinicalColumns = [
     ]
 
 adminColdHeaders = ['IGO ID' , 'User Sample ID' , 'CMO Sample ID' , 'CMO Patient ID' , 'DMP Sample ID' ,
-                       'DMP Patient ID' , 'MRN' , 'Sex' , 'Sample Type' , 'Sample Class' ,
-                       'Tumor Type' , 'Parental Tumor Type' , 'Tumor Site' , 'Mol Accession #' , 'Collection Yr' ,
-                       'Date DMP Request' , 'DMP Request ID' , 'IGO Request ID' , 'Date IGO Received' ,
-                       'IGO Complete Date' ,
-                       'Application' , 'Baitset' , 'Sequencer' , 'Project Name' , 'Lab Head' , 'CC/Fund' ,
-                       'Scientific PI' , 'Consent Part A' , 'Consent Part C' , 'Sample Status' ,
-                       'Access Level' , 'Clinical Trial' , 'Sequencing Site' , 'PI Request Date' , 'Pipeline' ,
-                       'Tissue Type' , 'Collaboration Center']
+                    'DMP Patient ID' , 'MRN' , 'Sex' , 'Sample Type' , 'Sample Class' ,
+                    'Tumor Type' , 'Parental Tumor Type' , 'Tumor Site' , 'Mol Accession #' , 'Collection Yr' ,
+                    'Date DMP Request' , 'DMP Request ID' , 'IGO Request ID' , 'Date IGO Received' ,
+                    'IGO Complete Date' ,'Application' , 'Baitset' , 'Sequencer' , 'Project Name' ,'Data Analyst' ,
+                    'Lab Head' ,'CC/Fund' ,'Scientific PI' , 'Consent Part A' , 'Consent Part C' , 'Sample Status' ,
+                    'Access Level' , 'Clinical Trial' , 'Sequencing Site' , 'PI Request Date' , 'Pipeline' ,
+                    'Tissue Type' , 'Collaboration Center']
 adminColumns = [
     {
         'data' : 'sampleid' ,
@@ -552,6 +551,9 @@ adminColumns = [
         'readOnly' : True
         } ,
     {
+        'data' : 'data_analyst',
+        } ,
+    {
         'data' : 'lab_head' ,
         'readOnly' : True
         } ,
@@ -605,7 +607,8 @@ settings = {
     'columnSorting' : True ,
     'filters' : True ,
     'autoColumnSize' : True,
-    'colWidths': [200, 200, 200,200, 200, 200,200, 200, 200, 200,200, 200, 200,200, 200, 200, 200,200, 200, 200,200, 200, 200, 200,200, 200, 200,200, 200, 200, 200,200, 200, 200,200, 200, 200],
+    'rowHeaders': True,
+    'colWidths': [200, 200, 200,200, 200, 200,200, 200, 200, 200,200, 200, 200,200, 200, 200, 200,200, 200, 200, 200,200, 200, 200, 200,200, 200, 200,200, 200, 200, 200,200, 200, 200,200, 200, 200],
     'manualColumnResize': True,
     'dropdownMenu' : ['filter_by_condition' , 'filter_action_bar'],
     }

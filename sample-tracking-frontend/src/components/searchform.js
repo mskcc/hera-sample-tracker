@@ -1,7 +1,7 @@
 
 import React, { Component } from 'react';
 import { Form, Icon, Input, Button, Select, Row, Col, Spin } from 'antd';
-import { search_data } from '../actions/mainActions';
+import { search_data } from '../actions/searchActions';
 import { connect } from 'react-redux';
 import DataTable from '../components/datatable';
 import DevTools from '../components/devtools';

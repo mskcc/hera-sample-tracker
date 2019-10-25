@@ -12,13 +12,16 @@ from flask_jwt_extended import (
     create_access_token, create_refresh_token,
     jwt_refresh_token_required, get_raw_jwt
 )
+from flask_script import Manager
+from flask_migrate import Migrate, MigrateCommand
 from requests.adapters import HTTPAdapter
 from urllib3 import PoolManager
 import ssl
 import requests
 import os, yaml
-from database.models import db, User, Sample, AppLog, BlacklistToken
+from database.models import db, Sample, AppLog
 import clientsideconfigs.gridconfigs as gridconfigs
+from sqlalchemy import and_
 
 
 app = Flask(__name__)
@@ -57,6 +60,17 @@ app.config['JWT_SECRET_KEY'] = 'super-secret'  # Change this!
 app.config['JWT_BLACKLIST_ENABLED'] = True
 app.config['JWT_BLACKLIST_TOKEN_CHECKS'] = ['access', 'refresh']
 
+migrate = Migrate(app, db)
+manager = Manager(app)
+manager.add_command('db', MigrateCommand)
+
+''' 
+To use migration run following commands to update the changes to database models into the mysql database.
+    python app.py db init
+    python app.py db migrate
+    python app.py db upgrade
+    python app.py db --help
+'''
 jwt = JWTManager(app)
 CORS(app)
 
@@ -72,6 +86,7 @@ LOG.basicConfig(level = LOG.INFO,
 with app.app_context():
     db.init_app(app)
     db.create_all()
+
 
 
 @app.route("/")
@@ -104,7 +119,6 @@ def login():
                 'sAMAccountName='+ username,
                 attrs,
             )
-            print(result)
             conn.unbind_s()
             AppLog.log(AppLog(level="INFO", process="Root", user=username,
                               message="Successfully authenticated and logged into the app."))
@@ -167,7 +181,9 @@ def logout():
         blacklist.add(jti)
         AppLog.log(AppLog(level="INFO", process="Root", user=current_user,
                           message="Successfully logged out user " + current_user))
-        return jsonify({"message": "Successfully logged out"}), 200
+        return jsonify({"message": "Successfully logged out",
+                        "access_token": "",
+                        "refresh_token": ""}), 200
     except Exception as e:
         AppLog.log(AppLog(level="ERROR", process="Root", user=current_user,
                           message="Error while logging out user " + current_user))
@@ -187,32 +203,48 @@ def save_to_db(data):
     """
     Method to save data to Sample Tracking database.
     """
+    record_ids = []
     for item in data_to_json:
-        print(item.get("recordId"))
-        record_ids = []
         db.session.autoflush = False
-        existing = Sample.query.filter_by(sampleid=item.get("sampleId")).first()
+        ''' check if the record already exists and is IGO processed Sample. If a sample was processed by IGO, 
+            it should have both "limsSampleRecordId" and "limsTrackerRecordId" values. '''
+        existing = None
+        if item.get("limsSampleRecordId") is not None:
+            existing = Sample.query.filter_by(lims_sample_recordid=item.get("limsSampleRecordId"), lims_tracker_recordid=item.get("limsTrackerRecordId")).first()
+
+        '''If the record does not exist, create a new record.'''
         if existing is None:
             print(" Not Existing True")
-            sample = Sample(item.get("sampleId"), item.get("userSampleId"), item.get("cmoSampleId"), item.get("cmoPatientId"), item.get("dmpSampleId"), item.get("dmpPatientId"),
-                             item.get("mrn"), item.get("sex"), item.get("sampleType"), item.get("sampleClass"), item.get("tumorType"), item.get("parentalTumorType"),
-                             item.get("tissueSite"), item.get("molecularAccessionNum"), item.get("collectionYear"), item.get("dateDmpRequest"), item.get("dmpRequestId"), item.get("igoRequestId"),
-                             item.get("dateIgoReceived"), item.get("igoCompleteDate"), item.get("applicationRequested"), item.get("baitsetUsed"), item.get("sequencerType"), item.get("projectTitle"),
-                             item.get("labHead"), item.get("ccFund"), item.get("scientificPi"), item.get("consentPartAStatus"), item.get("consentPartCStatus"), item.get("sampleStatus"),
-                             item.get("accessLevel"), item.get("clinicalTrial"), item.get("sequencingSite"), item.get("piRequestDate"), item.get("pipeline"), item.get("tissueType"), item.get("collaborationCenter"), item.get("limsRecordId")
+            print(item.get("limsTrackerRecordId"))
+            sample = Sample(sampleid=item.get("sampleId"), user_sampleid=item.get("userSampleId"), cmo_sampleid=item.get("cmoSampleId"), cmo_patientid=item.get("cmoPatientId"), dmp_sampleid=item.get("dmpSampleId"), dmp_patientid=item.get("dmpPatientId"),
+                             mrn=item.get("mrn"), sex=item.get("sex"), sample_type=item.get("sampleType"), sample_class=item.get("sampleClass"), tumor_type=item.get("tumorType"), parental_tumortype=item.get("parentalTumorType"),
+                             tumor_site=item.get("tissueSite"), molecular_accession_num=item.get("molecularAccessionNum"), collection_year=item.get("collectionYear"), date_dmp_request=item.get("dateDmpRequest"), dmp_requestid=item.get("dmpRequestId"), igo_requestid=item.get("igoRequestId"),
+                             date_igo_received=item.get("dateIgoReceived"), date_igo_complete=item.get("igoCompleteDate"), application_requested=item.get("applicationRequested"), baitset_used=item.get("baitsetUsed"), sequencer_type=item.get("sequencerType"), project_title=item.get("projectTitle"),
+                             lab_head=item.get("labHead"), cc_fund=item.get("ccFund"), scientific_pi=item.get("scientificPi"), consent_parta_status=item.get("consentPartAStatus"), consent_partc_status=item.get("consentPartCStatus"), sample_status=item.get("sampleStatus"),
+                             access_level=item.get("accessLevel"), clinical_trial=item.get("clinicalTrial"), seqiencing_site=item.get("sequencingSite"), pi_request_date=item.get("piRequestDate"), pipeline=item.get("pipeline"), tissue_type=item.get("tissueType"), collaboration_center=item.get("collaborationCenter"),
+                             lims_sample_recordid=item.get("limsSampleRecordId"), lims_tracker_recordid=item.get("limsTrackerRecordId")
             )
             db.session.add(sample)
-            record_ids.append(item.get("recordId"))
+            db.session.commit()
+            db.session.flush()
+            record_ids.append(item.get("limsTrackerRecordId"))
 
+        # If the record already exists, update the record.
         elif existing:
             print("existing true")
             api_update_sample(db, item)
-    db.session.commit()
-    db.session.flush()
+
+        ''' check if the record already exists and is non IGO processed Sample. If a sample was not processed by IGO, 
+                    it should only have "limsTrackerRecordId" value. '''
+        partial_existing = None
+        if item.get("limsSampleRecordId") is None and item.get("limsTrackerRecordId") is not None:
+            partial_existing = Sample.query.filter_by(lims_sample_recordid=None, lims_tracker_recordid=item.get("limsTrackerRecordId")).first()
+        '''If a non IGO sample exists, then update the values.'''
+        if partial_existing:
+            api_update_sample(db, item);
+
     AppLog.log(AppLog(level="INFO", process="werkzeug",
                           message="Added {0} new records to the Sample Tracking Database".format(len(record_ids))))
-    response = make_response(jsonify(data=(str(record_ids))), 200 , None)
-
     return len(record_ids)
 
 
@@ -220,7 +252,7 @@ def save_to_db(data):
 def get_wes_data():
     """
     End point to get WES Sample data from LIMS using timestamp. User can either pass "timestamp" parameter (miliseconds) to this endpoint
-    to fetch sample data that was created after the timestamp provided. Or use can call the endpoint without any parameters and the end point will fetch data for last 24 hours.
+    to fetch sample data that was created after the timestamp provided. Or user can call the endpoint without any parameters and the end point will fetch data for last 24 hours.
     :return:
     """
     try:
@@ -235,8 +267,8 @@ def get_wes_data():
             AppLog.log(AppLog(level="INFO", process="werkzeug", message="Starting WES Sample query after calculating time: " + str(timestamp) + ", provided to the endpoint by user."))
         if int(timestamp) > 0:
             print(timestamp)
-            LOG.info("Starting query : " + "http://localhost:5007" + "/timestamp=" + str(int(timestamp)))
-            r = s.get("http://localhost:5007" + "/getWESSampleData?timestamp=" + str(int(timestamp)), auth=(USER, PASSW), verify=False)
+            LOG.info("Starting query : " + LIMS_API_ROOT + "/LimsRest/getWESSampleData?timestamp=" + str(int(timestamp)))
+            r = s.get(LIMS_API_ROOT+ "/LimsRest/getWESSampleData?timestamp=" + str(int(timestamp)), auth=(USER, PASSW), verify=False)
             data = r.content.decode("utf-8", "strict")
             ids = save_to_db(data)
             LOG.info("Added {0} new records to the Sample Tracking Database".format(ids))
@@ -251,8 +283,17 @@ def get_wes_data():
 
 def api_update_sample(db, item):
     try:
-        print (item.get("sampleId"))
-        sample = db.session.query(Sample).filter_by(sampleid=item.get("sampleId"), lims_recordId=item.get("limsRecordId")).first()
+        sample = None
+        if item.get("limsSampleRecordId") is not None:
+            print(item.get("sampleId"))
+            sample = db.session.query(Sample).filter_by(lims_sample_recordid= item.get("limsSampleRecordId"), lims_tracker_recordid=item.get("limsTrackerRecordId")).first()
+            print("updating sample with both record ids")
+        else:
+            print(item.get("sampleId"))
+            sample = db.session.query(Sample).filter_by(lims_sample_recordid=None,
+                                                        lims_tracker_recordid=item.get("limsTrackerRecordId")).first()
+            print("updating sample with no sample record id")
+        sample = db.session.query(Sample).filter_by(lims_tracker_recordid=item.get("limsTrackerRecordId")).first()
         sample.sampleid=item.get("sampleId")
         sample.user_sampleid=item.get("userSampleId")
         sample.cmo_sampleid = item.get("cmoSampleId")
@@ -282,46 +323,59 @@ def api_update_sample(db, item):
         sample.consent_parta_status= item.get("consentPartAStatus")
         sample.consent_partc_status= item.get("consentPartCStatus")
         sample.sample_status= item.get("sampleStatus")
+        if item.get("limsSampleRecordId") is not None and sample.lims_sample_recordid is None:
+            sample.lims_sample_recordid = item.get("limsSampleRecordId")
         db.session.commit()
+        db.session.flush()
     except Exception as e:
         LOG.error(e, exc_info=True)
 
 
-@app.route("/update", methods=['POST'])
+@app.route("/save_sample_changes", methods=['POST'])
 @jwt_required
-def user_update_sample(session, item):
+def save_sample_changes():
     try:
-      sample = session.query(Sample).filter_by(sampleid=item.get("sampleId"), lims_recordId=item.get("limsRecordId")).first()
-      sample.sampleid=item.get("sampleId")
-      sample.user_sampleid=item.get("userSampleId")
-      sample.cmo_sampleid = item.get("cmoSampleId")
-      sample.cmo_patientid= item.get("cmoPatientId")
-      sample.dmp_sampleid= item.get("dmpSampleId")
-      sample.dmp_patientid= item.get("dmpPatientId")
-      sample.mrn= item.get("mrn")
-      sample.sex= item.get("sex")
-      sample.sample_type= item.get("sampleType")
-      sample.sample_class= item.get("sampleClass")
-      sample.tumor_type= item.get("tumorType")
-      sample.parental_tumortype= item.get("parentalTumorType")
-      sample.tumor_site= item.get("tissueSite")
-      sample.molecular_accession_num= item.get("molecularAccessionNum")
-      sample.collection_year= item.get("collectionYear")
-      sample.date_dmp_request= item.get("dateDmpRequest")
-      sample.dmp_requestid= item.get("dmpRequestId")
-      sample.igo_requestid= item.get("igoRequestId")
-      sample.date_igo_received= item.get("dateIgoReceived")
-      sample.date_igo_complete= item.get("igoCompleteDate")
-      sample.application_requested= item.get("applicationRequested")
-      sample.baitset_used= item.get("baitsetUsed")
-      sample.sequencer_type= item.get("sequencerType")
-      sample.project_title= item.get("projectTitle")
-      sample.lab_head= item.get("labHead")
-      sample.cc_fund= item.get("ccFund")
-      sample.consent_parta_status= item.get("consentPartAStatus")
-      sample.consent_partc_status= item.get("consentPartCStatus")
-      sample.sample_status= item.get("sampleStatus")
-      session.commit()
+        if request.method == "POST":
+            sample_data = request.get_json(silent=True)
+            for item in sample_data:
+                user_update_sample(db.session, item)
+            AppLog.log(AppLog(level="INFO", process="root", message= "update {} samples by user".format(len(sample_data))))
+            LOG.info("update {} samples by user".format(len(sample_data)))
+            return jsonify({"data": "no data",
+                            "message": "Data updated successfully.",
+                            "success": True}), 200
+    except Exception as e:
+        LOG.error(repr(e))
+        AppLog.log(AppLog(level="ERROR" , process="root" , message="error while updating the samples {}".format(repr(e))))
+        return jsonify({ "data" : None,
+                         "success" : False,
+                         "save_error": True,
+                         "error":"Save operation failed. Plese try again later."}) , 200
+
+
+def user_update_sample(session, item):
+    '''
+    Sometimes users will update some editable columns on the clientside. These updated values should be updated to the database.
+    Only the fields that are editable on the front end will be updated.
+    :param session:
+    :param item:
+    :return:
+    '''
+    try:
+      sample = session.query(Sample).filter_by(lims_tracker_recordid=item.get("lims_tracker_recordid")).first()
+      if sample is not None:
+          print(sample.sampleid)
+          sample.data_analyst = item.get("data_analyst")
+          sample.scientific_pi = item.get("scientific_pi")
+          sample.access_level = item.get("access_level")
+          sample.clinical_trial= item.get("clinical_trial")
+          sample.seqiencing_site = item.get("seqiencing_site")
+          sample.pi_request_date = item.get("pi_request_date")
+          sample.pipeline = item.get("pipeline")
+          sample.tissue_type = item.get("tissue_type")
+          sample.collaboration_center = item.get("collaboration_center")
+          session.commit()
+          session.flush()
     except Exception as e:
         LOG.error(e, exc_info=True)
 
@@ -376,6 +430,16 @@ def search_data():
             response = make_response(jsonify(json.dumps(data="Sorry, 'Search Type' '{}' is not supported.".format(search_type)), 200, None))
             response.headers.add('Access-Control-Allow-Origin', '*')
             return make_response(response)
+
+
+#################################### scheduler to run at interval ####################################
+# scheduler = BackgroundScheduler()
+# scheduler.add_job(func=get_wes_data, trigger="interval", minutes=15)
+# scheduler.start()
+#
+# # Shut down the scheduler when exiting the app
+# atexit.register(lambda: scheduler.shutdown())
+########################################################################################################
 
 if __name__ == '__main__':
     app.run(debug=True)
