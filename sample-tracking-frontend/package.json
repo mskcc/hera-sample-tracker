@@ -1,5 +1,5 @@
 {
-  "name": "hera",
+  "name": "hera-sample-tracker",
   "version": "1.0.0",
   "description": "WES data sharing solution",
   "main": "index.js",

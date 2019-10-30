@@ -26,7 +26,10 @@ class DataGridEditTrackingInfo extends React.Component {
   }
 
   setGridHeight(data){
-    return (data.length * 24)+24;
+    if (data.length <= 50){
+      return (data.length * 23)+15;
+    }
+    return 700;
   }
   saveChanges = () =>{
     console.log(this.gridData);

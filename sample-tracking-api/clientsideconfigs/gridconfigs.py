@@ -1,159 +1,3 @@
-clinical_column_widths = (
-    dict(columnName="sampleid" , width=150) ,
-    dict(columnName="user_sampleid" , width=200) ,
-    dict(columnName="cmo_sampleid" , width=200) ,
-    dict(columnName="cmo_patientid" , width=200) ,
-    dict(columnName="dmp_sampleid" , width=200) ,
-    dict(columnName="dmp_patientid" , width=200) ,
-    dict(columnName="mrn" , width=150) ,
-    dict(columnName="sex" , width=150) ,
-    dict(columnName="sample_type" , width=150) ,
-    dict(columnName="sample_class" , width=200) ,
-    dict(columnName="tumor_type" , width=150) ,
-    dict(columnName="parental_tumortype" , width=150) ,
-    dict(columnName="tumor_site" , width=200) ,
-    dict(columnName="molecular_accession_num" , width=200) ,
-    dict(columnName="collection_year" , width=150) ,
-    dict(columnName="date_dmp_request" , width=200) ,
-
-    dict(columnName="sex" , width=150) ,
-    dict(columnName="mrn" , width=150) ,
-    dict(columnName="surgical_accession_number" , width=200) ,
-
-    dict(columnName="oncotree_code" , width=150) ,
-    dict(columnName="parental_tumortype" , width=200) ,
-
-    dict(columnName="dmp_sampleid" , width=150) ,
-    dict(columnName="dmp_patientid" , width=150) ,
-    dict(columnName="registration_12_245AC" , width=200) ,
-    dict(columnName="vaf" , width=100) ,
-    dict(columnName="facets" , width=100)
-    )
-
-clinical_column_names = (
-    dict(title="IGO ID" , name="sampleid") ,
-    dict(title="User Sample ID" , name="sampleid") ,
-    dict(title="CMO Sample ID" , name="cmo_sampleid") ,
-    dict(title="CMO Patient ID" , name="cmo_patientid") ,
-    dict(title="DMP Sample ID" , name="dmp_sampleid") ,
-    dict(title="DMP Patient ID" , name="cmo_patientid") ,
-    dict(title="MRN" , name="mrn") ,
-    dict(title="Sex" , name="sex") ,
-    dict(title="Sample Type" , name="sample_type") ,
-    dict(title="Sample Class" , name="sample_class") ,
-    dict(title="Tumor Type" , name="tumor_type") ,
-    dict(title="Parental Tumor Type" , name="tumor_type") ,
-    dict(title="Tumor Site" , name="tumor_site") ,
-    dict(title="Mol Accession No" , name="molecular_accession_num") ,
-    dict(title="Collection Year" , name="collection_year") ,
-    dict(title="Date DMP Request" , name="date_dmp_request") ,
-    dict(title="DMP Request ID" , name="dmp_requestid") ,
-
-    dict(title="Sex" , name="sex") ,
-    dict(title="MRN" , name="mrn") ,
-    dict(title="Surgical Accession No." , name="surgical_accession_number") ,
-
-    dict(title="Oncotree Code" , name="oncotree_code") ,
-    dict(title="Parental Tumor Type" , name="parental_tumortype") ,
-
-    dict(title="DMP Sample ID" , name="dmp_sampleid") ,
-    dict(title="DMP Patient ID" , name="dmp_patientid") ,
-    dict(title="Registration 12-245AC" , name="registration_12_245AC") ,
-    dict(title="VAF" , name="vaf") ,
-    dict(title="Facets" , name="facets")
-    )
-
-non_clinical_column_widths = (
-    dict(columnName="sampleid" , width=150) ,
-    dict(columnName="other_sampleid" , width=200) ,
-    dict(columnName="corrected_cmo_id" , width=200) ,
-    dict(columnName="sample_type" , width=150) ,
-    dict(columnName="tumor_type" , width=150) ,
-    dict(columnName="sample_class" , width=200) ,
-    dict(columnName="tumor_site" , width=200) ,
-    dict(columnName="tissue_location" , width=200) ,
-    dict(columnName="sex" , width=150) ,
-    dict(columnName="mrn" , width=150) ,
-    dict(columnName="surgical_accession_number" , width=200) ,
-    dict(columnName="m_accession_number" , width=200) ,
-    dict(columnName="oncotree_code" , width=150) ,
-    dict(columnName="parental_tumortype" , width=200) ,
-    dict(columnName="collection_year" , width=150) ,
-    dict(columnName="dmp_sampleid" , width=150) ,
-    dict(columnName="dmp_patientid" , width=150) ,
-    dict(columnName="registration_12_245AC" , width=200) ,
-    dict(columnName="vaf" , width=100) ,
-    dict(columnName="facets" , width=100)
-    )
-non_clinical_column_names = (
-    dict(title="IGO ID" , name="sampleid") ,
-    dict(title="CMO Sample ID" , name="other_sampleid") ,
-    dict(title="Corrected CMO ID" , name="corrected_cmo_id") ,
-    dict(title="Sample Type" , name="sample_type") ,
-    dict(title="Tumor Type" , name="tumor_type") ,
-    dict(title="Sample Class" , name="sample_class") ,
-    dict(title="Tumor Site" , name="tumor_site") ,
-    dict(title="Tissue Location" , name="tissue_location") ,
-    dict(title="Sex" , name="sex") ,
-    dict(title="MRN" , name="mrn") ,
-    dict(title="Surgical Accession No." , name="surgical_accession_number") ,
-    dict(title="M Accession No" , name="m_accession_number") ,
-    dict(title="Oncotree Code" , name="oncotree_code") ,
-    dict(title="Parental Tumor Type" , name="parental_tumortype") ,
-    dict(title="Collection Year" , name="collection_year") ,
-    dict(title="DMP Sample ID" , name="dmp_sampleid") ,
-    dict(title="DMP Patient ID" , name="dmp_patientid") ,
-    dict(title="Registration 12-245AC" , name="registration_12_245AC") ,
-    dict(title="VAF" , name="vaf") ,
-    dict(title="Facets" , name="facets")
-    )
-
-admin_column_widths = (
-    dict(columnName="sampleid" , width=150) ,
-    dict(columnName="other_sampleid" , width=200) ,
-    dict(columnName="corrected_cmo_id" , width=200) ,
-    dict(columnName="sample_type" , width=150) ,
-    dict(columnName="tumor_type" , width=150) ,
-    dict(columnName="sample_class" , width=200) ,
-    dict(columnName="tumor_site" , width=200) ,
-    dict(columnName="tissue_location" , width=200) ,
-    dict(columnName="sex" , width=150) ,
-    dict(columnName="mrn" , width=150) ,
-    dict(columnName="surgical_accession_number" , width=200) ,
-    dict(columnName="m_accession_number" , width=200) ,
-    dict(columnName="oncotree_code" , width=150) ,
-    dict(columnName="parental_tumortype" , width=200) ,
-    dict(columnName="collection_year" , width=150) ,
-    dict(columnName="dmp_sampleid" , width=150) ,
-    dict(columnName="dmp_patientid" , width=150) ,
-    dict(columnName="registration_12_245AC" , width=200) ,
-    dict(columnName="vaf" , width=100) ,
-    dict(columnName="facets" , width=100)
-    )
-
-admin_column_names = (
-    dict(title="IGO ID" , name="sampleid") ,
-    dict(title="CMO Sample ID" , name="other_sampleid") ,
-    dict(title="Corrected CMO ID" , name="corrected_cmo_id") ,
-    dict(title="Sample Type" , name="sample_type") ,
-    dict(title="Tumor Type" , name="tumor_type") ,
-    dict(title="Sample Class" , name="sample_class") ,
-    dict(title="Tumor Site" , name="tumor_site") ,
-    dict(title="Tissue Location" , name="tissue_location") ,
-    dict(title="Sex" , name="sex") ,
-    dict(title="MRN" , name="mrn") ,
-    dict(title="Surgical Accession No." , name="surgical_accession_number") ,
-    dict(title="M Accession No" , name="m_accession_number") ,
-    dict(title="Oncotree Code" , name="oncotree_code") ,
-    dict(title="Parental Tumor Type" , name="parental_tumortype") ,
-    dict(title="Collection Year" , name="collection_year") ,
-    dict(title="DMP Sample ID" , name="dmp_sampleid") ,
-    dict(title="DMP Patient ID" , name="dmp_patientid") ,
-    dict(title="Registration 12-245AC" , name="registration_12_245AC") ,
-    dict(title="VAF" , name="vaf") ,
-    dict(title="Facets" , name="facets")
-    )
-
 ###############################################################HandsonTable Column configs #############################################################################
 
 clinicalColdHeaders = ['IGO ID' , 'User Sample ID' , 'CMO Sample ID' , 'CMO Patient ID' , 'DMP Sample ID' ,
@@ -327,8 +171,8 @@ nonClinicalColdHeaders = ['IGO ID' , 'User Sample ID' , 'CMO Sample ID' , 'Sex' 
 nonClinicalColumns = [
     {
         'data' : 'sampleid' ,
-        'readOnly' : True,
-        'width':200
+        'readOnly' : True ,
+        'width' : 200
         } ,
     {
         'data' : 'user_sampleid' ,
@@ -448,15 +292,15 @@ adminColdHeaders = ['IGO ID' , 'User Sample ID' , 'CMO Sample ID' , 'CMO Patient
                     'DMP Patient ID' , 'MRN' , 'Sex' , 'Sample Type' , 'Sample Class' ,
                     'Tumor Type' , 'Parental Tumor Type' , 'Tumor Site' , 'Mol Accession #' , 'Collection Yr' ,
                     'Date DMP Request' , 'DMP Request ID' , 'IGO Request ID' , 'Date IGO Received' ,
-                    'IGO Complete Date' ,'Application' , 'Baitset' , 'Sequencer' , 'Project Name' ,'Data Analyst' ,
-                    'Lab Head' ,'CC/Fund' ,'Scientific PI' , 'Consent Part A' , 'Consent Part C' , 'Sample Status' ,
+                    'IGO Complete Date' , 'Application' , 'Baitset' , 'Sequencer' , 'Project Name' , 'Data Analyst' ,
+                    'Lab Head' , 'CC/Fund' , 'Scientific PI' , 'Consent Part A' , 'Consent Part C' , 'Sample Status' ,
                     'Access Level' , 'Clinical Trial' , 'Sequencing Site' , 'PI Request Date' , 'Pipeline' ,
                     'Tissue Type' , 'Collaboration Center']
 adminColumns = [
     {
         'data' : 'sampleid' ,
         'readOnly' : True ,
-        'width':200
+        'width' : 200
         } ,
     {
         'data' : 'user_sampleid' ,
@@ -551,7 +395,7 @@ adminColumns = [
         'readOnly' : True
         } ,
     {
-        'data' : 'data_analyst',
+        'data' : 'data_analyst' ,
         } ,
     {
         'data' : 'lab_head' ,
@@ -578,8 +422,8 @@ adminColumns = [
         } ,
     {
         'data' : 'access_level' ,
-        'editor': 'select',
-      	'selectOptions': ['PI restricted', 'MSK public', 'Published']
+        'editor' : 'select' ,
+        'selectOptions' : ['PI restricted' , 'MSK public' , 'Published']
         } ,
     {
         'data' : 'clinical_trial' ,
@@ -595,8 +439,8 @@ adminColumns = [
         } ,
     {
         'data' : 'tissue_type' ,
-        'editor': 'select',
-      	'selectOptions': ['cfDNA', 'Tumor', 'Normal']
+        'editor' : 'select' ,
+        'selectOptions' : ['cfDNA' , 'Tumor' , 'Normal']
         } ,
     {
         'data' : 'collaboration_center' ,
@@ -604,11 +448,176 @@ adminColumns = [
     ]
 
 settings = {
-    'columnSorting' : True ,
-    'filters' : True ,
-    'autoColumnSize' : True,
+    'columnSorting': True ,
+    'filters': True ,
+    'autoColumnSize': True ,
+    'width': '100%',
+    'height': 500,
+    'colWidths': [200 , 200 , 200 , 200 , 200 , 200 , 200 , 200 , 200 , 200 , 200 , 200 , 200 , 200 , 200 , 200 , 200 ,
+                   200 , 200 , 200 , 200 , 200 , 200 , 200 , 200 , 200 , 200 , 200 , 200 , 200 , 200 , 200 , 200 , 200 ,
+                   200 , 200 , 200 , 200] ,
+    'manualColumnResize' : True ,
     'rowHeaders': True,
-    'colWidths': [200, 200, 200,200, 200, 200,200, 200, 200, 200,200, 200, 200,200, 200, 200, 200,200, 200, 200, 200,200, 200, 200, 200,200, 200, 200,200, 200, 200, 200,200, 200, 200,200, 200, 200],
-    'manualColumnResize': True,
-    'dropdownMenu' : ['filter_by_condition' , 'filter_action_bar'],
+    'colHeaders': True,
+    'search': True,
+    'dropdownMenu': ['filter_by_condition' , 'filter_action_bar'] ,
     }
+
+
+########################################################################################################################################
+
+# clinical_column_widths = (
+#     dict(columnName="sampleid" , width=150) ,
+#     dict(columnName="user_sampleid" , width=200) ,
+#     dict(columnName="cmo_sampleid" , width=200) ,
+#     dict(columnName="cmo_patientid" , width=200) ,
+#     dict(columnName="dmp_sampleid" , width=200) ,
+#     dict(columnName="dmp_patientid" , width=200) ,
+#     dict(columnName="mrn" , width=150) ,
+#     dict(columnName="sex" , width=150) ,
+#     dict(columnName="sample_type" , width=150) ,
+#     dict(columnName="sample_class" , width=200) ,
+#     dict(columnName="tumor_type" , width=150) ,
+#     dict(columnName="parental_tumortype" , width=150) ,
+#     dict(columnName="tumor_site" , width=200) ,
+#     dict(columnName="molecular_accession_num" , width=200) ,
+#     dict(columnName="collection_year" , width=150) ,
+#     dict(columnName="date_dmp_request" , width=200) ,
+#
+#     dict(columnName="sex" , width=150) ,
+#     dict(columnName="mrn" , width=150) ,
+#     dict(columnName="surgical_accession_number" , width=200) ,
+#
+#     dict(columnName="oncotree_code" , width=150) ,
+#     dict(columnName="parental_tumortype" , width=200) ,
+#
+#     dict(columnName="dmp_sampleid" , width=150) ,
+#     dict(columnName="dmp_patientid" , width=150) ,
+#     dict(columnName="registration_12_245AC" , width=200) ,
+#     dict(columnName="vaf" , width=100) ,
+#     dict(columnName="facets" , width=100)
+#     )
+#
+# clinical_column_names = (
+#     dict(title="IGO ID" , name="sampleid") ,
+#     dict(title="User Sample ID" , name="sampleid") ,
+#     dict(title="CMO Sample ID" , name="cmo_sampleid") ,
+#     dict(title="CMO Patient ID" , name="cmo_patientid") ,
+#     dict(title="DMP Sample ID" , name="dmp_sampleid") ,
+#     dict(title="DMP Patient ID" , name="cmo_patientid") ,
+#     dict(title="MRN" , name="mrn") ,
+#     dict(title="Sex" , name="sex") ,
+#     dict(title="Sample Type" , name="sample_type") ,
+#     dict(title="Sample Class" , name="sample_class") ,
+#     dict(title="Tumor Type" , name="tumor_type") ,
+#     dict(title="Parental Tumor Type" , name="tumor_type") ,
+#     dict(title="Tumor Site" , name="tumor_site") ,
+#     dict(title="Mol Accession No" , name="molecular_accession_num") ,
+#     dict(title="Collection Year" , name="collection_year") ,
+#     dict(title="Date DMP Request" , name="date_dmp_request") ,
+#     dict(title="DMP Request ID" , name="dmp_requestid") ,
+#
+#     dict(title="Sex" , name="sex") ,
+#     dict(title="MRN" , name="mrn") ,
+#     dict(title="Surgical Accession No." , name="surgical_accession_number") ,
+#
+#     dict(title="Oncotree Code" , name="oncotree_code") ,
+#     dict(title="Parental Tumor Type" , name="parental_tumortype") ,
+#
+#     dict(title="DMP Sample ID" , name="dmp_sampleid") ,
+#     dict(title="DMP Patient ID" , name="dmp_patientid") ,
+#     dict(title="Registration 12-245AC" , name="registration_12_245AC") ,
+#     dict(title="VAF" , name="vaf") ,
+#     dict(title="Facets" , name="facets")
+#     )
+#
+# non_clinical_column_widths = (
+#     dict(columnName="sampleid" , width=150) ,
+#     dict(columnName="other_sampleid" , width=200) ,
+#     dict(columnName="corrected_cmo_id" , width=200) ,
+#     dict(columnName="sample_type" , width=150) ,
+#     dict(columnName="tumor_type" , width=150) ,
+#     dict(columnName="sample_class" , width=200) ,
+#     dict(columnName="tumor_site" , width=200) ,
+#     dict(columnName="tissue_location" , width=200) ,
+#     dict(columnName="sex" , width=150) ,
+#     dict(columnName="mrn" , width=150) ,
+#     dict(columnName="surgical_accession_number" , width=200) ,
+#     dict(columnName="m_accession_number" , width=200) ,
+#     dict(columnName="oncotree_code" , width=150) ,
+#     dict(columnName="parental_tumortype" , width=200) ,
+#     dict(columnName="collection_year" , width=150) ,
+#     dict(columnName="dmp_sampleid" , width=150) ,
+#     dict(columnName="dmp_patientid" , width=150) ,
+#     dict(columnName="registration_12_245AC" , width=200) ,
+#     dict(columnName="vaf" , width=100) ,
+#     dict(columnName="facets" , width=100)
+#     )
+# non_clinical_column_names = (
+#     dict(title="IGO ID" , name="sampleid") ,
+#     dict(title="CMO Sample ID" , name="other_sampleid") ,
+#     dict(title="Corrected CMO ID" , name="corrected_cmo_id") ,
+#     dict(title="Sample Type" , name="sample_type") ,
+#     dict(title="Tumor Type" , name="tumor_type") ,
+#     dict(title="Sample Class" , name="sample_class") ,
+#     dict(title="Tumor Site" , name="tumor_site") ,
+#     dict(title="Tissue Location" , name="tissue_location") ,
+#     dict(title="Sex" , name="sex") ,
+#     dict(title="MRN" , name="mrn") ,
+#     dict(title="Surgical Accession No." , name="surgical_accession_number") ,
+#     dict(title="M Accession No" , name="m_accession_number") ,
+#     dict(title="Oncotree Code" , name="oncotree_code") ,
+#     dict(title="Parental Tumor Type" , name="parental_tumortype") ,
+#     dict(title="Collection Year" , name="collection_year") ,
+#     dict(title="DMP Sample ID" , name="dmp_sampleid") ,
+#     dict(title="DMP Patient ID" , name="dmp_patientid") ,
+#     dict(title="Registration 12-245AC" , name="registration_12_245AC") ,
+#     dict(title="VAF" , name="vaf") ,
+#     dict(title="Facets" , name="facets")
+#     )
+#
+# admin_column_widths = (
+#     dict(columnName="sampleid" , width=150) ,
+#     dict(columnName="other_sampleid" , width=200) ,
+#     dict(columnName="corrected_cmo_id" , width=200) ,
+#     dict(columnName="sample_type" , width=150) ,
+#     dict(columnName="tumor_type" , width=150) ,
+#     dict(columnName="sample_class" , width=200) ,
+#     dict(columnName="tumor_site" , width=200) ,
+#     dict(columnName="tissue_location" , width=200) ,
+#     dict(columnName="sex" , width=150) ,
+#     dict(columnName="mrn" , width=150) ,
+#     dict(columnName="surgical_accession_number" , width=200) ,
+#     dict(columnName="m_accession_number" , width=200) ,
+#     dict(columnName="oncotree_code" , width=150) ,
+#     dict(columnName="parental_tumortype" , width=200) ,
+#     dict(columnName="collection_year" , width=150) ,
+#     dict(columnName="dmp_sampleid" , width=150) ,
+#     dict(columnName="dmp_patientid" , width=150) ,
+#     dict(columnName="registration_12_245AC" , width=200) ,
+#     dict(columnName="vaf" , width=100) ,
+#     dict(columnName="facets" , width=100)
+#     )
+#
+# admin_column_names = (
+#     dict(title="IGO ID" , name="sampleid") ,
+#     dict(title="CMO Sample ID" , name="other_sampleid") ,
+#     dict(title="Corrected CMO ID" , name="corrected_cmo_id") ,
+#     dict(title="Sample Type" , name="sample_type") ,
+#     dict(title="Tumor Type" , name="tumor_type") ,
+#     dict(title="Sample Class" , name="sample_class") ,
+#     dict(title="Tumor Site" , name="tumor_site") ,
+#     dict(title="Tissue Location" , name="tissue_location") ,
+#     dict(title="Sex" , name="sex") ,
+#     dict(title="MRN" , name="mrn") ,
+#     dict(title="Surgical Accession No." , name="surgical_accession_number") ,
+#     dict(title="M Accession No" , name="m_accession_number") ,
+#     dict(title="Oncotree Code" , name="oncotree_code") ,
+#     dict(title="Parental Tumor Type" , name="parental_tumortype") ,
+#     dict(title="Collection Year" , name="collection_year") ,
+#     dict(title="DMP Sample ID" , name="dmp_sampleid") ,
+#     dict(title="DMP Patient ID" , name="dmp_patientid") ,
+#     dict(title="Registration 12-245AC" , name="registration_12_245AC") ,
+#     dict(title="VAF" , name="vaf") ,
+#     dict(title="Facets" , name="facets")
+#     )

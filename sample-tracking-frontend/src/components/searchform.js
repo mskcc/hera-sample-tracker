@@ -72,6 +72,7 @@ class SearchForm extends Component {
                                     <Select placeholder="Search Type" size="large" style={{ minWidth: 150 }} onChange={(value) => this.handleSearchTypeSelectChange(value, 'searchtype')}>
                                         <Select.Option value="MRN">MRN</Select.Option>
                                         <Select.Option value="TUMOR TYPE">TUMOR TYPE</Select.Option>
+                                        <Select.Option value="DMPID">DMP ID</Select.Option>
                                     </Select>
                                 )}
                             </Form.Item>
@@ -80,7 +81,7 @@ class SearchForm extends Component {
                             <Form.Item>
                                 <Button type="primary" size="large" htmlType="submit">
                                     <Icon type="search" />Search
-                    </Button>
+                                </Button>
                             </Form.Item>
                         </Col>
 
