@@ -4,6 +4,8 @@ import { Form, Icon, Input, Button, Select, Row, Col, Spin } from 'antd';
 import { search_data } from '../actions/searchActions';
 import { connect } from 'react-redux';
 import DataTable from '../components/datatable';
+import MySnackbar from '../components/MySnackbar';
+import {withRouter} from 'react-router';
 import DevTools from '../components/devtools';
 
 
@@ -17,14 +19,22 @@ class SearchForm extends Component {
         }
     }
 
+    componentDidMount(){
+        if (!this.props.user.access_token){
+            this.props.history.push("/");
+        }
+    }
+
     handleSubmit = e => {
         e.preventDefault();
         this.props.form.validateFields((err, values) => {
+            const data = {
+                'searchtext': values.searchtext,
+                'searchtype': values.searchtype,
+                'role': this.props.user.role
+            }
             if (!err) {
-                this.props.searchData(values, this.props.user.access_token);
-                console.log(this.props.data);
-                console.log(values);
-                //console.log(Object.entries(this.props.data));
+                this.props.searchData(data, this.props.user.access_token);
             }
         });
     };
@@ -91,12 +101,13 @@ class SearchForm extends Component {
                 {this.props.isFetching ? <div style={{ marginLeft: '47%', marginTop: '15%', marginRight: '47%' }}><Spin tip="Loading..." size='large' /></div> :
                     this.props.data && <DataTable data={this.props.data} />
                 }
-                {/* <DevTools/> */}
+                <DevTools/>
             </div>
         );
     }
 }
 const mapStateToProps = state => ({
+    state:state,
     data: state.searchResult.data,
     isFetching: state.searchResult.isFetching,
     error: state.searchResult.error,
@@ -105,7 +116,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-    searchData: (searchtext, searchtype) => dispatch(search_data(searchtext, searchtype))
+    searchData: (data, token) => dispatch(search_data(data, token))
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(Form.create()(SearchForm));
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Form.create()(SearchForm)));

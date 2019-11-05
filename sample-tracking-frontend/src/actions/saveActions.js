@@ -42,12 +42,12 @@ export const save_data_begin = () => {
       )
         .then(res => {
             console.log(res);
-          if (res.success && res.data != null) {
+          if (res.success && res.message != null) {
             console.log(res.data);
             return dispatch(save_data_success(res.message));
           }
-          if (res.save_error) {
-              console.log(res);
+          if (!res.success) {
+              console.log(res.data);
             dispatch(save_data_failure(res.search_error));
           }
         })

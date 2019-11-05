@@ -34,7 +34,7 @@ export const operation_error = (error) => {
   };
 };
 
-export const search_data = (search_params, token) => {
+export const search_data = (data, token) => {
   var config = {
     headers: {
       'Content-Type': 'application/json',
@@ -42,16 +42,17 @@ export const search_data = (search_params, token) => {
       'Authorization': "Bearer " + token
     }
   };
+  console.log("search begin");
+  console.log(data);
   return dispatch => {
     dispatch(search_data_begin());
-    axios.post(BASE_URL + "search_data", search_params, config
+    axios.post(BASE_URL + "search_data", data, config
     )
       .then(res => {
         if (res.data) {
           return dispatch(search_data_success(res.data));
         }
         if (res.data.success && res.data == null) {
-          console.log(res.data);
           return dispatch(search_data_notfound(res.data));
         }
         if (res.search_error) {

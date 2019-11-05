@@ -104,13 +104,19 @@ def login() :
                 'sAMAccountName=' + username ,
                 attrs ,
                 )
+            role = 'user'
+            for item in result[0]:
+                if type(item) is dict:
+                    for val in item.get('memberOf'):
+                        if val.decode("utf-8").__contains__("CN=zzPDL_SKI_IGO_DATA"):
+                            role='admin'
             conn.unbind_s()
             AppLog.log(AppLog(level="INFO" , process="Root" , user=username ,
                               message="Successfully authenticated and logged into the app."))
             access_token = create_access_token(identity=username)
             refresh_token = create_refresh_token(identity=username)
             response = make_response(
-                jsonify(valid=True , username=username , access_token=access_token , refresh_token=refresh_token) ,
+                jsonify(valid=True , username=username , access_token=access_token , refresh_token=refresh_token, role=role) ,
                 200 , None)
             response.headers.add('Access-Control-Allow-Origin' , '*')
             return response
@@ -158,30 +164,50 @@ def refresh() :
         return jsonify(response) , 200
 
 
-@app.route('/logout' , methods=['DELETE'])
+@app.route('/logout' , methods=['POST'])
 @jwt_required
 def logout() :
     try :
-        current_user = get_jwt_identity()
-        jti = get_raw_jwt()['jti']
-        blacklist.add(jti)
-        AppLog.log(AppLog(level="INFO" , process="Root" , user=current_user ,
-                          message="Successfully logged out user " + current_user))
-        return jsonify({ "message" : "Successfully logged out" ,
-                         "access_token" : "" ,
-                         "refresh_token" : "" }) , 200
+        if request.method == "POST" :
+            user_data = request.get_json(silent=True)
+            print(user_data)
+            current_user = get_jwt_identity()
+            jti = get_raw_jwt()['jti']
+            blacklist.add(jti)
+            AppLog.log(AppLog(level="INFO" , process="Root" , user=current_user ,
+                              message="Successfully logged out user " + current_user))
+            response = make_response(
+                jsonify(success=True,
+                        valid=True,
+                        username=None ,
+                        access_token=None ,
+                        refresh_token=None,
+                        message="Successfully logged out user " + current_user),
+                200 , None)
+            response.headers.add('Access-Control-Allow-Origin' , '*')
+            return response
     except Exception as e :
-        AppLog.log(AppLog(level="ERROR" , process="Root" , user=current_user ,
+        AppLog.log(AppLog(level="ERROR" ,
+                          process="Root" ,
+                          user=current_user ,
                           message="Error while logging out user " + current_user))
-        return jsonify({ "message" : "Error while logging out user " + current_user ,
-                         "error" : repr(e) }) , 200
+        response = make_response(
+            jsonify(valid=False ,
+                    username=None ,
+                    access_token=None ,
+                    refresh_token=None ,
+                    message= "Error while logging out user " + current_user ,
+                    error= repr(e)) ,
+            200 , None)
+        response.headers.add('Access-Control-Allow-Origin' , '*')
+        return response
 
 
 @jwt_refresh_token_required
 def logout2() :
     jti = get_raw_jwt()['jti']
     blacklist.add(jti)
-    return jsonify({ "msg" : "Successfully logged out" }) , 200
+    return jsonify({ "success":True, "msg" : "Successfully logged out"}) , 200
 
 
 def save_to_db(data) :
@@ -297,7 +323,7 @@ def get_wes_data() :
         return response
 
 
-def api_update_sample(db , item) :
+def api_update_sample(db, item):
     try :
         sample = None
         if item.get("limsSampleRecordId") is not None :
@@ -359,17 +385,24 @@ def save_sample_changes() :
             AppLog.log(
                 AppLog(level="INFO" , process="root" , message="update {} samples by user".format(len(sample_data))))
             LOG.info("update {} samples by user".format(len(sample_data)))
-            return jsonify({ "data" : "no data" ,
-                             "message" : "Data updated successfully." ,
-                             "success" : True }) , 200
-    except Exception as e :
+            response = make_response(
+                jsonify(success=True,
+                        message="Data updated successfully.",
+                        ),
+                200, None)
+            response.headers.add('Access-Control-Allow-Origin' , '*')
+            return response
+    except Exception as e:
         LOG.error(repr(e))
         AppLog.log(
             AppLog(level="ERROR" , process="root" , message="error while updating the samples {}".format(repr(e))))
-        return jsonify({ "data" : None ,
-                         "success" : False ,
-                         "save_error" : True ,
-                         "error" : "Save operation failed. Plese try again later." }) , 200
+        response = make_response(
+            jsonify(success=False ,
+                    message="Save operation failed. Plese try again later." ,
+                    ) ,
+            200 , None)
+        response.headers.add('Access-Control-Allow-Origin' , '*')
+        return response
 
 
 def user_update_sample(session , item) :
@@ -395,6 +428,8 @@ def user_update_sample(session , item) :
             sample.collaboration_center = item.get("collaboration_center")
             session.commit()
             session.flush()
+
+
     except Exception as e :
         LOG.error(e , exc_info=True)
 
@@ -420,7 +455,7 @@ def get_column_configs(role) :
 @jwt_required
 def search_data() :
     """
-    From the client_side, user will search for samples using either "MRN's" or "Tumor_Type". Along with search words,
+    From the client_side, user will search for samples using either "MRN's", "Tumor_Type" or "Dmp ID". Along with search words,
     "search_type (MRN || Tumor Type)" is also passed to this api route. The logic is to call different LIMSRest end points
     based on the search_type parameter to get appropriate data and send as Response to client side.
     :return:
@@ -431,8 +466,8 @@ def search_data() :
         print(request.headers['Authorization'])
         search_keywords = query_data.get('searchtext')
         search_type = query_data.get('searchtype')
-        colHeaders , columns , settings = get_column_configs("admin")
-
+        user_role = query_data.get('role')
+        colHeaders , columns , settings = get_column_configs(user_role)
         if search_keywords is not None and search_type.lower() == "mrn" :
             search_keywords = [x.strip() for x in search_keywords.split(',')]
             result = db.session.query(Sample).filter(Sample.mrn.in_((search_keywords))).all()
@@ -470,6 +505,7 @@ def search_data() :
                         None))
             response.headers.add('Access-Control-Allow-Origin' , '*')
             return make_response(response)
+
 
 #################################### scheduler to run at interval ####################################
 # scheduler = BackgroundScheduler()

@@ -1,10 +1,11 @@
 import React from 'react';
 import { HotTable } from '@handsontable/react';
 import { Paper, Button } from '@material-ui/core';
-import { makeStyles } from '@material-ui/core/styles';
 import { save_changes } from '../actions/saveActions';
 import { connect } from 'react-redux';
+// import MySnackbar from '../components/MySnackbar';
 import '../styles/styles.css';
+// import CustomizedSnackbars from '../components/MySnackbar';
 
 
 let styles = {
@@ -27,7 +28,7 @@ class DataGridEditTrackingInfo extends React.Component {
 
   setGridHeight(data){
     if (data.length <= 50){
-      return (data.length * 23)+15;
+      return (data.length * 25)+25;
     }
     return 700;
   }
@@ -65,26 +66,19 @@ class DataGridEditTrackingInfo extends React.Component {
                     autoRowSize={false}
                 />
             </Paper>
+            
+            {/* <CustomizedSnackbars variant="success" message = "testing"/> */}
       </div>
     );
   }
 }
 const mapStateToProps = state => ({
-  user: state.user.userData
+  user: state.user.userData,
+  save_results: state.saveResult
 });
 
 const mapDispatchToProps = dispatch => ({
   save_changes: (data, token) => dispatch(save_changes(data, token))
 });
-// const mapStateToProps = state => ({
-//   data: state.searchResult.data,
-//   colHeaders: state.searchResult.colHeaders,
-//   columns: state.searchResults.columns,
-//   settings: state.searchResult.settings,
-//   isFetching:state.searchResult.isFetching,
-//   error: state.searchResult.error,
-//   message:  state.searchResult.message,
-//   user : state.user.userData
-// });
 
 export default connect(mapStateToProps, mapDispatchToProps)(DataGridEditTrackingInfo);
