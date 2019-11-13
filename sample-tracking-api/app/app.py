@@ -44,13 +44,25 @@ config = os.path.join(os.path.dirname(os.path.realpath(__file__)) , "lims_user_c
 config_options = yaml.safe_load(open(config , "r"))
 USER = config_options['username']
 PASSW = config_options['password']
-PORT = config_options['port']
 ENV = config_options['env']
-LIMS_API_ROOT = config_options['lims_end_point']
+PORT = config_options['port_dev']
+LIMS_API_ROOT = config_options['lims_end_point_dev']
+if (ENV== 'dev'):
+    PORT = config_options['port_dev']
+    LIMS_API_ROOT = config_options['lims_end_point_dev']
+    app.config['SQLALCHEMY_DATABASE_URI'] = config_options['db_uri_dev']
+elif (ENV== 'prod'):
+    PORT = config_options['port_prod']
+    LIMS_API_ROOT = config_options['lims_end_point_prod']
+    app.config['SQLALCHEMY_DATABASE_URI'] = config_options['db_uri_prod']
+elif (ENV == 'local'):
+    PORT = config_options['port_dev']
+    LIMS_API_ROOT = config_options['lims_end_point_dev']
+    app.config['SQLALCHEMY_DATABASE_URI'] = config_options['db_uri_local']
+
 AUTH_LDAP_URL = config_options['auth_ldap_url']
 ldap.set_option(ldap.OPT_X_TLS_REQUIRE_CERT , ldap.OPT_X_TLS_NEVER)
 app.config['SECRET_KEY'] = 'the quick brown fox jumps over the lazy dog'
-app.config['SQLALCHEMY_DATABASE_URI'] = config_options['db_uri']
 app.config['SQLALCHEMY_ECHO'] = False
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
@@ -65,9 +77,9 @@ blacklist = set()
 
 ##################################### Logging settings ###############################################
 log_file_path = ''
-if ENV == 'dev' :
-    log_file_path = config_options['log_file_dev']
-elif ENV == 'prod' :
+if ENV=='local' :
+    log_file_path = config_options['log_file_local']
+elif ENV == 'prod' or ENV == 'dev' :
     log_file_path = config_options['log_file_prod']
 
 LOG.basicConfig(level=LOG.INFO ,
@@ -552,6 +564,7 @@ def search_data() :
     based on the search_type parameter to get appropriate data and send as Response to client side.
     :return:
     """
+
     if request.method == "POST" :
         query_data = request.get_json(silent=True)
         print(query_data)
@@ -561,54 +574,80 @@ def search_data() :
         user_role = query_data.get('role')
         username = get_jwt_identity()
         colHeaders , columns , settings = get_column_configs(user_role)
-        if search_keywords is not None and search_type.lower() == "mrn" :
-            search_keywords = [x.strip() for x in search_keywords.split(',')]
-            result = db.session.query(Sample).filter(Sample.mrn.in_((search_keywords))).all()
-            response = make_response(jsonify(
-                data=(json.dumps([r.__dict__ for r in result] , default=alchemy_encoder , sort_keys=True , indent=4 ,
-                                 separators=(',' , ': '))) , colHeaders=colHeaders , columns=columns ,
-                settings=settings , ) , 200 , None)
-            response.headers.add('Access-Control-Allow-Origin' , '*')
-            AppLog.log(
-                AppLog(level="INFO" , process="root" ,
-                       message="User {} with role {} searched using kewords {} and searchtype {}".format(username ,
-                                                                                                         user_role ,
-                                                                                                         search_keywords ,
-                                                                                                         search_type)))
-            return make_response(response)
-        elif search_keywords is not None and search_type.lower() == "tumor type" :
-            search_keywords = search_keywords.split(",")
-            search_results = []
-            for item in search_keywords :
-                search_word_like = "%{}%".format(item)
-                result = db.session.query(Sample).filter(Sample.tumor_type.like(search_word_like)).all()
-                search_results.append(result)
-            response = make_response(jsonify(
-                data=(json.dumps([r.__dict__ for r in result] , default=alchemy_encoder , sort_keys=True , indent=4 ,
-                                 separators=(',' , ': '))) , colHeaders=colHeaders , columns=columns ,
-                settings=settings) , 200 , None)
-            response.headers.add('Access-Control-Allow-Origin' , '*')
-            AppLog.log(
-                AppLog(level="INFO" , process="root" ,
-                       message="User {} with role {} searched using kewords {} and searchtype {}".format(username ,
-                                                                                                         user_role ,
-                                                                                                         search_keywords ,
-                                                                                                         search_type)))
-            return make_response(response)
-        elif search_keywords is not None and search_type.lower() == "dmpid" :
-            search_keywords = search_keywords.split(",")
-            result = db.session.query(Sample).filter(Sample.dmp_sampleid.in_((search_keywords))).all()
-            response = make_response(jsonify(
-                data=(json.dumps([r.__dict__ for r in result] , default=alchemy_encoder , sort_keys=True , indent=4 ,
-                                 separators=(',' , ': '))) , colHeaders=colHeaders , columns=columns ,
-                settings=settings) , 200 , None)
-            response.headers.add('Access-Control-Allow-Origin' , '*')
-            return make_response(response)
-        else :
+
+        try:
+            if search_keywords is not None and search_type.lower() == "mrn" :
+                search_keywords = [x.strip() for x in search_keywords.split(',')]
+                result = db.session.query(Sample).filter(Sample.mrn.in_((search_keywords))).all()
+                response = make_response(jsonify(
+                    data=(json.dumps([r.__dict__ for r in result] , default=alchemy_encoder , sort_keys=True , indent=4 ,
+                                     separators=(',' , ': '))) , colHeaders=colHeaders , columns=columns ,
+                    settings=settings , ) , 200 , None)
+                response.headers.add('Access-Control-Allow-Origin' , '*')
+                AppLog.log(
+                    AppLog(level="INFO" , process="root" ,
+                           message="User {} with role {} searched using kewords {} and searchtype {}".format(username ,
+                                                                                                             user_role ,
+                                                                                                             search_keywords ,
+                                                                                                             search_type)))
+                return make_response(response)
+            elif search_keywords is not None and search_type.lower() == "tumor type" :
+                search_keywords = [x.strip() for x in search_keywords.split(',')]
+                search_results = []
+                for item in search_keywords :
+                    search_word_like = "%{}%".format(item)
+                    result = db.session.query(Sample).filter(Sample.tumor_type.like(search_word_like)).all()
+                    search_results.append(result)
+                response = make_response(jsonify(
+                    data=(json.dumps([r.__dict__ for r in result] , default=alchemy_encoder , sort_keys=True , indent=4 ,
+                                     separators=(',' , ': '))) , colHeaders=colHeaders , columns=columns ,
+                    settings=settings) , 200 , None)
+                response.headers.add('Access-Control-Allow-Origin' , '*')
+                AppLog.log(
+                    AppLog(level="INFO" , process="root" ,
+                           message="User {} with role {} searched using kewords {} and searchtype {}".format(username ,
+                                                                                                             user_role ,
+                                                                                                             search_keywords ,
+                                                                                                             search_type)))
+                return make_response(response)
+            elif search_keywords is not None and search_type.lower() == "dmpid" :
+                search_keywords = [x.strip() for x in search_keywords.split(',')]
+                result = db.session.query(Sample).filter(Sample.dmp_sampleid.in_((search_keywords))).all()
+                response = make_response(jsonify(
+                    data=(json.dumps([r.__dict__ for r in result] , default=alchemy_encoder , sort_keys=True , indent=4 ,
+                                     separators=(',' , ': '))) , colHeaders=colHeaders , columns=columns ,
+                    settings=settings) , 200 , None)
+                response.headers.add('Access-Control-Allow-Origin' , '*')
+                AppLog.log(
+                    AppLog(level="INFO" , process="root" ,
+                           message="User {} with role {} searched using kewords {} and searchtype {}".format(username ,
+                                                                                                             user_role ,
+                                                                                                             search_keywords ,
+                                                                                                             search_type)))
+                return make_response(response)
+            else :
+                response = make_response(
+                    jsonify(json.dumps(data="Sorry, 'Search Type' '{}' is not supported.".format(search_type)) , 200 ,
+                            None))
+                response.headers.add('Access-Control-Allow-Origin' , '*')
+                AppLog.log(
+                    AppLog(level="INFO" , process="root" ,
+                           message="User {} with role {} searched using kewords {} and searchtype {}".format(username ,
+                                                                                                             user_role ,
+                                                                                                             search_keywords ,
+                                                                                                             search_type)))
+                return make_response(response)
+        except Exception as e:
             response = make_response(
-                jsonify(json.dumps(data="Sorry, 'Search Type' '{}' is not supported.".format(search_type)) , 200 ,
+                jsonify(json.dumps(data="Sorry, error occured while searching using {}.".format(search_type)) , 200 ,
                         None))
             response.headers.add('Access-Control-Allow-Origin' , '*')
+            AppLog.log(
+                AppLog(level="INFO" , process="root" ,
+                       message="User {} with role {} searched using kewords {} and searchtype {}, it cuased error {}".format(username ,
+                                                                                                         user_role ,
+                                                                                                         search_keywords ,
+                                                                                                         search_type, e)))
             return make_response(response)
 
 #################################### scheduler to run at interval ####################################
