@@ -1,7 +1,18 @@
 .handsontable table thead th{
     background-color: #007CBA;
-    color:black;
+    color:white;
     font-weight:bold;
     font-size:12px;
     overflow: hidden;
 }
+.tr{
+  color:black !important;
+}
+.currentRow {
+    background-color: #F0F6F7 !important;
+    color:black !important;
+  }
+.currentCol {
+    background-color: #F0F6F7 !important;
+    color:black !important;
+  }

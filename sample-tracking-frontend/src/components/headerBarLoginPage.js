@@ -28,11 +28,11 @@ class HeaderBarLoginPage extends Component{
                     <img alt="example" src= {mskcc_logo} style={{maxHeight:65}}/>
                 </div>
               </Col>
-              <Col push={6} style={{padding:'auto', color:'black', fontSize:35, fontFamily:'sans-serif'}}>
-                Sample Tracking App
+              <Col push={6} style={{padding:'auto', color:'white', fontSize:35, fontFamily:'sans-serif'}}>
+                Sample Tracker
               </Col>
-              <Col push={10} style={{padding:'auto', color:'black', fontSize:35, fontFamily:'sans-serif'}}>
-                {this.props.user.username ? 
+              <Col push={15} style={{padding:'auto', color:'black', fontSize:35, fontFamily:'sans-serif'}}>
+                {this.props.user && this.props.user.username ?
                 <Button ghost icon="logout" onClick={()=> this.logout()}>LOG OUT</Button> : null}
               </Col> 
             </Row>

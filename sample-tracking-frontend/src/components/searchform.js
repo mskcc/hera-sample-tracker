@@ -3,11 +3,20 @@ import React, { Component } from 'react';
 import { Form, Icon, Input, Button, Select, Row, Col, Spin } from 'antd';
 import { search_data } from '../actions/searchActions';
 import { connect } from 'react-redux';
-import DataTable from '../components/datatable';
-import MySnackbar from '../components/MySnackbar';
-import {withRouter} from 'react-router';
+import DataGridEditTrackingInfo from '../components/dataGridEditTrackingInfo';
+import { withRouter } from 'react-router';
+import {ADMIN_EMAIL} from '../configs/react.configs';
 import DevTools from '../components/devtools';
 
+let styles = {
+    notification_div: {
+      color:'black',
+      textAlign:'center',
+      fontFamily: 'sans-serif',
+      fontSize:15,
+      margin :20,
+    }
+  }
 
 class SearchForm extends Component {
     constructor(props) {
@@ -17,10 +26,11 @@ class SearchForm extends Component {
             'searchtype': '',
             'data': this.props.data
         }
+
     }
 
-    componentDidMount(){
-        if (!this.props.user.access_token){
+    componentDidMount() {
+        if (!this.props.user || !this.props.user.access_token) {
             this.props.history.push("/");
         }
     }
@@ -82,7 +92,7 @@ class SearchForm extends Component {
                                     <Select placeholder="Search Type" size="large" style={{ minWidth: 150 }} onChange={(value) => this.handleSearchTypeSelectChange(value, 'searchtype')}>
                                         <Select.Option value="MRN">MRN</Select.Option>
                                         <Select.Option value="TUMOR TYPE">TUMOR TYPE</Select.Option>
-                                        <Select.Option value="DMPID">DMP ID</Select.Option>
+                                        {this.props.user && this.props.user.role === 'admin' && <Select.Option value="DMPID">DMP ID</Select.Option>}
                                     </Select>
                                 )}
                             </Form.Item>
@@ -98,16 +108,21 @@ class SearchForm extends Component {
                     </Row>
 
                 </Form>
-                {this.props.isFetching ? <div style={{ marginLeft: '47%', marginTop: '15%', marginRight: '47%' }}><Spin tip="Loading..." size='large' /></div> :
-                    this.props.data && <DataTable data={this.props.data} />
+                {this.props.user && this.props.user.role === 'user' &&
+                    <div style={styles.notification_div}>
+                        You are logged in as a regular user. If you are clinician or an admin please email Admins group at '{ADMIN_EMAIL}'' to get access to data.
+                    </div>
                 }
-                <DevTools/>
+                {this.props.isFetching ? <div style={{ marginLeft: '47%', marginTop: '15%', marginRight: '47%' }}><Spin tip="Loading..." size='large' /></div> :
+                    this.props.data && <DataGridEditTrackingInfo rowdata={this.props.data}/>
+                }
+                <DevTools />
             </div>
         );
     }
 }
 const mapStateToProps = state => ({
-    state:state,
+    state: state,
     data: state.searchResult.data,
     isFetching: state.searchResult.isFetching,
     error: state.searchResult.error,

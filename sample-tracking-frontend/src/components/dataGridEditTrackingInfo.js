@@ -1,80 +1,154 @@
 import React from 'react';
 import { HotTable } from '@handsontable/react';
-import { Paper, Button } from '@material-ui/core';
+import { Paper } from '@material-ui/core';
+import { Button, Spin, Modal, Icon } from 'antd';
 import { save_changes } from '../actions/saveActions';
 import { connect } from 'react-redux';
-// import MySnackbar from '../components/MySnackbar';
 import '../styles/styles.css';
-// import CustomizedSnackbars from '../components/MySnackbar';
+import { column_mappings } from '../configs/download-data-mappings';
+import FileSaver from "file-saver";
+import XLSX from "xlsx";
 
 
 let styles = {
   button: {
-    backgroundColor: '#C24D00',
-    margin: 15
-  }
+    margin: 15,
+  },
+  disclaimer:{
+    fontSize: '25px',
+    textAlign:'center'
+  },
+  icon:{
+    fontSize: '25px', 
+    color: 'orange', 
+    marginRight:'30px' 
+  },
 }
-
 
 class DataGridEditTrackingInfo extends React.Component {
   constructor(props) {
     super(props);
-    this.data=this.props.rowdata;
-    this.gridData = JSON.parse(this.data.data);
+    this.tabledata = this.props.rowdata;
     this.state = {
-      cancel:0,
+      isSaveButtonDisabled: true,
+      tableData: JSON.parse(this.props.rowdata.data),
+      colHeaders: this.props.rowdata.colHeaders,
+      columnDef: this.props.rowdata.columns,
+      settings: this.props.rowdata.settings,
+      searchtext: this.props.searchtext,
+      searchtype: this.props.searchtype,
+      role: this.props.role,
+      confirmVisible: false,
     }
+    this.downloadData = this.downloadData.bind(this);
   }
 
-  setGridHeight(data){
-    if (data.length <= 50){
-      return (data.length * 25)+25;
+  setGridHeight(data) {
+    if (data.length <= 50) {
+      return (data.length * 25) + 25;
     }
-    return 700;
-  }
-  saveChanges = () =>{
-    console.log(this.gridData);
-    this.props.save_changes(this.gridData, this.props.user.access_token);
+    return 900;
   }
 
-  cancelChanges = () => {
-    this.data=this.props.rowdata;
-    this.gridData = JSON.parse(this.data.data);
-    this.forceUpdate();
-    
+  saveChanges = () => {
+    this.props.save_changes(this.state.tableData, this.props.user.access_token);
+    this.setState({ isSaveButtonDisabled: true });
+  }
+
+  downloadData = () => {
+    this.setState({confirmVisible:false});
+    const dataArray = [];
+    const headers = this.state.colHeaders;
+    dataArray.push(headers);
+    this.state.tableData.forEach((row) => {
+      var arr = [];
+      headers.forEach((value) => {
+        arr.push(row[column_mappings[value]]);
+      })
+      dataArray.push(arr);
+    });
+
+    const fileExtension = ".xlsx";
+    const fileType = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
+    const today = new Date();
+    const date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
+    const fileName = `Data-${date}`;
+    const ws = XLSX.utils.json_to_sheet(dataArray, { skipHeader: true });
+    const wb = { Sheets: { data: ws }, SheetNames: ["data"] };
+    const excelBuffer = XLSX.write(wb, {
+      bookType: "xlsx",
+      type: "array"
+    });
+    const data = new Blob([excelBuffer], { type: fileType });
+    console.log(data);
+    FileSaver.saveAs(data, fileName + fileExtension);
+  }
+
+  handleCancel = () => {
+    this.setState({ confirmVisible: false });
+  }
+
+  handleDownload = () => {
+    this.setState({ confirmVisible: true });
+  }
+
+  handleEdit = (changes, source) => {
+    if (changes) {
+      this.setState({ isSaveButtonDisabled: false });
+    }
   }
 
   render() {
-    return (
-      <div style={{height:'100%', marginTop:'15px', marginLeft:'15px', marginRight:'15px', alignContent:'center'}}>
-            <Paper>
+    const disclaimerText = 'The information contained in this transmission from Memorial Sloan-Kettering Cancer Center is privileged, confidential and protected health information (PHI) and it is protected from disclosure under applicable law, ' +
+      'including the Health Insurance Portability and Accountability Act of 1996, as amended (HIPAA).  This transmission is intended for the sole use of approved individuals with permission and training to access this information and PHI. ' +
+      'If you are not the intended recipient, please CANCEL this transmission. You are notified that all the transmissions and other activities from this site are logged and closely monitored.  If you have received this transmission in error, ' +
+      'please immediately delete this information and any attachments from any computer.';
 
+    return (
+      <div style={{ height: '100%', margin: '15px', alignContent: 'center' }}>
+        {this.props.savedata.isFetching ? <div style={{ marginLeft: '47%', marginTop: '15%', marginRight: '47%' }}><Spin tip="Saving data..." size='large' /></div> :
+          <Paper>
             <div>
-              <Button variant="contained" color='primary' style = {styles.button} onClick= {() => this.saveChanges()}>Save Changes</Button>
-              <Button variant="contained" color='primary' style = {styles.button} onClick= {() => this.cancelChanges()}>Cancel Changes</Button>
+              {this.props.user && this.props.user.role === 'admin' &&
+                <Button type="primary" disabled={this.state.isSaveButtonDisabled} icon="cloud" style={styles.button} onClick={() => this.saveChanges()}>Save Changes</Button>
+              }
+              <Button type="primary" icon="download" style={styles.button} onClick={() => this.handleDownload()}>Download Data</Button>
             </div>
-                <HotTable
-                    className="handsontable handsontablerow"
-                    data = {this.gridData}
-                    colHeaders={this.data.colHeaders}
-                    columns={this.data.columns}
-                    settings={this.data.settings}
-                    stretchH= 'all'
-                    licenseKey = "non-commercial-and-evaluation"
-                    height={this.setGridHeight(this.gridData)}
-                    wordWrap={false}
-                    autoRowSize={false}
-                />
-            </Paper>
-            
-            {/* <CustomizedSnackbars variant="success" message = "testing"/> */}
+            <HotTable
+              className="handsontable handsontablerow"
+              data={this.state.tableData}
+              colHeaders={this.state.colHeaders}
+              columns={this.state.columnDef}
+              settings={this.state.settings}
+              afterChange={(changes, source) => this.handleEdit(changes, source)}
+              stretchH='all'
+              licenseKey="non-commercial-and-evaluation"
+              height={this.setGridHeight(this.state.tableData)}
+              wordWrap={false}
+              autoRowSize={false}
+              search={true}
+              currentRowClassName='currentRow'
+              currentColClassName='currentCol'
+            />
+          </Paper>
+        }
+        <Modal
+          title={<div style={styles.disclaimer}><Icon type="warning" style={styles.icon} theme="outlined"/>Disclaimer</div>}                     
+          visible={this.state.confirmVisible}
+          onOk={this.downloadData}
+          onCancel={this.handleCancel}
+          width='30%'
+        >
+          <p>{disclaimerText}</p>
+        </Modal>
       </div>
     );
   }
 }
 const mapStateToProps = state => ({
   user: state.user.userData,
-  save_results: state.saveResult
+  data: state.searchResult.data,
+  savedata: state.saveResult
 });
 
 const mapDispatchToProps = dispatch => ({

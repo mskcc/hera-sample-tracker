@@ -17,7 +17,7 @@ from urllib3 import PoolManager
 import ssl
 import requests
 import os , yaml
-import app
+from userutils.userutils import get_user_fullname , get_user_group , get_user_title
 from database.models import db , Sample , AppLog
 import clientsideconfigs.gridconfigs as gridconfigs
 
@@ -45,6 +45,7 @@ config_options = yaml.safe_load(open(config , "r"))
 USER = config_options['username']
 PASSW = config_options['password']
 PORT = config_options['port']
+ENV = config_options['env']
 LIMS_API_ROOT = config_options['lims_end_point']
 AUTH_LDAP_URL = config_options['auth_ldap_url']
 ldap.set_option(ldap.OPT_X_TLS_REQUIRE_CERT , ldap.OPT_X_TLS_NEVER)
@@ -53,18 +54,24 @@ app.config['SQLALCHEMY_DATABASE_URI'] = config_options['db_uri']
 app.config['SQLALCHEMY_ECHO'] = False
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-app.config['JWT_SECRET_KEY'] = 'super-secret'  # Change this!
+app.config['JWT_SECRET_KEY'] = config_options['secret_key']  # Change this!
 app.config['JWT_BLACKLIST_ENABLED'] = True
 app.config['JWT_BLACKLIST_TOKEN_CHECKS'] = ['access' , 'refresh']
-
+app.config['JWT_ACCESS_TOKEN_EXPIRES'] = False
 jwt = JWTManager(app)
 CORS(app)
 
 blacklist = set()
+
 ##################################### Logging settings ###############################################
+log_file_path = ''
+if ENV == 'dev' :
+    log_file_path = config_options['log_file_dev']
+elif ENV == 'prod' :
+    log_file_path = config_options['log_file_prod']
 
 LOG.basicConfig(level=LOG.INFO ,
-                filename="./logs/sample-tracking-db-{}.log".format(datetime.datetime.now().date()) ,
+                filename=log_file_path.format(datetime.datetime.now().date()) ,
                 format='%(asctime)s  %(levelname)-10s %(processName)s  %(name)s %(message)s')
 
 ##################################### DB Initialization###############################################
@@ -73,8 +80,21 @@ with app.app_context() :
     db.init_app(app)
     db.create_all()
 
+#################################### APP CONSTANTS ###################################################
 
+# ADMIN_GROUPS = ['AHDHD'] # add another admin group from PM's when available
+ADMIN_GROUPS = ['zzPDL_SKI_IGO_DATA' , 'GRP_SKI_CMO_WESRecapture']
+CLINICAL_GROUPS = ['clinical_group_update_when_available']
+
+
+######################################################################################################
+
+@app.route("/" , methods=['GET' , 'POST'])
 def index() :
+    '''
+    This method is here only to test at times if the app is working correctly.
+    :return:
+    '''
     log_entry = LOG.info("testing")
     AppLog.log(AppLog(level="INFO" , process="Root" , user="Admin" , message="Testing the logging to db."))
     return jsonify(columnHeaders=gridconfigs.clinicalColdHeaders , columns=gridconfigs.clinicalColumns ,
@@ -90,6 +110,10 @@ def get_ldap_connection() :
 
 @app.route("/login" , methods=['GET' , 'POST'])
 def login() :
+    '''
+    Login user using ldap connection and validate user role.
+    :return:
+    '''
     if request.method == "POST" :
         login_credentials = request.get_json(silent=True)
         username = login_credentials.get('username')
@@ -105,18 +129,26 @@ def login() :
                 attrs ,
                 )
             role = 'user'
-            for item in result[0]:
-                if type(item) is dict:
-                    for val in item.get('memberOf'):
-                        if val.decode("utf-8").__contains__("CN=zzPDL_SKI_IGO_DATA"):
-                            role='admin'
+
+            print(result)
+
+            user_fullname = get_user_fullname(result)
+            user_title = get_user_title(result)
+            user_groups = get_user_group(result)
+            # check user role
+            if len(set(user_groups).intersection(set(ADMIN_GROUPS))) > 0 :
+                role = 'admin'
+            elif len(set(user_groups).intersection(set(CLINICAL_GROUPS))) > 0 :
+                role = 'clinical'
             conn.unbind_s()
+            LOG.info("Successfully authenticated and logged {} into the app with role {}.".format(username , role))
             AppLog.log(AppLog(level="INFO" , process="Root" , user=username ,
                               message="Successfully authenticated and logged into the app."))
             access_token = create_access_token(identity=username)
             refresh_token = create_refresh_token(identity=username)
             response = make_response(
-                jsonify(valid=True , username=username , access_token=access_token , refresh_token=refresh_token, role=role) ,
+                jsonify(valid=True , username=username , access_token=access_token , refresh_token=refresh_token ,
+                        role=role , title=user_title , user_fullname=user_fullname) ,
                 200 , None)
             response.headers.add('Access-Control-Allow-Origin' , '*')
             return response
@@ -136,6 +168,11 @@ def login() :
 
 @jwt.token_in_blacklist_loader
 def check_if_token_in_blacklist(decrypted_token) :
+    '''
+    Add JWT token to blacklist.
+    :param decrypted_token:
+    :return:
+    '''
     jti = decrypted_token['jti']
     return jti in blacklist
 
@@ -143,6 +180,10 @@ def check_if_token_in_blacklist(decrypted_token) :
 @app.route('/refresh_token' , methods=['POST'])
 @jwt_refresh_token_required
 def refresh() :
+    '''
+    Refresh JWT token when needed. Not being used as of now.
+    :return:
+    '''
     try :
         current_user = get_jwt_identity()
         response = {
@@ -177,12 +218,12 @@ def logout() :
             AppLog.log(AppLog(level="INFO" , process="Root" , user=current_user ,
                               message="Successfully logged out user " + current_user))
             response = make_response(
-                jsonify(success=True,
-                        valid=True,
+                jsonify(success=True ,
+                        valid=True ,
                         username=None ,
                         access_token=None ,
-                        refresh_token=None,
-                        message="Successfully logged out user " + current_user),
+                        refresh_token=None ,
+                        message="Successfully logged out user " + current_user) ,
                 200 , None)
             response.headers.add('Access-Control-Allow-Origin' , '*')
             return response
@@ -196,8 +237,8 @@ def logout() :
                     username=None ,
                     access_token=None ,
                     refresh_token=None ,
-                    message= "Error while logging out user " + current_user ,
-                    error= repr(e)) ,
+                    message="Error while logging out user " + current_user ,
+                    error=repr(e)) ,
             200 , None)
         response.headers.add('Access-Control-Allow-Origin' , '*')
         return response
@@ -207,78 +248,7 @@ def logout() :
 def logout2() :
     jti = get_raw_jwt()['jti']
     blacklist.add(jti)
-    return jsonify({ "success":True, "msg" : "Successfully logged out"}) , 200
-
-
-def save_to_db(data) :
-    data_to_json = json.loads(data)
-    """
-    Method to save data to Sample Tracking database.
-    """
-    record_ids = []
-    for item in data_to_json :
-        db.session.autoflush = False
-        ''' check if the record already exists and is IGO processed Sample. If a sample was processed by IGO, 
-            it should have both "limsSampleRecordId" and "limsTrackerRecordId" values. '''
-        existing = None
-        if item.get("limsSampleRecordId") is not None :
-            existing = Sample.query.filter_by(lims_sample_recordid=item.get("limsSampleRecordId") ,
-                                              lims_tracker_recordid=item.get("limsTrackerRecordId")).first()
-
-        '''If the record does not exist, create a new record.'''
-        if existing is None :
-            print(" Not Existing True")
-            print(item.get("limsTrackerRecordId"))
-            sample = Sample(sampleid=item.get("sampleId") , user_sampleid=item.get("userSampleId") ,
-                            cmo_sampleid=item.get("cmoSampleId") , cmo_patientid=item.get("cmoPatientId") ,
-                            dmp_sampleid=item.get("dmpSampleId") , dmp_patientid=item.get("dmpPatientId") ,
-                            mrn=item.get("mrn") , sex=item.get("sex") , sample_type=item.get("sampleType") ,
-                            sample_class=item.get("sampleClass") , tumor_type=item.get("tumorType") ,
-                            parental_tumortype=item.get("parentalTumorType") ,
-                            tumor_site=item.get("tissueSite") ,
-                            molecular_accession_num=item.get("molecularAccessionNum") ,
-                            collection_year=item.get("collectionYear") , date_dmp_request=item.get("dateDmpRequest") ,
-                            dmp_requestid=item.get("dmpRequestId") , igo_requestid=item.get("igoRequestId") ,
-                            date_igo_received=item.get("dateIgoReceived") ,
-                            date_igo_complete=item.get("igoCompleteDate") ,
-                            application_requested=item.get("applicationRequested") ,
-                            baitset_used=item.get("baitsetUsed") , sequencer_type=item.get("sequencerType") ,
-                            project_title=item.get("projectTitle") ,
-                            lab_head=item.get("labHead") , cc_fund=item.get("ccFund") ,
-                            scientific_pi=item.get("scientificPi") ,
-                            consent_parta_status=item.get("consentPartAStatus") ,
-                            consent_partc_status=item.get("consentPartCStatus") ,
-                            sample_status=item.get("sampleStatus") ,
-                            access_level=item.get("accessLevel") , clinical_trial=item.get("clinicalTrial") ,
-                            seqiencing_site=item.get("sequencingSite") , pi_request_date=item.get("piRequestDate") ,
-                            pipeline=item.get("pipeline") , tissue_type=item.get("tissueType") ,
-                            collaboration_center=item.get("collaborationCenter") ,
-                            lims_sample_recordid=item.get("limsSampleRecordId") ,
-                            lims_tracker_recordid=item.get("limsTrackerRecordId")
-                            )
-            db.session.add(sample)
-            db.session.commit()
-            db.session.flush()
-            record_ids.append(item.get("limsTrackerRecordId"))
-
-        # If the record already exists, update the record.
-        elif existing :
-            print("existing true")
-            api_update_sample(db , item)
-
-        ''' check if the record already exists and is non IGO processed Sample. If a sample was not processed by IGO, 
-                    it should only have "limsTrackerRecordId" value. '''
-        partial_existing = None
-        if item.get("limsSampleRecordId") is None and item.get("limsTrackerRecordId") is not None :
-            partial_existing = Sample.query.filter_by(lims_sample_recordid=None ,
-                                                      lims_tracker_recordid=item.get("limsTrackerRecordId")).first()
-        '''If a non IGO sample exists, then update the values.'''
-        if partial_existing :
-            api_update_sample(db , item);
-
-    AppLog.log(AppLog(level="INFO" , process="werkzeug" ,
-                      message="Added {0} new records to the Sample Tracking Database".format(len(record_ids))))
-    return len(record_ids)
+    return jsonify({ "success" : True , "msg" : "Successfully logged out" }) , 200
 
 
 @app.route("/get_wes_data" , methods=['GET'])
@@ -323,7 +293,95 @@ def get_wes_data() :
         return response
 
 
-def api_update_sample(db, item):
+def save_to_db(data) :
+    '''
+    Method to save data to Sample Tracking database. The method will update if the record already exists/create new.
+    The existence of a record is validated using limsSampleRecordId and limsTrackerRecordId.
+    :param data:
+    :return:
+    '''
+    try :
+        data_to_json = json.loads(data)
+
+        record_ids = []
+        for item in data_to_json :
+            db.session.autoflush = False
+            ''' check if the record already exists and is IGO processed Sample. If a sample was processed by IGO, 
+                it should have both "limsSampleRecordId" and "limsTrackerRecordId" values. '''
+            existing = None
+            if item.get("limsSampleRecordId") is not None :
+                existing = Sample.query.filter_by(lims_sample_recordid=item.get("limsSampleRecordId") ,
+                                                  lims_tracker_recordid=item.get("limsTrackerRecordId")).first()
+
+            '''If the record does not exist, create a new record.'''
+            if existing is None :
+                print(" Not Existing True")
+                print(item.get("limsTrackerRecordId"))
+                sample = Sample(sampleid=item.get("sampleId") , user_sampleid=item.get("userSampleId") ,
+                                cmo_sampleid=item.get("cmoSampleId") , cmo_patientid=item.get("cmoPatientId") ,
+                                dmp_sampleid=item.get("dmpSampleId") , dmp_patientid=item.get("dmpPatientId") ,
+                                mrn=item.get("mrn") , sex=item.get("sex") , sample_type=item.get("sampleType") ,
+                                sample_class=item.get("sampleClass") , tumor_type=item.get("tumorType") ,
+                                parental_tumortype=item.get("parentalTumorType") ,
+                                tumor_site=item.get("tissueSite") ,
+                                molecular_accession_num=item.get("molecularAccessionNum") ,
+                                collection_year=item.get("collectionYear") ,
+                                date_dmp_request=item.get("dateDmpRequest") ,
+                                dmp_requestid=item.get("dmpRequestId") , igo_requestid=item.get("igoRequestId") ,
+                                date_igo_received=item.get("dateIgoReceived") ,
+                                date_igo_complete=item.get("igoCompleteDate") ,
+                                application_requested=item.get("applicationRequested") ,
+                                baitset_used=item.get("baitsetUsed") , sequencer_type=item.get("sequencerType") ,
+                                project_title=item.get("projectTitle") ,
+                                lab_head=item.get("labHead") , cc_fund=item.get("ccFund") ,
+                                scientific_pi=item.get("scientificPi") ,
+                                consent_parta_status=item.get("consentPartAStatus") ,
+                                consent_partc_status=item.get("consentPartCStatus") ,
+                                sample_status=item.get("sampleStatus") ,
+                                access_level=item.get("accessLevel") , clinical_trial=item.get("clinicalTrial") ,
+                                seqiencing_site=item.get("sequencingSite") , pi_request_date=item.get("piRequestDate") ,
+                                pipeline=item.get("pipeline") , tissue_type=item.get("tissueType") ,
+                                collaboration_center=item.get("collaborationCenter") ,
+                                lims_sample_recordid=item.get("limsSampleRecordId") ,
+                                lims_tracker_recordid=item.get("limsTrackerRecordId")
+                                )
+                db.session.add(sample)
+                db.session.commit()
+                db.session.flush()
+                record_ids.append(item.get("limsTrackerRecordId"))
+
+            # If the record already exists, update the record.
+            elif existing :
+                print("existing true")
+                api_update_sample(db , item)
+
+            ''' check if the record already exists and is non IGO processed Sample. If a sample was not processed by IGO, 
+                        it should only have "limsTrackerRecordId" value. '''
+            partial_existing = None
+            if item.get("limsSampleRecordId") is None and item.get("limsTrackerRecordId") is not None :
+                partial_existing = Sample.query.filter_by(lims_sample_recordid=None ,
+                                                          lims_tracker_recordid=item.get("limsTrackerRecordId")).first()
+            '''If a non IGO sample exists, then update the values.'''
+            if partial_existing :
+                api_update_sample(db , item);
+
+        AppLog.log(AppLog(level="INFO" , process="root" ,
+                          message="Added {} new records to the Sample Tracking Database".format(len(record_ids))))
+        return len(record_ids)
+    except Exception as e :
+        AppLog.log(AppLog(level="ERROR" , process="root" ,
+                          message="{} Error occured while adding records to the Sample Tracking Database.\n{}".format(
+                              e)))
+        return None
+
+
+def api_update_sample(db , item) :
+    '''
+    The method to update an existing record, done by api call. Not called by frontend.
+    :param db:
+    :param item:
+    :return:
+    '''
     try :
         sample = None
         if item.get("limsSampleRecordId") is not None :
@@ -377,22 +435,27 @@ def api_update_sample(db, item):
 @app.route("/save_sample_changes" , methods=['POST'])
 @jwt_required
 def save_sample_changes() :
+    '''
+    Method to save samples when users call the save method from frontend app via button click events.
+    :return: response
+    '''
     try :
         if request.method == "POST" :
             sample_data = request.get_json(silent=True)
             for item in sample_data :
                 user_update_sample(db.session , item)
             AppLog.log(
-                AppLog(level="INFO" , process="root" , message="update {} samples by user".format(len(sample_data))))
+                AppLog(level="INFO" , process="root" , message="updated {} samples by user".format(len(sample_data))))
             LOG.info("update {} samples by user".format(len(sample_data)))
             response = make_response(
-                jsonify(success=True,
-                        message="Data updated successfully.",
-                        ),
-                200, None)
+                jsonify(
+                    success=True ,
+                    message="Data updated successfully." ,
+                    ) ,
+                200 , None)
             response.headers.add('Access-Control-Allow-Origin' , '*')
             return response
-    except Exception as e:
+    except Exception as e :
         LOG.error(repr(e))
         AppLog.log(
             AppLog(level="ERROR" , process="root" , message="error while updating the samples {}".format(repr(e))))
@@ -416,7 +479,6 @@ def user_update_sample(session , item) :
     try :
         sample = session.query(Sample).filter_by(lims_tracker_recordid=item.get("lims_tracker_recordid")).first()
         if sample is not None :
-            print(sample.sampleid)
             sample.data_analyst = item.get("data_analyst")
             sample.scientific_pi = item.get("scientific_pi")
             sample.access_level = item.get("access_level")
@@ -443,12 +505,42 @@ def alchemy_encoder(obj) :
 
 
 def get_column_configs(role) :
-    if role is 'clinical' :
-        return gridconfigs.clinicalColdHeaders , gridconfigs.clinicalColumns , gridconfigs.settings
-    if role is 'admin' :
-        return gridconfigs.adminColdHeaders , gridconfigs.adminColumns , gridconfigs.settings
-    else :
-        return gridconfigs.nonClinicalColdHeaders , gridconfigs.nonClinicalColumns , gridconfigs.settings
+    '''
+    Method to return column configurations based on user role. Not all users are authorized to see all the data returned by this server.
+    :param role:
+    :return: column configurations
+    '''
+    print(role)
+    if role == 'clinical' :
+        return gridconfigs.clinicalColHeaders , gridconfigs.clinicalColumns , gridconfigs.settings
+    elif role == 'admin' :
+        return gridconfigs.adminColHeaders , gridconfigs.adminColumns , gridconfigs.settings
+    elif role == 'user' :
+        return gridconfigs.nonClinicalColHeaders , gridconfigs.nonClinicalColumns , gridconfigs.settings
+
+
+@app.route("/download_data" , methods=['POST'])
+@jwt_required
+def download_data() :
+    '''
+    Method to log the download data event from the forntend.
+    :return:
+    '''
+    if request.method == "POST" :
+        query_data = request.get_json(silent=True)
+        num_samples = request.get("number")
+        username = request.get("username")
+        role = request.get("role")
+        try :
+            AppLog.log(
+                AppLog(level="INFO" , process="root" ,
+                       message="User {} with role {} downloaded data for {} samples".format(username , role ,
+                                                                                            num_samples)))
+
+        except Exception as e :
+            AppLog.log(
+                AppLog(level="ERROR" , process="root" ,
+                       message="Error occured while logging the data download event\n{}".format(e)))
 
 
 @app.route("/search_data" , methods=['POST'])
@@ -467,6 +559,7 @@ def search_data() :
         search_keywords = query_data.get('searchtext')
         search_type = query_data.get('searchtype')
         user_role = query_data.get('role')
+        username = get_jwt_identity()
         colHeaders , columns , settings = get_column_configs(user_role)
         if search_keywords is not None and search_type.lower() == "mrn" :
             search_keywords = [x.strip() for x in search_keywords.split(',')]
@@ -476,6 +569,12 @@ def search_data() :
                                  separators=(',' , ': '))) , colHeaders=colHeaders , columns=columns ,
                 settings=settings , ) , 200 , None)
             response.headers.add('Access-Control-Allow-Origin' , '*')
+            AppLog.log(
+                AppLog(level="INFO" , process="root" ,
+                       message="User {} with role {} searched using kewords {} and searchtype {}".format(username ,
+                                                                                                         user_role ,
+                                                                                                         search_keywords ,
+                                                                                                         search_type)))
             return make_response(response)
         elif search_keywords is not None and search_type.lower() == "tumor type" :
             search_keywords = search_keywords.split(",")
@@ -489,6 +588,12 @@ def search_data() :
                                  separators=(',' , ': '))) , colHeaders=colHeaders , columns=columns ,
                 settings=settings) , 200 , None)
             response.headers.add('Access-Control-Allow-Origin' , '*')
+            AppLog.log(
+                AppLog(level="INFO" , process="root" ,
+                       message="User {} with role {} searched using kewords {} and searchtype {}".format(username ,
+                                                                                                         user_role ,
+                                                                                                         search_keywords ,
+                                                                                                         search_type)))
             return make_response(response)
         elif search_keywords is not None and search_type.lower() == "dmpid" :
             search_keywords = search_keywords.split(",")
@@ -505,7 +610,6 @@ def search_data() :
                         None))
             response.headers.add('Access-Control-Allow-Origin' , '*')
             return make_response(response)
-
 
 #################################### scheduler to run at interval ####################################
 # scheduler = BackgroundScheduler()

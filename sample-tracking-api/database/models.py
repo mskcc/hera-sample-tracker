@@ -1,7 +1,6 @@
 import datetime
 
-from flask import json
-from flask_sqlalchemy import SQLAlchemy, Model
+from flask_sqlalchemy import SQLAlchemy
 
 db = SQLAlchemy()
 
@@ -44,8 +43,8 @@ class Sample(db.Model):
     lab_head = db.Column(db.String(300))  # pulled from LIMS Request table
     cc_fund = db.Column(db.String(300))  # pulled from LIMS DMPSampleTracker table
     scientific_pi = db.Column(db.String(300))  # entered by PM's
-    consent_parta_status = db.Boolean()  # pulled from CVR endpoint
-    consent_partc_status = db.Boolean()  # pulled from CVR endpoint
+    consent_parta_status = db.Column(db.Boolean())  # pulled from CVR endpoint
+    consent_partc_status = db.Column(db.Boolean())  # pulled from CVR endpoint
     sample_status = db.Column(db.String(300))  # pulled from LIMS Sample table
     access_level = db.Column(db.String(300), default="MSK Public")  # default "MSK Public", updated by PM's
     clinical_trial = db.Column(db.String(300))  # entered by PM's

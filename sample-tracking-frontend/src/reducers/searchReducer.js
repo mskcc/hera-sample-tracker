@@ -49,6 +49,7 @@ const initialState = {
             isFetching: false,
             message: action.error,
         });
+
         default:
           return state;
       }

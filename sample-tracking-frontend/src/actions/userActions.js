@@ -1,6 +1,7 @@
 
 import axios from 'axios';
-import {BASE_URL, requestHeaders} from '../configs/react.configs';
+import {BASE_URL, requestHeaders, BASE_ROUTE} from '../configs/react.configs';
+import {Modal} from 'antd';
 
 const user_login = () => {
   return {
@@ -39,7 +40,7 @@ export const login = (data, history) => {
       .then(res => {
         if (res.data.valid){
           dispatch(user_login_success(res.data));
-          history.push('/home');
+          history.push(`${BASE_ROUTE}/home`);
         }
         if (!res.data.valid){
           dispatch(user_login_invalid(res.data));
@@ -79,12 +80,10 @@ export const login = (data, history) => {
       axios.post(BASE_URL + "logout",data, configs)
         .then(res => {
           if (res.data.success){
-            console.log("logout success");
-            console.log(res.data);
             dispatch(user_logout_success(res.data));
             localStorage.clear();
             localStorage.removeItem('persist:root');
-            history.push('/');
+            history.push(`${BASE_ROUTE}/`);
           }
         })
         .catch(err => {
@@ -93,3 +92,43 @@ export const login = (data, history) => {
     };
   };
   
+  const session_end = () => {
+    return {
+      type: 'SESSION_END_BEGIN'
+    };
+  };
+  
+  const session_end_success = (user) => {
+    return {
+      type: 'SESSION_END_SUCCESS',
+      isError:'',
+      data: user,
+      error:''
+    };
+  };
+  
+  const session_end_failure = (error) => {
+    return {
+      type: 'SESSION_END_FAILURE',
+      error: error
+    };
+  };
+
+  export const endsession = (data, configs, history) => {
+    return dispatch => {
+      dispatch(session_end());
+      axios.post(BASE_URL + "logout",data, configs)
+        .then(res => {
+          if (res.data.success){
+            dispatch(session_end_success(res.data));
+            localStorage.clear();
+            localStorage.removeItem('persist:root');
+            Modal.warning({content: "Session expired, Please log in again."});
+            history.push(`${BASE_ROUTE}/`);
+          }
+        })
+        .catch(err => {
+          dispatch(session_end_failure(err));
+        });
+    };
+  };

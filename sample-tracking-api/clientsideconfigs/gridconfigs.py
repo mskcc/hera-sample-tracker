@@ -1,6 +1,6 @@
 ###############################################################HandsonTable Column configs #############################################################################
 
-clinicalColdHeaders = ['IGO ID' , 'User Sample ID' , 'CMO Sample ID' , 'CMO Patient ID' , 'DMP Sample ID' ,
+clinicalColHeaders = ['IGO ID' , 'User Sample ID' , 'CMO Sample ID' , 'CMO Patient ID' , 'DMP Sample ID' ,
                        'DMP Patient ID' , 'MRN' , 'Sex' , 'Sample Type' , 'Sample Class' ,
                        'Tumor Type' , 'Parental Tumor Type' , 'Tumor Site' , 'Mol Accession #' , 'Collection Yr' ,
                        'Date DMP Request' , 'DMP Request ID' , 'IGO Request ID' , 'Date IGO Received' ,
@@ -160,7 +160,7 @@ clinicalColumns = [
         } ,
     ]
 
-nonClinicalColdHeaders = ['IGO ID' , 'User Sample ID' , 'CMO Sample ID' , 'Sex' , 'Sample Type' , 'Sample Class' ,
+nonClinicalColHeaders = ['IGO ID' , 'User Sample ID' , 'CMO Sample ID' , 'Sex' , 'Sample Type' , 'Sample Class' ,
                           'Tumor Type' , 'Parental Tumor Type' , 'Tumor Site' , 'Collection Yr' , 'Date DMP Request' ,
                           'DMP Request ID' , 'IGO Request ID' , 'Date IGO Received' , 'IGO Complete Date' ,
                           'Application' , 'Baitset' ,
@@ -288,7 +288,7 @@ nonClinicalColumns = [
         } ,
     ]
 
-adminColdHeaders = ['IGO ID' , 'User Sample ID' , 'CMO Sample ID' , 'CMO Patient ID' , 'DMP Sample ID' ,
+adminColHeaders = ['IGO ID' , 'User Sample ID' , 'CMO Sample ID' , 'CMO Patient ID' , 'DMP Sample ID' ,
                     'DMP Patient ID' , 'MRN' , 'Sex' , 'Sample Type' , 'Sample Class' ,
                     'Tumor Type' , 'Parental Tumor Type' , 'Tumor Site' , 'Mol Accession #' , 'Collection Yr' ,
                     'Date DMP Request' , 'DMP Request ID' , 'IGO Request ID' , 'Date IGO Received' ,
@@ -455,7 +455,7 @@ settings = {
     'height': 500,
     'colWidths': [200 , 200 , 200 , 200 , 200 , 200 , 200 , 200 , 200 , 200 , 200 , 200 , 200 , 200 , 200 , 200 , 200 ,
                    200 , 200 , 200 , 200 , 200 , 200 , 200 , 200 , 200 , 200 , 200 , 200 , 200 , 200 , 200 , 200 , 200 ,
-                   200 , 200 , 200 , 200] ,
+                   200 , 200 , 200 , 200, 200, 200, 200] ,
     'manualColumnResize' : True ,
     'rowHeaders': True,
     'colHeaders': True,

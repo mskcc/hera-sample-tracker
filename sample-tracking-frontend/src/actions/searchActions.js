@@ -30,7 +30,8 @@ export const search_data_failure = (search_error) => {
 export const operation_error = (error) => {
   return {
     type: 'OPERATION_ERROR',
-    error: error
+    error: true,
+    message: error
   };
 };
 
@@ -42,8 +43,6 @@ export const search_data = (data, token) => {
       'Authorization': "Bearer " + token
     }
   };
-  console.log("search begin");
-  console.log(data);
   return dispatch => {
     dispatch(search_data_begin());
     axios.post(BASE_URL + "search_data", data, config
@@ -64,3 +63,4 @@ export const search_data = (data, token) => {
       });
   };
 };
+
