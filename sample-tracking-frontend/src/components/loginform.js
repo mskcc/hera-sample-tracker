@@ -22,13 +22,12 @@ class LoginForm extends Component {
 
   render() {
     const { getFieldDecorator } = this.props.form;
-    
     return (
       <Row type = "flex" justify="space-around">
         <Card style={{ width:400, margin:100}}>
         
         {/* If the user credentials are not valid show the validation error message */}
-        {this.props.data != null && !this.props.data.valid && 
+        {this.props.data !=null && !this.props.data.valid && 
           <Alert message={this.props.error} type="error" showIcon style={{marginBottom:10}}/>
         }
         {/* Validation error message end*/}

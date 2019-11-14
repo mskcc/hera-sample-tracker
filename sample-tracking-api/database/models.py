@@ -1,7 +1,6 @@
 import datetime
 
-from flask import json
-from flask_sqlalchemy import SQLAlchemy, Model
+from flask_sqlalchemy import SQLAlchemy
 
 db = SQLAlchemy()
 
@@ -16,8 +15,8 @@ class User(db.Model):
 
 class Sample(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    sampleid = db.Column(db.String(300), unique=True, nullable=False)  # pulled from LIMS Sample table
-    user_sampleid = db.Column(db.String(300), unique=True, nullable=False)  # pulled from LIMS Sample table
+    sampleid = db.Column(db.String(300))  # pulled from LIMS Sample table
+    user_sampleid = db.Column(db.String(300))  # pulled from LIMS Sample table
     cmo_sampleid = db.Column(db.String(300))  # pulled from LIMS Sample table
     cmo_patientid = db.Column(db.String(300))  # pulled from LIMS SampleCMOInfoRecords table
     dmp_sampleid = db.Column(db.String(300))  # pulled from CVR endpoint
@@ -40,11 +39,12 @@ class Sample(db.Model):
     baitset_used = db.Column(db.String(300))  # pulled from LIMS KAPAAgilentCaptureProtocol2 table
     sequencer_type = db.Column(db.String(300))  # pulled from LIMS SeqAnalysisSampleQC table
     project_title = db.Column(db.String(300))  # pulled from LIMS DMPSampleTracker table
+    data_analyst = db.Column(db.String(300))  # entered by PM's
     lab_head = db.Column(db.String(300))  # pulled from LIMS Request table
     cc_fund = db.Column(db.String(300))  # pulled from LIMS DMPSampleTracker table
     scientific_pi = db.Column(db.String(300))  # entered by PM's
-    consent_parta_status = db.Boolean()  # pulled from CVR endpoint
-    consent_partc_status = db.Boolean()  # pulled from CVR endpoint
+    consent_parta_status = db.Column(db.Boolean())  # pulled from CVR endpoint
+    consent_partc_status = db.Column(db.Boolean())  # pulled from CVR endpoint
     sample_status = db.Column(db.String(300))  # pulled from LIMS Sample table
     access_level = db.Column(db.String(300), default="MSK Public")  # default "MSK Public", updated by PM's
     clinical_trial = db.Column(db.String(300))  # entered by PM's
@@ -53,15 +53,16 @@ class Sample(db.Model):
     pipeline = db.Column(db.String(300))  # entered by PM's
     tissue_type = db.Column(db.String(300))  # entered by PM's
     collaboration_center = db.Column(db.String(300))  # entered by PM's
-    lims_recordId = db.Column(db.String(300))  # entered by PM's
+    lims_sample_recordid = db.Column(db.String(300))  # entered by PM's
+    lims_tracker_recordid = db.Column(db.String(300), nullable=False)
 
     def __init__(self, sampleid=None, user_sampleid=None, cmo_sampleid=None, cmo_patientid=None, dmp_sampleid=None,
                  dmp_patientid=None, mrn=None, sex=None, sample_type=None, sample_class=None, tumor_type=None, parental_tumortype=None,
                  tumor_site=None, molecular_accession_num=None, collection_year=None, date_dmp_request=None, dmp_requestid=None,
                  igo_requestid=None, date_igo_received=None, date_igo_complete=None, application_requested=None, baitset_used=None,
-                 sequencer_type=None, project_title=None, lab_head=None, cc_fund=None, scientific_pi=None, consent_parta_status=None,
+                 sequencer_type=None, project_title=None, data_analyst=None, lab_head=None, cc_fund=None, scientific_pi=None, consent_parta_status=None,
                  consent_partc_status=None, sample_status=None, access_level=None, clinical_trial=None, seqiencing_site=None, pi_request_date=None,
-                 pipeline=None, tissue_type=None, collaboration_center=None, lims_recordId=None
+                 pipeline=None, tissue_type=None, collaboration_center=None, lims_sample_recordid=None, lims_tracker_recordid=None
                  ):
 
         self.sampleid = sampleid
@@ -88,6 +89,7 @@ class Sample(db.Model):
         self.baitset_used = baitset_used
         self.sequencer_type = sequencer_type
         self.project_title = project_title
+        self.data_analyst = data_analyst
         self.lab_head = lab_head
         self.cc_fund = cc_fund
         self.scientific_pi = scientific_pi
@@ -101,7 +103,8 @@ class Sample(db.Model):
         self.pipeline = pipeline
         self.tissue_type = tissue_type
         self.collaboration_center = collaboration_center
-        self.lims_recordId = lims_recordId
+        self.lims_sample_recordid = lims_sample_recordid
+        self.lims_tracker_recordid = lims_tracker_recordid
 
 
 class BlacklistToken(db.Model):

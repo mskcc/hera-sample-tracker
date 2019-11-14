@@ -1,6 +1,5 @@
 
 import React, {Component} from 'react';
-import Navigation from './navigation';
 import SearchForm from '../components/searchform';
 
 class Home extends Component {
@@ -15,7 +14,7 @@ constructor(props) {
   render() {
     return (
         <div>
-          <Navigation/>
+          {/* <Navigation/> */}
           <SearchForm/>
         </div>
     );

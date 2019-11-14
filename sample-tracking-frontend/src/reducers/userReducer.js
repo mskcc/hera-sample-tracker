@@ -32,12 +32,24 @@ const initialState = {
             error: action.error,
             isFetching: false
         });
-        case 'OPERATION_ERROR':
+        case 'LOGOUT_USER_BEGIN':
           return Object.assign({}, state,{
+            isFetching: true,
+            isError: false
+          });
+        case 'LOGOUT_USER_SUCCESS':
+          return Object.assign({}, state,{
+            userData: action.data,
+            isFetching: false,
+            isError: false,
+          });
+        case 'LOGOUT_USER_FAILURE':
+          return Object.assign({}, state,{
+            userData: action.data,
             isError: true,
             error: action.error,
             isFetching: false
-        });
+          });
         default:
           return state;
       }

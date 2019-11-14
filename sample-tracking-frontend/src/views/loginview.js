@@ -3,6 +3,7 @@ import React, {Component} from 'react';
 import HeaderBarLoginPage from '../components/headerBarLoginPage';
 import LoginForm from '../components/loginform';
 import {withRouter} from 'react-router-dom';
+import DevTools from '../components/devtools';
 
 class LoginView extends Component{
     render(){
@@ -10,6 +11,7 @@ class LoginView extends Component{
             <div>
                 <HeaderBarLoginPage/>
                 <LoginForm/>
+                <DevTools/>
             </div>
         );
     }

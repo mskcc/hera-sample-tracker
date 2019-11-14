@@ -1,57 +1,43 @@
 const initialState = {
     data: null,
+    responseData:null,
     isFetching: false,
     isError: false,
     message:''
   };
   
-  const mainReducer = (state = initialState, action) => {
+  const saveReducer = (state = initialState, action) => {
       switch (action.type) {
-        case 'SEARCH_DATA_BEGIN':
+        case 'SAVE_DATA_BEGIN':
           return Object.assign({}, state,{
             isFetching: true,
             isError: false,
             message:''
           });
 
-        case 'SEARCH_DATA_SUCCESS':
-          console.log(action);
+        case 'SAVE_DATA_SUCCESS':
           return Object.assign({}, state,{
-            data: action.data,
-            colHeaders: action.colHeaders,
-            columns: action.columns,
-            settings: action.settings,
             isFetching: false,
             isError: false,
-            message:''
-          });
-
-        case 'SEARCH_DATA_NOTFOUND':
-          return Object.assign({}, state,{
-            data: null,
-            isError: false,
-            isFetching: false,
             message: action.message,
           });
 
-        case 'SEARCH_DATA_FAILURE':
+        case 'SAVE_DATA_FAILURE':
           return Object.assign({}, state,{
-            data:null,
-            isError: false,
-            isFetching: false,
-            message: action.message,
-        });
-
-        case 'OPERATION_ERROR':
-          return Object.assign({}, state,{
-            data: null,
             isError: true,
             isFetching: false,
-            message: action.error,
+            message: action.message,
+          });
+          
+        case 'OPERATION_ERROR':
+          return Object.assign({}, state,{
+            isError: true,
+            isFetching: false,
+            message: action.message,
         });
         default:
           return state;
       }
     };
-  export default mainReducer;
+  export default saveReducer;
   
