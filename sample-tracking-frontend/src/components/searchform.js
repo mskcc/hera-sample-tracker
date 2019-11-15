@@ -116,7 +116,7 @@ class SearchForm extends Component {
                 {this.props.isFetching ? <div style={{ marginLeft: '47%', marginTop: '15%', marginRight: '47%' }}><Spin tip="Loading..." size='large' /></div> :
                     this.props.data && <DataGridEditTrackingInfo rowdata={this.props.data}/>
                 }
-                <DevTools />
+                {/* <DevTools /> */}
             </div>
         );
     }

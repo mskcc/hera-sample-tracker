@@ -8,6 +8,8 @@ import '../styles/styles.css';
 import { column_mappings } from '../configs/download-data-mappings';
 import FileSaver from "file-saver";
 import XLSX from "xlsx";
+import axios from 'axios';
+import {BASE_URL} from '../configs/react.configs';
 
 
 let styles = {
@@ -67,7 +69,6 @@ class DataGridEditTrackingInfo extends React.Component {
       })
       dataArray.push(arr);
     });
-
     const fileExtension = ".xlsx";
     const fileType = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
     const today = new Date();
@@ -80,8 +81,33 @@ class DataGridEditTrackingInfo extends React.Component {
       type: "array"
     });
     const data = new Blob([excelBuffer], { type: fileType });
-    console.log(data);
     FileSaver.saveAs(data, fileName + fileExtension);
+
+    const post_data = {
+      user: this.props.user,
+      data_length: this.state.tableData.length,
+    }
+
+    const token = this.props.user.access_token;
+    var config = {
+      headers: {
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin': '*',
+        'Authorization': "Bearer " + token
+      }
+    };
+    axios.post(BASE_URL + "download_data",post_data, config)
+        .then(res => {
+          if (res.data.success){
+            console.log("download logged successfully.")
+          }
+          if (!res.data.success){
+            console.log("download logging failed.")
+          }
+        })
+        .catch(err => {
+          console.log(err);
+        });
   }
 
   handleCancel = () => {

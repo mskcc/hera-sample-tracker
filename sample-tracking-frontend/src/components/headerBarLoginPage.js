@@ -22,16 +22,16 @@ class HeaderBarLoginPage extends Component{
     render(){
         return(
             <div>
-            <Row  type= "flex" style = {{backgroundColor:'#007CBA', maxHeight:65, overflow:'hidden'}}>
-              <Col >
+            <Row  style = {{backgroundColor:'#007CBA', maxHeight:65, overflow:'hidden'}}>
+              <Col span={10}>
                 <div>
                     <img alt="example" src= {mskcc_logo} style={{maxHeight:65}}/>
                 </div>
               </Col>
-              <Col push={6} style={{padding:'auto', color:'white', fontSize:35, fontFamily:'sans-serif'}}>
+              <Col span={10} style={{padding:'auto', color:'white', fontSize:35, fontFamily:'sans-serif', overflow:'hidden'}}>
                 Sample Tracker
               </Col>
-              <Col push={15} style={{padding:'auto', color:'black', fontSize:35, fontFamily:'sans-serif'}}>
+              <Col span={4} style={{padding:'auto', color:'black', fontSize:35, fontFamily:'sans-serif'}}>
                 {this.props.user && this.props.user.username ?
                 <Button ghost icon="logout" onClick={()=> this.logout()}>LOG OUT</Button> : null}
               </Col> 
