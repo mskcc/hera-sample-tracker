@@ -11,7 +11,7 @@ class LoginView extends Component{
             <div>
                 <HeaderBarLoginPage/>
                 <LoginForm/>
-                <DevTools/>
+                {/* <DevTools/> */}
             </div>
         );
     }

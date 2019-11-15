@@ -142,9 +142,7 @@ def login() :
                 )
             role = 'user'
 
-            print(result)
-
-            user_fullname = get_user_fullname(result)
+            user_fullname = '' #get_user_fullname(result)
             user_title = get_user_title(result)
             user_groups = get_user_group(result)
             # check user role
@@ -275,14 +273,14 @@ def get_wes_data() :
         if request.args.get("timestamp") is not None :
             timestamp = request.args.get("timestamp")
             LOG.info("Starting WES Sample query using time stamp: " + timestamp + ", provided to the endpoint query")
-            AppLog.log(AppLog(level="INFO" , process="werkzeug" ,
+            AppLog.log(AppLog(level="INFO" , process="werkzeug" , user='api',
                               message="Starting WES Sample query using time stamp: " + timestamp + ", provided to the endpoint query"))
         else :
             timestamp = time.mktime((datetime.datetime.today() - timedelta(
                 days=1.1)).timetuple()) * 1000  # 1.1 to account for lost during the firing of query. It is better to have some time overlap to get all the data.
             LOG.info("Starting WES Sample query after calculating time: " + str(
                 timestamp) + ", provided to the endpoint by user.")
-            AppLog.log(AppLog(level="INFO" , process="werkzeug" ,
+            AppLog.log(AppLog(level="INFO" , process="werkzeug" , user='api',
                               message="Starting WES Sample query after calculating time: " + str(
                                   timestamp) + ", provided to the endpoint by user."))
         if int(timestamp) > 0 :
@@ -294,12 +292,12 @@ def get_wes_data() :
             data = r.content.decode("utf-8" , "strict")
             ids = save_to_db(data)
             LOG.info("Added {0} new records to the Sample Tracking Database".format(ids))
-            AppLog.log(AppLog(level="INFO" , process="werkzeug" ,
+            AppLog.log(AppLog(level="INFO" , process="werkzeug" , user='api',
                               message="Added {0} new records to the Sample Tracking Database".format(ids)))
             response = make_response(jsonify(data=(str(ids))) , 200 , None)
             return response
     except Exception as e :
-        AppLog.log(AppLog(level="ERROR" , process="werkzeug" , message=repr(e)))
+        AppLog.log(AppLog(level="ERROR" , process="werkzeug" , user='api', message=repr(e)))
         LOG.error(e , exc_info=True)
         response = make_response(jsonify(data="" , error="There was a problem processing the request.") , 200 , None)
         return response
@@ -377,11 +375,11 @@ def save_to_db(data) :
             if partial_existing :
                 api_update_sample(db , item);
 
-        AppLog.log(AppLog(level="INFO" , process="root" ,
+        AppLog.log(AppLog(level="INFO" , process="root" , user='api',
                           message="Added {} new records to the Sample Tracking Database".format(len(record_ids))))
         return len(record_ids)
     except Exception as e :
-        AppLog.log(AppLog(level="ERROR" , process="root" ,
+        AppLog.log(AppLog(level="ERROR" , process="root" , user='api',
                           message="{} Error occured while adding records to the Sample Tracking Database.\n{}".format(
                               e)))
         return None
@@ -457,7 +455,7 @@ def save_sample_changes() :
             for item in sample_data :
                 user_update_sample(db.session , item)
             AppLog.log(
-                AppLog(level="INFO" , process="root" , message="updated {} samples by user".format(len(sample_data))))
+                AppLog(level="INFO" , process="root" , user=get_jwt_identity(), message="updated {} samples by user".format(len(sample_data))))
             LOG.info("update {} samples by user".format(len(sample_data)))
             response = make_response(
                 jsonify(
@@ -470,7 +468,7 @@ def save_sample_changes() :
     except Exception as e :
         LOG.error(repr(e))
         AppLog.log(
-            AppLog(level="ERROR" , process="root" , message="error while updating the samples {}".format(repr(e))))
+            AppLog(level="ERROR" , process="root" , user=get_jwt_identity(), message="error while updating the samples {}".format(repr(e))))
         response = make_response(
             jsonify(success=False ,
                     message="Save operation failed. Plese try again later." ,
@@ -540,20 +538,30 @@ def download_data() :
     '''
     if request.method == "POST" :
         query_data = request.get_json(silent=True)
-        num_samples = request.get("number")
-        username = request.get("username")
-        role = request.get("role")
+        print(query_data)
+        num_samples = query_data.get('data_length')
+        user = query_data.get('user')
+        username = user.get('username')
+        role = user.get('role')
         try :
+            LOG.info("User {} with role {} downloaded data for {} samples".format(username , role ,
+                                                                                      num_samples))
             AppLog.log(
-                AppLog(level="INFO" , process="root" ,
+                AppLog(level="INFO" , process="root" , user=username,
                        message="User {} with role {} downloaded data for {} samples".format(username , role ,
                                                                                             num_samples)))
-
+            response = make_response(jsonify(
+                success=True ), 200 , None)
+            response.headers.add('Access-Control-Allow-Origin' , '*')
+            return response
         except Exception as e :
             AppLog.log(
-                AppLog(level="ERROR" , process="root" ,
+                AppLog(level="ERROR" , process="root" , user=username,
                        message="Error occured while logging the data download event\n{}".format(e)))
-
+            response = make_response(jsonify(
+                success=False) , 200 , None)
+            response.headers.add('Access-Control-Allow-Origin' , '*')
+            return response
 
 @app.route("/search_data" , methods=['POST'])
 @jwt_required
@@ -567,14 +575,11 @@ def search_data() :
 
     if request.method == "POST" :
         query_data = request.get_json(silent=True)
-        print(query_data)
-        print(request.headers['Authorization'])
         search_keywords = query_data.get('searchtext')
         search_type = query_data.get('searchtype')
         user_role = query_data.get('role')
         username = get_jwt_identity()
         colHeaders , columns , settings = get_column_configs(user_role)
-
         try:
             if search_keywords is not None and search_type.lower() == "mrn" :
                 search_keywords = [x.strip() for x in search_keywords.split(',')]
@@ -585,7 +590,7 @@ def search_data() :
                     settings=settings , ) , 200 , None)
                 response.headers.add('Access-Control-Allow-Origin' , '*')
                 AppLog.log(
-                    AppLog(level="INFO" , process="root" ,
+                    AppLog(level="INFO" , process="root" , user=username,
                            message="User {} with role {} searched using kewords {} and searchtype {}".format(username ,
                                                                                                              user_role ,
                                                                                                              search_keywords ,
@@ -604,7 +609,7 @@ def search_data() :
                     settings=settings) , 200 , None)
                 response.headers.add('Access-Control-Allow-Origin' , '*')
                 AppLog.log(
-                    AppLog(level="INFO" , process="root" ,
+                    AppLog(level="INFO" , process="root" , user=username,
                            message="User {} with role {} searched using kewords {} and searchtype {}".format(username ,
                                                                                                              user_role ,
                                                                                                              search_keywords ,
@@ -619,7 +624,7 @@ def search_data() :
                     settings=settings) , 200 , None)
                 response.headers.add('Access-Control-Allow-Origin' , '*')
                 AppLog.log(
-                    AppLog(level="INFO" , process="root" ,
+                    AppLog(level="INFO" , process="root" , user=username,
                            message="User {} with role {} searched using kewords {} and searchtype {}".format(username ,
                                                                                                              user_role ,
                                                                                                              search_keywords ,
@@ -631,7 +636,7 @@ def search_data() :
                             None))
                 response.headers.add('Access-Control-Allow-Origin' , '*')
                 AppLog.log(
-                    AppLog(level="INFO" , process="root" ,
+                    AppLog(level="INFO" , process="root" , user=username,
                            message="User {} with role {} searched using kewords {} and searchtype {}".format(username ,
                                                                                                              user_role ,
                                                                                                              search_keywords ,
@@ -643,7 +648,7 @@ def search_data() :
                         None))
             response.headers.add('Access-Control-Allow-Origin' , '*')
             AppLog.log(
-                AppLog(level="INFO" , process="root" ,
+                AppLog(level="INFO" , process="root" , user=username,
                        message="User {} with role {} searched using kewords {} and searchtype {}, it cuased error {}".format(username ,
                                                                                                          user_role ,
                                                                                                          search_keywords ,

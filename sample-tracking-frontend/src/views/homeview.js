@@ -27,7 +27,6 @@ class HomeView extends Component{
     }
 
     componentWillMount(){
-        console.log(this.props.user);
         !this.props.user && this.props.history.push(`${BASE_ROUTE}/`);
     }
     componentDidMount(){
