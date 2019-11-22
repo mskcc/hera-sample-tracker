@@ -1,22 +1,22 @@
 
 import React, { Component } from 'react';
-import { Form, Icon, Input, Button, Select, Row, Col, Spin } from 'antd';
+import { Form, Icon, Input, Button, Select, Checkbox, Row, Col, Spin } from 'antd';
 import { search_data } from '../actions/searchActions';
 import { connect } from 'react-redux';
 import DataGridEditTrackingInfo from '../components/dataGridEditTrackingInfo';
 import { withRouter } from 'react-router';
-import {ADMIN_EMAIL} from '../configs/react.configs';
+import { ADMIN_EMAIL } from '../configs/react.configs';
 import DevTools from '../components/devtools';
 
 let styles = {
     notification_div: {
-      color:'black',
-      textAlign:'center',
-      fontFamily: 'sans-serif',
-      fontSize:15,
-      margin :20,
+        color: 'black',
+        textAlign: 'center',
+        fontFamily: 'sans-serif',
+        fontSize: 15,
+        margin: 20,
     }
-  }
+}
 
 class SearchForm extends Component {
     constructor(props) {
@@ -24,6 +24,7 @@ class SearchForm extends Component {
         this.state = {
             'searchtext': '',
             'searchtype': '',
+            'exactmatch': false,
             'data': this.props.data
         }
 
@@ -41,6 +42,7 @@ class SearchForm extends Component {
             const data = {
                 'searchtext': values.searchtext,
                 'searchtype': values.searchtype,
+                'exactmatch': this.state.exactmatch,
                 'role': this.props.user.role
             }
             if (!err) {
@@ -57,6 +59,10 @@ class SearchForm extends Component {
         const fieldname = e.target.name;
         const value = e.target.value
         this.setState({ [fieldname]: value });
+    }
+
+    onChange = (e) => {
+        this.setState({ exactmatch: !this.state.exactmatch });
     }
 
     render() {
@@ -97,6 +103,13 @@ class SearchForm extends Component {
                                 )}
                             </Form.Item>
                         </Col>
+
+                        {
+                            this.state.searchtype === "TUMOR TYPE" &&
+                            <Col>
+                                <Checkbox checked={this.state.exactmatch} onChange={(e)=>this.onChange(e)}>Find Exact Match</Checkbox>
+                            </Col>
+                        }
                         <Col>
                             <Form.Item>
                                 <Button type="primary" size="large" htmlType="submit">
@@ -114,7 +127,7 @@ class SearchForm extends Component {
                     </div>
                 }
                 {this.props.isFetching ? <div style={{ marginLeft: '47%', marginTop: '15%', marginRight: '47%' }}><Spin tip="Loading..." size='large' /></div> :
-                    this.props.data && <DataGridEditTrackingInfo rowdata={this.props.data}/>
+                    this.props.data && <DataGridEditTrackingInfo rowdata={this.props.data} />
                 }
                 {/* <DevTools /> */}
             </div>
