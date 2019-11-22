@@ -24,7 +24,7 @@ let styles = {
     fontSize: '25px', 
     color: 'orange', 
     marginRight:'30px' 
-  },
+  }
 }
 
 class DataGridEditTrackingInfo extends React.Component {
@@ -55,6 +55,15 @@ class DataGridEditTrackingInfo extends React.Component {
   saveChanges = () => {
     this.props.save_changes(this.state.tableData, this.props.user.access_token);
     this.setState({ isSaveButtonDisabled: true });
+  }
+
+  setMinSpareRows = (data) =>{
+    if (data.length > 50) {
+      return 1;
+    }
+    else {
+      return 0;
+    }
   }
 
   downloadData = () => {
@@ -140,22 +149,23 @@ class DataGridEditTrackingInfo extends React.Component {
               }
               <Button type="primary" icon="download" style={styles.button} onClick={() => this.handleDownload()}>Download Data</Button>
             </div>
-            <HotTable
-              className="handsontable handsontablerow"
-              data={this.state.tableData}
-              colHeaders={this.state.colHeaders}
-              columns={this.state.columnDef}
-              settings={this.state.settings}
-              afterChange={(changes, source) => this.handleEdit(changes, source)}
-              stretchH='all'
-              licenseKey="non-commercial-and-evaluation"
-              height={this.setGridHeight(this.state.tableData)}
-              wordWrap={false}
-              autoRowSize={false}
-              search={true}
-              currentRowClassName='currentRow'
-              currentColClassName='currentCol'
-            />
+              <HotTable
+                className="handsontable handsontablerow"
+                data={this.state.tableData}
+                colHeaders={this.state.colHeaders}
+                columns={this.state.columnDef}
+                settings={this.state.settings}
+                afterChange={(changes, source) => this.handleEdit(changes, source)}
+                stretchH='all'
+                licenseKey="non-commercial-and-evaluation"
+                height={this.setGridHeight(this.state.tableData)}
+                wordWrap={false}
+                autoRowSize={false}
+                search={true}
+                currentRowClassName='currentRow'
+                currentColClassName='currentCol'
+                minSpareRows= {this.setMinSpareRows(this.state.tableData)}
+              />
           </Paper>
         }
         <Modal
