@@ -490,20 +490,20 @@ def user_update_sample(session , item) :
     :return:
     '''
     try :
-        sample = session.query(Sample).filter_by(lims_tracker_recordid=item.get("lims_tracker_recordid")).first()
-        if sample is not None :
-            sample.data_analyst = item.get("data_analyst")
-            sample.scientific_pi = item.get("scientific_pi")
-            sample.access_level = item.get("access_level")
-            sample.clinical_trial = item.get("clinical_trial")
-            sample.seqiencing_site = item.get("seqiencing_site")
-            sample.pi_request_date = item.get("pi_request_date")
-            sample.pipeline = item.get("pipeline")
-            sample.tissue_type = item.get("tissue_type")
-            sample.collaboration_center = item.get("collaboration_center")
-            session.commit()
-            session.flush()
-
+        if item.get("lims_tracker_recordid") is not None:
+            sample = session.query(Sample).filter_by(lims_tracker_recordid=item.get("lims_tracker_recordid")).first()
+            if sample is not None :
+                sample.data_analyst = item.get("data_analyst")
+                sample.scientific_pi = item.get("scientific_pi")
+                sample.access_level = item.get("access_level")
+                sample.clinical_trial = item.get("clinical_trial")
+                sample.seqiencing_site = item.get("seqiencing_site")
+                sample.pi_request_date = item.get("pi_request_date")
+                sample.pipeline = item.get("pipeline")
+                sample.tissue_type = item.get("tissue_type")
+                sample.collaboration_center = item.get("collaboration_center")
+                session.commit()
+                session.flush()
 
     except Exception as e :
         LOG.error(e , exc_info=True)

@@ -1,5 +1,5 @@
-import {message} from 'antd';
 import axios from 'axios';
+import {notification} from 'antd';
 import { BASE_URL } from '../configs/react.configs';
 
 
@@ -47,10 +47,21 @@ export const save_changes = (data, token) => {
     )
     .then (res => {
       if (res.data.success) {
-        message.success({content: 'Success!\nThe Data has been saved successfully.', duration: 3});
+        notification.success({
+          message: 'Success!',
+          description:
+            'The data has been saved successfully.',
+            duration: 3
+        });
         return dispatch(save_data_success(res.data.message));
       }
       if (!res.data.success) {
+        notification.error({
+          message: 'Error!',
+          description:
+            'There was an error while saving the data. Please try again.',
+            duration: 3
+        });
         return dispatch(save_data_failure(res.data.message));
       }
     })
