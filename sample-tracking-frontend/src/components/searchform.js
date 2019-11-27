@@ -1,6 +1,6 @@
 
 import React, { Component } from 'react';
-import { Form, Icon, Input, Button, Select, Checkbox, Row, Col, Spin } from 'antd';
+import { Form, Icon, Input, Button, Select, Checkbox, Row, Col, Spin} from 'antd';
 import { search_data } from '../actions/searchActions';
 import { connect } from 'react-redux';
 import DataGridEditTrackingInfo from '../components/dataGridEditTrackingInfo';
@@ -129,6 +129,7 @@ class SearchForm extends Component {
                 {this.props.isFetching ? <div style={{ marginLeft: '47%', marginTop: '15%', marginRight: '47%' }}><Spin tip="Loading..." size='large' /></div> :
                     this.props.data && <DataGridEditTrackingInfo rowdata={this.props.data} />
                 }
+            
                 {/* <DevTools /> */}
             </div>
         );
@@ -140,7 +141,8 @@ const mapStateToProps = state => ({
     isFetching: state.searchResult.isFetching,
     error: state.searchResult.error,
     message: state.searchResult.message,
-    user: state.user.userData
+    user: state.user.userData,
+    savedata: state.saveResult
 });
 
 const mapDispatchToProps = dispatch => ({

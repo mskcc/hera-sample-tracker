@@ -360,7 +360,6 @@ adminColumns = [
         } ,
     {
         'data' : 'date_dmp_request' ,
-        'readOnly' : True
         } ,
     {
         'data' : 'dmp_requestid' ,
@@ -430,12 +429,16 @@ adminColumns = [
         } ,
     {
         'data' : 'seqiencing_site' ,
+        'editor' : 'select' ,
+        'selectOptions' : ['IGO' , 'Outside']
         } ,
     {
         'data' : 'pi_request_date' ,
         } ,
     {
         'data' : 'pipeline' ,
+        'editor' : 'select' ,
+        'selectOptions' : ['Investigator' , 'TEMPO']
         } ,
     {
         'data' : 'tissue_type' ,
@@ -444,6 +447,8 @@ adminColumns = [
         } ,
     {
         'data' : 'collaboration_center' ,
+        'editor' : 'select' ,
+        'selectOptions' : ['CMO' , 'IPOP' , 'PICI']
         } ,
     ]
 

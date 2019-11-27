@@ -1,7 +1,7 @@
 import React from 'react';
 import { HotTable } from '@handsontable/react';
 import { Paper } from '@material-ui/core';
-import { Button, Spin, Modal, Icon } from 'antd';
+import { Button, Spin, Modal, Icon} from 'antd';
 import { save_changes } from '../actions/saveActions';
 import { connect } from 'react-redux';
 import '../styles/styles.css';

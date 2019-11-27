@@ -61,7 +61,7 @@ class Sample(db.Model):
                  tumor_site=None, molecular_accession_num=None, collection_year=None, date_dmp_request=None, dmp_requestid=None,
                  igo_requestid=None, date_igo_received=None, date_igo_complete=None, application_requested=None, baitset_used=None,
                  sequencer_type=None, project_title=None, data_analyst=None, lab_head=None, cc_fund=None, scientific_pi=None, consent_parta_status=None,
-                 consent_partc_status=None, sample_status=None, access_level=None, clinical_trial=None, seqiencing_site=None, pi_request_date=None,
+                 consent_partc_status=None, sample_status=None, access_level="MSK Public", clinical_trial=None, seqiencing_site=None, pi_request_date=None,
                  pipeline=None, tissue_type=None, collaboration_center=None, lims_sample_recordid=None, lims_tracker_recordid=None
                  ):
 
