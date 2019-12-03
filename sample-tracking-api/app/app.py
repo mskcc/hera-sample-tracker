@@ -112,7 +112,7 @@ def index() :
     '''
     log_entry = LOG.info("testing")
     AppLog.log(AppLog(level="INFO" , process="Root" , user="Admin" , message="Testing the logging to db."))
-    return jsonify(columnHeaders=gridconfigs.clinicalColdHeaders , columns=gridconfigs.clinicalColumns ,
+    return jsonify(columnHeaders=gridconfigs.clinicalColHeaders , columns=gridconfigs.clinicalColumns ,
                    settings=gridconfigs.settings) , 200
 
 
@@ -298,11 +298,13 @@ def get_wes_data() :
             AppLog.log(AppLog(level="INFO" , process="werkzeug" , user='api',
                               message="Added {0} new records to the Sample Tracking Database".format(ids)))
             response = make_response(jsonify(data=(str(ids))) , 200 , None)
+            response.headers.add('Access-Control-Allow-Origin', '*')
             return response
     except Exception as e :
         AppLog.log(AppLog(level="ERROR" , process="werkzeug" , user='api', message=repr(e)))
         LOG.error(e , exc_info=True)
         response = make_response(jsonify(data="" , error="There was a problem processing the request.") , 200 , None)
+        response.headers.add('Access-Control-Allow-Origin', '*')
         return response
 
 
@@ -586,14 +588,26 @@ def search_data() :
         username = get_jwt_identity()
         colHeaders , columns , settings = get_column_configs(user_role)
         try:
-            if search_keywords is not None and search_type.lower() == "mrn" :
+            if search_keywords is not None and search_keywords == "*":
+                result = db.session.query(Sample).all()
+                response = make_response(jsonify(
+                    data=(json.dumps([r.__dict__ for r in result], default=alchemy_encoder, sort_keys=True, indent=4,
+                                     separators=(',', ': '))), colHeaders=colHeaders, columns=columns,
+                    settings=settings), 200, None)
+                response.headers.add('Access-Control-Allow-Origin', '*')
+                AppLog.log(
+                    AppLog(level="INFO", process="root", user=username,
+                           message="User {} with role {} searched using wildcard {}".format(username, user_role, search_keywords)))
+                return response
+
+            elif search_keywords is not None and search_type.lower() == "mrn":
                 search_keywords = [x.strip() for x in search_keywords.split(',')]
                 result = db.session.query(Sample).filter(Sample.mrn.in_((search_keywords))).all()
                 response = make_response(jsonify(
                     data=(json.dumps([r.__dict__ for r in result] , default=alchemy_encoder , sort_keys=True , indent=4 ,
                                      separators=(',' , ': '))) , colHeaders=colHeaders , columns=columns ,
                     settings=settings , ) , 200 , None)
-                response.headers.add('Access-Control-Allow-Origin' , '*')
+                response.headers.add('Access-Control-Allow-Origin', '*')
                 AppLog.log(
                     AppLog(level="INFO" , process="root" , user=username,
                            message="User {} with role {} searched using kewords {} and searchtype {}".format(username ,
@@ -604,17 +618,15 @@ def search_data() :
             elif search_keywords is not None and search_type.lower() == "tumor type" and exact_match:
                 search_keywords = [x.strip() for x in search_keywords.split(',')]
                 search_results = []
-                # for item in search_keywords :
-                #     search_word_like = "%{}%".format(item)
                 result = db.session.query(Sample).filter(Sample.tumor_type.in_(search_keywords)).all()
                 search_results.append(result)
                 response = make_response(jsonify(
-                    data=(json.dumps([r.__dict__ for r in result] , default=alchemy_encoder , sort_keys=True , indent=4 ,
-                                     separators=(',' , ': '))) , colHeaders=colHeaders , columns=columns ,
-                    settings=settings) , 200 , None)
+                    data=(json.dumps([r.__dict__ for r in result], default=alchemy_encoder, sort_keys=True, indent=4,
+                                     separators=(',', ': '))), colHeaders=colHeaders, columns=columns,
+                    settings=settings), 200, None)
                 response.headers.add('Access-Control-Allow-Origin' , '*')
                 AppLog.log(
-                    AppLog(level="INFO" , process="root" , user=username,
+                    AppLog(level="INFO" , process="root", user=username,
                            message="User {} with role {} searched using kewords {} and searchtype {}".format(username ,
                                                                                                              user_role ,
                                                                                                              search_keywords ,

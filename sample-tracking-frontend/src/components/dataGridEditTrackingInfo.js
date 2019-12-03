@@ -1,7 +1,7 @@
 import React from 'react';
 import { HotTable } from '@handsontable/react';
 import { Paper } from '@material-ui/core';
-import { Button, Spin, Modal, Icon} from 'antd';
+import { Button, Spin, Modal, Icon, Input} from 'antd';
 import { save_changes } from '../actions/saveActions';
 import { connect } from 'react-redux';
 import '../styles/styles.css';
@@ -24,8 +24,14 @@ let styles = {
     fontSize: '25px', 
     color: 'orange', 
     marginRight:'30px' 
+  },
+  searchbox:{
+    marginLeft:'20px',
+    width:200
   }
 }
+
+const { Search } = Input;
 
 class DataGridEditTrackingInfo extends React.Component {
   constructor(props) {
@@ -33,7 +39,8 @@ class DataGridEditTrackingInfo extends React.Component {
     this.tabledata = this.props.rowdata;
     this.state = {
       isSaveButtonDisabled: true,
-      tableData: JSON.parse(this.props.rowdata.data),
+      searchData: JSON.parse(this.props.rowdata.data),
+      tableData: this.state.searchData,
       colHeaders: this.props.rowdata.colHeaders,
       columnDef: this.props.rowdata.columns,
       settings: this.props.rowdata.settings,
@@ -133,6 +140,10 @@ class DataGridEditTrackingInfo extends React.Component {
     }
   }
 
+  filterResults = (e)=>{
+
+  }
+
   render() {
     const disclaimerText = 'The information contained in this transmission from Memorial Sloan-Kettering Cancer Center is privileged, confidential and protected health information (PHI) and it is protected from disclosure under applicable law, ' +
       'including the Health Insurance Portability and Accountability Act of 1996, as amended (HIPAA).  This transmission is intended for the sole use of approved individuals with permission and training to access this information and PHI. ' +
@@ -148,6 +159,12 @@ class DataGridEditTrackingInfo extends React.Component {
                 <Button type="primary" disabled={this.state.isSaveButtonDisabled} icon="cloud" style={styles.button} onClick={() => this.saveChanges()}>Save Changes</Button>
               }
               <Button type="primary" icon="download" style={styles.button} onClick={() => this.handleDownload()}>Download Data</Button>
+              <Search
+                placeholder="input search text"
+                onSearch={value => console.log(value)}
+                onChange={e => console.log(e.target.value)}
+                style={styles.searchbox}
+              />
             </div>
               <HotTable
                 className="handsontable handsontablerow"
