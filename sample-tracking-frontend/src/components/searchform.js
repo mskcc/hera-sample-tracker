@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 import DataGridEditTrackingInfo from '../components/dataGridEditTrackingInfo';
 import { withRouter } from 'react-router';
 import { ADMIN_EMAIL } from '../configs/react.configs';
-import DevTools from '../components/devtools';
+// import DevTools from '../components/devtools';
 
 let styles = {
     notification_div: {

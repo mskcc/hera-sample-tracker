@@ -122,7 +122,7 @@ export const login = (data, history) => {
           if (res.data.success){
             dispatch(session_end_success(res.data));
             localStorage.clear();
-            localStorage.removeItem('persist:root');
+            localStorage.removeItem("persist:root");
             Modal.warning({content: "Session expired, Please log in again."});
             history.push(`${BASE_ROUTE}/`);
           }

@@ -1,7 +1,7 @@
 import React from 'react';
 import { HotTable } from '@handsontable/react';
 import { Paper } from '@material-ui/core';
-import { Button, Spin, Modal, Icon, Input} from 'antd';
+import { Button, Spin, Modal, Icon, Input } from 'antd';
 import { save_changes } from '../actions/saveActions';
 import { connect } from 'react-redux';
 import '../styles/styles.css';
@@ -9,25 +9,33 @@ import { column_mappings } from '../configs/download-data-mappings';
 import FileSaver from "file-saver";
 import XLSX from "xlsx";
 import axios from 'axios';
-import {BASE_URL} from '../configs/react.configs';
+import { BASE_URL } from '../configs/react.configs';
 
 
 let styles = {
   button: {
     margin: 15,
   },
-  disclaimer:{
+  disclaimer: {
     fontSize: '25px',
-    textAlign:'center'
+    textAlign: 'center'
   },
-  icon:{
-    fontSize: '25px', 
-    color: 'orange', 
-    marginRight:'30px' 
+  icon: {
+    fontSize: '25px',
+    color: 'orange',
+    marginRight: '30px'
   },
-  searchbox:{
-    marginLeft:'20px',
-    width:200
+  searchbox: {
+    marginLeft: '20px',
+    width: 200
+  }
+  ,
+  searchresults: {
+    marginLeft: '20px',
+    color: 'black',
+  },
+  handsontable: {
+    paddingBottom: 20,
   }
 }
 
@@ -40,7 +48,7 @@ class DataGridEditTrackingInfo extends React.Component {
     this.state = {
       isSaveButtonDisabled: true,
       searchData: JSON.parse(this.props.rowdata.data),
-      tableData: this.state.searchData,
+      tableData: JSON.parse(this.props.rowdata.data),
       colHeaders: this.props.rowdata.colHeaders,
       columnDef: this.props.rowdata.columns,
       settings: this.props.rowdata.settings,
@@ -48,6 +56,7 @@ class DataGridEditTrackingInfo extends React.Component {
       searchtype: this.props.searchtype,
       role: this.props.role,
       confirmVisible: false,
+      spareRowAdded: false,
     }
     this.downloadData = this.downloadData.bind(this);
   }
@@ -64,17 +73,12 @@ class DataGridEditTrackingInfo extends React.Component {
     this.setState({ isSaveButtonDisabled: true });
   }
 
-  setMinSpareRows = (data) =>{
-    if (data.length > 50) {
-      return 1;
-    }
-    else {
-      return 0;
-    }
+  handleCancel = () =>{
+    this.setState({confirmVisible:false});
   }
 
   downloadData = () => {
-    this.setState({confirmVisible:false});
+    this.setState({ confirmVisible: false });
     const dataArray = [];
     const headers = this.state.colHeaders;
     dataArray.push(headers);
@@ -112,22 +116,18 @@ class DataGridEditTrackingInfo extends React.Component {
         'Authorization': "Bearer " + token
       }
     };
-    axios.post(BASE_URL + "download_data",post_data, config)
-        .then(res => {
-          if (res.data.success){
-            console.log("download logged successfully.")
-          }
-          if (!res.data.success){
-            console.log("download logging failed.")
-          }
-        })
-        .catch(err => {
-          console.log(err);
-        });
-  }
-
-  handleCancel = () => {
-    this.setState({ confirmVisible: false });
+    axios.post(BASE_URL + "download_data", post_data, config)
+      .then(res => {
+        if (res.data.success) {
+          console.log("download logged successfully.")
+        }
+        if (!res.data.success) {
+          console.log("download logging failed.")
+        }
+      })
+      .catch(err => {
+        console.log(err);
+      });
   }
 
   handleDownload = () => {
@@ -135,13 +135,27 @@ class DataGridEditTrackingInfo extends React.Component {
   }
 
   handleEdit = (changes, source) => {
+    //console.log(changes);
     if (changes) {
       this.setState({ isSaveButtonDisabled: false });
     }
   }
 
-  filterResults = (e)=>{
-
+  filterResults = (e) => {
+    let searchtext = e.target.value;
+    if (searchtext) {
+      const data = this.state.searchData.filter((item) => {
+        return Object.values(item).map((value) => {
+          return String(value).toLowerCase();
+        }).find((value) => {
+          return value && value.includes(searchtext.toLowerCase());
+        });
+      });
+      this.setState({ tableData: data });
+    }
+    else {
+      this.setState({ tableData: this.state.searchData });
+    }
   }
 
   render() {
@@ -160,14 +174,17 @@ class DataGridEditTrackingInfo extends React.Component {
               }
               <Button type="primary" icon="download" style={styles.button} onClick={() => this.handleDownload()}>Download Data</Button>
               <Search
-                placeholder="input search text"
+                placeholder="find in table"
                 onSearch={value => console.log(value)}
-                onChange={e => console.log(e.target.value)}
+                onChange={e => this.filterResults(e)}
                 style={styles.searchbox}
               />
+
+              <span style={styles.searchresults}> found {this.state.tableData.length} rows</span>
             </div>
+            <div style={styles.handsontable}>
               <HotTable
-                className="handsontable handsontablerow"
+                className="handsontable"
                 data={this.state.tableData}
                 colHeaders={this.state.colHeaders}
                 columns={this.state.columnDef}
@@ -181,12 +198,12 @@ class DataGridEditTrackingInfo extends React.Component {
                 search={true}
                 currentRowClassName='currentRow'
                 currentColClassName='currentCol'
-                minSpareRows= {this.setMinSpareRows(this.state.tableData)}
               />
+            </div>
           </Paper>
         }
         <Modal
-          title={<div style={styles.disclaimer}><Icon type="warning" style={styles.icon} theme="outlined"/>Disclaimer</div>}                     
+          title={<div style={styles.disclaimer}><Icon type="warning" style={styles.icon} theme="outlined" />Disclaimer</div>}
           visible={this.state.confirmVisible}
           onOk={this.downloadData}
           onCancel={this.handleCancel}

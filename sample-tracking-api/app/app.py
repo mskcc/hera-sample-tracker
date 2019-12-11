@@ -146,7 +146,7 @@ def login() :
             role = 'user'
 
             user_fullname = '' #get_user_fullname(result)
-            user_title = get_user_title(result)
+            #user_title = get_user_title(result)
             user_groups = get_user_group(result)
             # check user role
             if len(set(user_groups).intersection(set(ADMIN_GROUPS))) > 0 :
@@ -161,7 +161,7 @@ def login() :
             refresh_token = create_refresh_token(identity=username)
             response = make_response(
                 jsonify(valid=True , username=username , access_token=access_token , refresh_token=refresh_token ,
-                        role=role , title=user_title , user_fullname=user_fullname) ,
+                        role=role , title="not found" , user_fullname=user_fullname) ,
                 200 , None)
             response.headers.add('Access-Control-Allow-Origin' , '*')
             return response
@@ -321,16 +321,41 @@ def save_to_db(data) :
         record_ids = []
         for item in data_to_json :
             db.session.autoflush = False
-            ''' check if the record already exists and is IGO processed Sample. If a sample was processed by IGO, 
-                it should have both "limsSampleRecordId" and "limsTrackerRecordId" values. '''
+
+            print("LIMS sample record ID: " + item.get("limsSampleRecordId"))
+            print("LIMS tracker record ID: " + item.get("limsTrackerRecordId"))
+            partial_existing = None
             existing = None
-            if item.get("limsSampleRecordId") is not None :
+            if item.get("limsSampleRecordId") is None and item.get("limsTrackerRecordId") is not None :
+                ''' check if the record already exists and is non IGO processed Sample. If a sample was not processed by IGO, 
+                                                    it should only have "limsTrackerRecordId" value. '''
+                print("running partial existing block")
+                partial_existing = Sample.query.filter_by(lims_tracker_recordid=item.get("limsTrackerRecordId")).first()
+                print ("partial tracker ID: " + partial_existing.lims_tracker_recordid)
+                print("partial tracker ID: " + partial_existing.lims_sample_recordid)
+
+                '''If a non IGO sample exists, this means that the sample values have changed in DMP tracker and LIMS since last build of DB, then update the values on existing record.'''
+                if partial_existing :
+                    api_update_sample(db , item);
+
+
+            elif item.get("limsSampleRecordId") is not None and item.get("limsTrackerRecordId") is not None :
+                ''' check if the record already exists and is IGO processed Sample. If a sample was processed by IGO, 
+                                it should have both "limsSampleRecordId" and "limsTrackerRecordId" values. '''
+
                 existing = Sample.query.filter_by(lims_sample_recordid=item.get("limsSampleRecordId") ,
                                                   lims_tracker_recordid=item.get("limsTrackerRecordId")).first()
+                if existing:
+                    print("existing true")
+                    print("running existing block")
+                    print("tracker record ID: " + existing.lims_tracker_recordid)
+                    print("sample record ID: " + existing.lims_sample_recordid)
+                    api_update_sample(db , item)
 
             '''If the record does not exist, create a new record.'''
-            if existing is None :
+            if partial_existing is None and existing is None:
                 print(" Not Existing True")
+                print ("running not existing block")
                 print(item.get("limsTrackerRecordId"))
                 sample = Sample(sampleid=item.get("sampleId") , user_sampleid=item.get("userSampleId") ,
                                 cmo_sampleid=item.get("cmoSampleId") , cmo_patientid=item.get("cmoPatientId") ,
@@ -365,21 +390,6 @@ def save_to_db(data) :
                 db.session.flush()
                 record_ids.append(item.get("limsTrackerRecordId"))
 
-            # If the record already exists, update the record.
-            elif existing :
-                print("existing true")
-                api_update_sample(db , item)
-
-            ''' check if the record already exists and is non IGO processed Sample. If a sample was not processed by IGO, 
-                        it should only have "limsTrackerRecordId" value. '''
-            partial_existing = None
-            if item.get("limsSampleRecordId") is None and item.get("limsTrackerRecordId") is not None :
-                partial_existing = Sample.query.filter_by(lims_sample_recordid=None ,
-                                                          lims_tracker_recordid=item.get("limsTrackerRecordId")).first()
-            '''If a non IGO sample exists, then update the values.'''
-            if partial_existing :
-                api_update_sample(db , item);
-
         AppLog.log(AppLog(level="INFO" , process="root" , user='api',
                           message="Added {} new records to the Sample Tracking Database".format(len(record_ids))))
         return len(record_ids)
@@ -399,50 +409,53 @@ def api_update_sample(db , item) :
     '''
     try :
         sample = None
-        if item.get("limsSampleRecordId") is not None :
+        if item.get("limsSampleRecordId") is not None and item.get("limsTrackerRecordId") is not None :
             print(item.get("sampleId"))
             sample = db.session.query(Sample).filter_by(lims_sample_recordid=item.get("limsSampleRecordId") ,
                                                         lims_tracker_recordid=item.get("limsTrackerRecordId")).first()
             print("updating sample with both record ids")
-        else :
+        elif item.get("limsSampleRecordId") is None and item.get("limsTrackerRecordId") is not None :
             print(item.get("sampleId"))
-            sample = db.session.query(Sample).filter_by(lims_sample_recordid=None ,
-                                                        lims_tracker_recordid=item.get("limsTrackerRecordId")).first()
+            sample = db.session.query(Sample).filter_by(lims_sample_recordid=item.get("limsSampleRecordId"), lims_tracker_recordid=item.get("limsTrackerRecordId")).first()
             print("updating sample with no sample record id")
-        sample = db.session.query(Sample).filter_by(lims_tracker_recordid=item.get("limsTrackerRecordId")).first()
-        sample.sampleid = item.get("sampleId")
-        sample.user_sampleid = item.get("userSampleId")
-        sample.cmo_sampleid = item.get("cmoSampleId")
-        sample.cmo_patientid = item.get("cmoPatientId")
-        sample.dmp_sampleid = item.get("dmpSampleId")
-        sample.dmp_patientid = item.get("dmpPatientId")
-        sample.mrn = item.get("mrn")
-        sample.sex = item.get("sex")
-        sample.sample_type = item.get("sampleType")
-        sample.sample_class = item.get("sampleClass")
-        sample.tumor_type = item.get("tumorType")
-        sample.parental_tumortype = item.get("parentalTumorType")
-        sample.tumor_site = item.get("tissueSite")
-        sample.molecular_accession_num = item.get("molecularAccessionNum")
-        sample.collection_year = item.get("collectionYear")
-        sample.date_dmp_request = item.get("dateDmpRequest")
-        sample.dmp_requestid = item.get("dmpRequestId")
-        sample.igo_requestid = item.get("igoRequestId")
-        sample.date_igo_received = item.get("dateIgoReceived")
-        sample.date_igo_complete = item.get("igoCompleteDate")
-        sample.application_requested = item.get("applicationRequested")
-        sample.baitset_used = item.get("baitsetUsed")
-        sample.sequencer_type = item.get("sequencerType")
-        sample.project_title = item.get("projectTitle")
-        sample.lab_head = item.get("labHead")
-        sample.cc_fund = item.get("ccFund")
-        sample.consent_parta_status = item.get("consentPartAStatus")
-        sample.consent_partc_status = item.get("consentPartCStatus")
-        sample.sample_status = item.get("sampleStatus")
-        if item.get("limsSampleRecordId") is not None and sample.lims_sample_recordid is None :
-            sample.lims_sample_recordid = item.get("limsSampleRecordId")
-        db.session.commit()
-        db.session.flush()
+
+        if sample is not None :
+            sample = db.session.query(Sample).filter_by(lims_tracker_recordid=item.get("limsTrackerRecordId")).first()
+            sample.sampleid = item.get("sampleId")
+            sample.user_sampleid = item.get("userSampleId")
+            sample.cmo_sampleid = item.get("cmoSampleId")
+            sample.cmo_patientid = item.get("cmoPatientId")
+            sample.dmp_sampleid = item.get("dmpSampleId")
+            sample.dmp_patientid = item.get("dmpPatientId")
+            sample.mrn = item.get("mrn")
+            sample.sex = item.get("sex")
+            sample.sample_type = item.get("sampleType")
+            sample.sample_class = item.get("sampleClass")
+            sample.tumor_type = item.get("tumorType")
+            sample.parental_tumortype = item.get("parentalTumorType")
+            sample.tumor_site = item.get("tissueSite")
+            sample.molecular_accession_num = item.get("molecularAccessionNum")
+            sample.collection_year = item.get("collectionYear")
+            sample.date_dmp_request = item.get("dateDmpRequest")
+            sample.dmp_requestid = item.get("dmpRequestId")
+            sample.igo_requestid = item.get("igoRequestId")
+            sample.date_igo_received = item.get("dateIgoReceived")
+            sample.date_igo_complete = item.get("igoCompleteDate")
+            sample.application_requested = item.get("applicationRequested")
+            sample.baitset_used = item.get("baitsetUsed")
+            sample.sequencer_type = item.get("sequencerType")
+            sample.project_title = item.get("projectTitle")
+            sample.lab_head = item.get("labHead")
+            sample.cc_fund = item.get("ccFund")
+            sample.consent_parta_status = item.get("consentPartAStatus")
+            sample.consent_partc_status = item.get("consentPartCStatus")
+            sample.sample_status = item.get("sampleStatus")
+            if sample.access_level is None:
+                sample.access_level="PI restricted"
+            if item.get("limsSampleRecordId") is not None and sample.lims_sample_recordid is None :
+                sample.lims_sample_recordid = item.get("limsSampleRecordId")
+            db.session.commit()
+            db.session.flush()
     except Exception as e :
         LOG.error(e , exc_info=True)
 
@@ -492,20 +505,19 @@ def user_update_sample(session , item) :
     :return:
     '''
     try :
-        if item.get("lims_tracker_recordid") is not None:
-            sample = session.query(Sample).filter_by(lims_tracker_recordid=item.get("lims_tracker_recordid")).first()
-            if sample is not None :
-                sample.data_analyst = item.get("data_analyst")
-                sample.scientific_pi = item.get("scientific_pi")
-                sample.access_level = item.get("access_level")
-                sample.clinical_trial = item.get("clinical_trial")
-                sample.seqiencing_site = item.get("seqiencing_site")
-                sample.pi_request_date = item.get("pi_request_date")
-                sample.pipeline = item.get("pipeline")
-                sample.tissue_type = item.get("tissue_type")
-                sample.collaboration_center = item.get("collaboration_center")
-                session.commit()
-                session.flush()
+        sample = session.query(Sample).filter_by(id=item.get("id")).first()
+        if sample is not None :
+            sample.data_analyst = item.get("data_analyst")
+            sample.scientific_pi = item.get("scientific_pi")
+            sample.access_level = item.get("access_level")
+            sample.clinical_trial = item.get("clinical_trial")
+            sample.seqiencing_site = item.get("seqiencing_site")
+            sample.pi_request_date = item.get("pi_request_date")
+            sample.pipeline = item.get("pipeline")
+            sample.tissue_type = item.get("tissue_type")
+            sample.collaboration_center = item.get("collaboration_center")
+            session.commit()
+            session.flush()
 
     except Exception as e :
         LOG.error(e , exc_info=True)
@@ -584,7 +596,6 @@ def search_data() :
         search_type = query_data.get('searchtype')
         user_role = query_data.get('role')
         exact_match = query_data.get('exactmatch')
-        print (query_data)
         username = get_jwt_identity()
         colHeaders , columns , settings = get_column_configs(user_role)
         try:
