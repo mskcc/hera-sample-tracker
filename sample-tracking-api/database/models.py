@@ -17,6 +17,9 @@ class Sample(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     sampleid = db.Column(db.String(300))  # pulled from LIMS Sample table
     user_sampleid = db.Column(db.String(300))  # pulled from LIMS Sample table
+    user_sampleid_historical = db.Column(db.String(300)) # pulled from LIMS DMPSampleTracker table
+    duplicate_sample = db.Column(db.String(300)) # pulled from LIMS DMPSampleTracker table
+    wes_sampleid = db.Column(db.String(300)) # pulled from LIMS DMPSampleTracker table
     cmo_sampleid = db.Column(db.String(300))  # pulled from LIMS Sample table
     cmo_patientid = db.Column(db.String(300))  # pulled from LIMS SampleCMOInfoRecords table
     dmp_sampleid = db.Column(db.String(300))  # pulled from CVR endpoint
@@ -56,7 +59,7 @@ class Sample(db.Model):
     lims_sample_recordid = db.Column(db.String(300))  # entered by PM's
     lims_tracker_recordid = db.Column(db.String(300), nullable=False)
 
-    def __init__(self, sampleid=None, user_sampleid=None, cmo_sampleid=None, cmo_patientid=None, dmp_sampleid=None,
+    def __init__(self, sampleid=None, user_sampleid=None, user_sampleid_historical=None, duplicate_sample=None, wes_sampleid=None, cmo_sampleid=None, cmo_patientid=None, dmp_sampleid=None,
                  dmp_patientid=None, mrn=None, sex=None, sample_type=None, sample_class=None, tumor_type=None, parental_tumortype=None,
                  tumor_site=None, molecular_accession_num=None, collection_year=None, date_dmp_request=None, dmp_requestid=None,
                  igo_requestid=None, date_igo_received=None, date_igo_complete=None, application_requested=None, baitset_used=None,
@@ -67,6 +70,9 @@ class Sample(db.Model):
 
         self.sampleid = sampleid
         self.user_sampleid = user_sampleid
+        self.user_sampleid_historical = user_sampleid_historical
+        self.duplicate_sample = duplicate_sample
+        self.wes_sampleid = wes_sampleid
         self.cmo_sampleid = cmo_sampleid
         self.cmo_patientid = cmo_patientid
         self.dmp_sampleid = dmp_sampleid

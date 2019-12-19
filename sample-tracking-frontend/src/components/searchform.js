@@ -10,7 +10,7 @@ import { ADMIN_EMAIL } from '../configs/react.configs';
 
 let styles = {
     notification_div: {
-        color: 'black',
+        color: 'red',
         textAlign: 'center',
         fontFamily: 'sans-serif',
         fontSize: 15,
@@ -98,7 +98,7 @@ class SearchForm extends Component {
                                     <Select placeholder="Search Type" size="large" style={{ minWidth: 150 }} onChange={(value) => this.handleSearchTypeSelectChange(value, 'searchtype')}>
                                         <Select.Option value="MRN">MRN</Select.Option>
                                         <Select.Option value="TUMOR TYPE">TUMOR TYPE</Select.Option>
-                                        {this.props.user && this.props.user.role === 'admin' && <Select.Option value="DMPID">DMP ID</Select.Option>}
+                                        <Select.Option value="DMPID">DMP ID</Select.Option>
                                     </Select>
                                 )}
                             </Form.Item>
@@ -123,7 +123,7 @@ class SearchForm extends Component {
                 </Form>
                 {this.props.user && this.props.user.role === 'user' &&
                     <div style={styles.notification_div}>
-                        You are logged in as a regular user. If you are clinician or an admin please email Admins group at '{ADMIN_EMAIL}'' to get access to data.
+                        You are logged in as a regular user. If you are clinician, please email administrators group at '{ADMIN_EMAIL}' to get access to clinical data.
                     </div>
                 }
                 {this.props.isFetching ? <div style={{ marginLeft: '47%', marginTop: '15%', marginRight: '47%' }}><Spin tip="Loading..." size='large' /></div> :

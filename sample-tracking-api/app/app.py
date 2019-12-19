@@ -317,13 +317,9 @@ def save_to_db(data) :
     '''
     try :
         data_to_json = json.loads(data)
-
         record_ids = []
         for item in data_to_json :
             db.session.autoflush = False
-
-            print("LIMS sample record ID: " + item.get("limsSampleRecordId"))
-            print("LIMS tracker record ID: " + item.get("limsTrackerRecordId"))
             partial_existing = None
             existing = None
             if item.get("limsSampleRecordId") is None and item.get("limsTrackerRecordId") is not None :
@@ -331,8 +327,6 @@ def save_to_db(data) :
                                                     it should only have "limsTrackerRecordId" value. '''
                 print("running partial existing block")
                 partial_existing = Sample.query.filter_by(lims_tracker_recordid=item.get("limsTrackerRecordId")).first()
-                print ("partial tracker ID: " + partial_existing.lims_tracker_recordid)
-                print("partial tracker ID: " + partial_existing.lims_sample_recordid)
 
                 '''If a non IGO sample exists, this means that the sample values have changed in DMP tracker and LIMS since last build of DB, then update the values on existing record.'''
                 if partial_existing :
@@ -346,18 +340,16 @@ def save_to_db(data) :
                 existing = Sample.query.filter_by(lims_sample_recordid=item.get("limsSampleRecordId") ,
                                                   lims_tracker_recordid=item.get("limsTrackerRecordId")).first()
                 if existing:
-                    print("existing true")
                     print("running existing block")
-                    print("tracker record ID: " + existing.lims_tracker_recordid)
-                    print("sample record ID: " + existing.lims_sample_recordid)
                     api_update_sample(db , item)
 
             '''If the record does not exist, create a new record.'''
             if partial_existing is None and existing is None:
-                print(" Not Existing True")
                 print ("running not existing block")
-                print(item.get("limsTrackerRecordId"))
                 sample = Sample(sampleid=item.get("sampleId") , user_sampleid=item.get("userSampleId") ,
+                                user_sampleid_historical= item.get("userSampleidHistorical"),
+                                duplicate_sample= item.get("duplicateSample"),
+                                wes_sampleid=item.get("wesSampleid") ,
                                 cmo_sampleid=item.get("cmoSampleId") , cmo_patientid=item.get("cmoPatientId") ,
                                 dmp_sampleid=item.get("dmpSampleId") , dmp_patientid=item.get("dmpPatientId") ,
                                 mrn=item.get("mrn") , sex=item.get("sex") , sample_type=item.get("sampleType") ,
@@ -378,7 +370,7 @@ def save_to_db(data) :
                                 consent_parta_status=item.get("consentPartAStatus") ,
                                 consent_partc_status=item.get("consentPartCStatus") ,
                                 sample_status=item.get("sampleStatus") ,
-                                access_level="PI restricted" , clinical_trial=item.get("clinicalTrial") ,
+                                access_level="MSK public" , clinical_trial=item.get("clinicalTrial") ,
                                 seqiencing_site=item.get("sequencingSite") , pi_request_date=item.get("piRequestDate") ,
                                 pipeline=item.get("pipeline") , tissue_type=item.get("tissueType") ,
                                 collaboration_center=item.get("collaborationCenter") ,
@@ -389,7 +381,6 @@ def save_to_db(data) :
                 db.session.commit()
                 db.session.flush()
                 record_ids.append(item.get("limsTrackerRecordId"))
-
         AppLog.log(AppLog(level="INFO" , process="root" , user='api',
                           message="Added {} new records to the Sample Tracking Database".format(len(record_ids))))
         return len(record_ids)
@@ -410,7 +401,6 @@ def api_update_sample(db , item) :
     try :
         sample = None
         if item.get("limsSampleRecordId") is not None and item.get("limsTrackerRecordId") is not None :
-            print(item.get("sampleId"))
             sample = db.session.query(Sample).filter_by(lims_sample_recordid=item.get("limsSampleRecordId") ,
                                                         lims_tracker_recordid=item.get("limsTrackerRecordId")).first()
             print("updating sample with both record ids")
@@ -423,6 +413,9 @@ def api_update_sample(db , item) :
             sample = db.session.query(Sample).filter_by(lims_tracker_recordid=item.get("limsTrackerRecordId")).first()
             sample.sampleid = item.get("sampleId")
             sample.user_sampleid = item.get("userSampleId")
+            sample.user_sampleid_historical = item.get("userSampleidHistorical")
+            sample.duplicate_sample = item.get("duplicateSample")
+            sample.wes_sampleid = item.get("wesSampleid")
             sample.cmo_sampleid = item.get("cmoSampleId")
             sample.cmo_patientid = item.get("cmoPatientId")
             sample.dmp_sampleid = item.get("dmpSampleId")
@@ -446,12 +439,14 @@ def api_update_sample(db , item) :
             sample.sequencer_type = item.get("sequencerType")
             sample.project_title = item.get("projectTitle")
             sample.lab_head = item.get("labHead")
+            if sample.scientific_pi is None:
+                sample.scientific_pi = item.get("labHead")
             sample.cc_fund = item.get("ccFund")
             sample.consent_parta_status = item.get("consentPartAStatus")
             sample.consent_partc_status = item.get("consentPartCStatus")
             sample.sample_status = item.get("sampleStatus")
             if sample.access_level is None:
-                sample.access_level="PI restricted"
+                sample.access_level="MSK public"
             if item.get("limsSampleRecordId") is not None and sample.lims_sample_recordid is None :
                 sample.lims_sample_recordid = item.get("limsSampleRecordId")
             db.session.commit()
@@ -632,7 +627,7 @@ def search_data() :
                 result = db.session.query(Sample).filter(Sample.tumor_type.in_(search_keywords)).all()
                 search_results.append(result)
                 response = make_response(jsonify(
-                    data=(json.dumps([r.__dict__ for r in result], default=alchemy_encoder, sort_keys=True, indent=4,
+                    data=(json.dumps([r.__dict__ for r in search_results], default=alchemy_encoder, sort_keys=True, indent=4,
                                      separators=(',', ': '))), colHeaders=colHeaders, columns=columns,
                     settings=settings), 200, None)
                 response.headers.add('Access-Control-Allow-Origin' , '*')
@@ -645,13 +640,14 @@ def search_data() :
                 return response
             elif search_keywords is not None and search_type.lower() == "tumor type" and not exact_match:
                 search_keywords = [x.strip() for x in search_keywords.split(',')]
-                search_results = []
+                search_results = list()
                 for item in search_keywords :
                     search_word_like = "%{}%".format(item)
+                    print(search_word_like)
                     result = db.session.query(Sample).filter(Sample.tumor_type.like(search_word_like)).all()
-                    search_results.append(result)
+                    search_results.extend(result)
                 response = make_response(jsonify(
-                    data=(json.dumps([r.__dict__ for r in result] , default=alchemy_encoder , sort_keys=True , indent=4 ,
+                    data=(json.dumps([r.__dict__ for r in search_results] , default=alchemy_encoder , sort_keys=True , indent=4 ,
                                      separators=(',' , ': '))) , colHeaders=colHeaders , columns=columns ,
                     settings=settings) , 200 , None)
                 response.headers.add('Access-Control-Allow-Origin' , '*')
