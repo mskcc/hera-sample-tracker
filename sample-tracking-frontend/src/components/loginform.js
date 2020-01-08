@@ -5,12 +5,7 @@ import {connect} from 'react-redux';
 import {withRouter} from 'react-router';
 
 class LoginForm extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-    
-    }
-  }
+ 
   handleSubmit = e => {
     e.preventDefault();
     this.props.form.validateFields((err, values) => {
@@ -64,6 +59,8 @@ class LoginForm extends Component {
           </Form>
       </Card>
       </Row>
+
+      
     );
   }
 }

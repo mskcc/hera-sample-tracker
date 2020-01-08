@@ -1,21 +1,14 @@
 ###############################################################HandsonTable Column configs #############################################################################
 
-clinicalColHeaders = ['IGO ID' , 'User Sample ID' , 'CMO Sample ID' , 'CMO Patient ID' , 'DMP Sample ID' ,
-                       'DMP Patient ID' , 'MRN' , 'Sex' , 'Sample Type' , 'Sample Class' ,
-                       'Tumor Type' , 'Parental Tumor Type' , 'Tumor Site' , 'Mol Accession #' , 'Collection Yr' ,
-                       'Date DMP Request' , 'DMP Request ID' , 'IGO Request ID' , 'Date IGO Received' ,
-                       'IGO Complete Date' ,
-                       'Application' , 'Baitset' , 'Sequencer' , 'Project Name' , 'Lab Head' , 'CC/Fund' ,
-                       'Scientific PI' , 'Consent Part A' , 'Consent Part C' , 'Sample Status' ,
-                       'Access Level' , 'Clinical Trial' , 'Sequencing Site' , 'PI Request Date' , 'Pipeline' ,
-                       'Tissue Type' , 'Collaboration Center']
+clinicalColHeaders = ['WES Sample ID' , 'CMO Sample ID' , 'CMO Patient ID' , 'DMP Sample ID' , 'DMP Patient ID' , 'MRN' , 'Sex' ,
+                      'Sample Type' , 'Sample Class' , 'Tumor Type' , 'Parental Tumor Type' , 'Tumor Site' , 'Mol Accession #' ,
+                      'Collection Yr' , 'DMP Request ID' , 'Date IGO Received' , 'IGO Complete Date' , 'Application' ,
+                      'Baitset' , 'Sequencer' , 'Lab Head' , 'Scientific PI' , 'Consent Part A' , 'Consent Part C' , 'Sample Status' ,
+                      'Access Level' , 'Clinical Trial' , 'Sequencing Site' , 'Pipeline' , 'Tissue Type' , 'Collaboration Center']
 clinicalColumns = [
+
     {
-        'data' : 'sampleid' ,
-        'readOnly' : True ,
-        } ,
-    {
-        'data' : 'user_sampleid' ,
+        'data' : 'wes_sampleid' ,
         'readOnly' : True
         } ,
     {
@@ -71,15 +64,7 @@ clinicalColumns = [
         'readOnly' : True
         } ,
     {
-        'data' : 'date_dmp_request' ,
-        'readOnly' : True
-        } ,
-    {
         'data' : 'dmp_requestid' ,
-        'readOnly' : True
-        } ,
-    {
-        'data' : 'igo_requestid' ,
         'readOnly' : True
         } ,
     {
@@ -103,15 +88,7 @@ clinicalColumns = [
         'readOnly' : True
         } ,
     {
-        'data' : 'project_title' ,
-        'readOnly' : True
-        } ,
-    {
         'data' : 'lab_head' ,
-        'readOnly' : True
-        } ,
-    {
-        'data' : 'cc_fund' ,
         'readOnly' : True
         } ,
     {
@@ -143,10 +120,6 @@ clinicalColumns = [
         'readOnly' : True
         } ,
     {
-        'data' : 'pi_request_date' ,
-        'readOnly' : True
-        } ,
-    {
         'data' : 'pipeline' ,
         'readOnly' : True
         } ,
@@ -160,22 +133,14 @@ clinicalColumns = [
         } ,
     ]
 
-nonClinicalColHeaders = ['IGO ID' , 'User Sample ID' , 'CMO Sample ID' , 'Sex' , 'Sample Type' , 'Sample Class' ,
-                          'Tumor Type' , 'Parental Tumor Type' , 'Tumor Site' , 'Collection Yr' , 'Date DMP Request' ,
-                          'DMP Request ID' , 'IGO Request ID' , 'Date IGO Received' , 'IGO Complete Date' ,
-                          'Application' , 'Baitset' ,
-                          'Sequencer' , 'Project Name' , 'Lab Head' , 'CC/Fund' , 'Scientific PI' , 'Sample Status' ,
-                          'Access Level' ,
-                          'Sequencing Site' , 'PI Request Date' , 'Pipeline' , 'Tissue Type' , 'Collaboration Center']
+nonClinicalColHeaders = ['WES Sample ID' , 'CMO Sample ID' , 'Sex' , 'Sample Type' , 'Sample Class' , 'DMP Sample ID', 'DMP Patient ID',
+                        'Tumor Type' , 'Parental Tumor Type' , 'Tumor Site' , 'Collection Yr' , 'DMP Request ID' , 'Application' ,
+                        'Baitset' , 'Sequencer' ,  'Lab Head' , 'Scientific PI' , 'Consent Part A' , 'Consent Part C' , 'Sample Status' ,
+                        'Access Level', 'Clinical Trial', 'Sequencing Site' ,  'Pipeline' , 'Tissue Type' , 'Collaboration Center']
 
 nonClinicalColumns = [
     {
-        'data' : 'sampleid' ,
-        'readOnly' : True ,
-        'width' : 200
-        } ,
-    {
-        'data' : 'user_sampleid' ,
+        'data' : 'wes_sampleid' ,
         'readOnly' : True
         } ,
     {
@@ -195,6 +160,14 @@ nonClinicalColumns = [
         'readOnly' : True
         } ,
     {
+        'data' : 'dmp_sampleid' ,
+        'readOnly' : True
+        } ,
+    {
+        'data' : 'dmp_patientid' ,
+        'readOnly' : True
+        } ,
+    {
         'data' : 'tumor_type' ,
         'readOnly' : True
         } ,
@@ -211,23 +184,7 @@ nonClinicalColumns = [
         'readOnly' : True
         } ,
     {
-        'data' : 'date_dmp_request' ,
-        'readOnly' : True
-        } ,
-    {
         'data' : 'dmp_requestid' ,
-        'readOnly' : True
-        } ,
-    {
-        'data' : 'igo_requestid' ,
-        'readOnly' : True
-        } ,
-    {
-        'data' : 'date_igo_received' ,
-        'readOnly' : True
-        } ,
-    {
-        'data' : 'date_igo_complete' ,
         'readOnly' : True
         } ,
     {
@@ -243,19 +200,19 @@ nonClinicalColumns = [
         'readOnly' : True
         } ,
     {
-        'data' : 'project_title' ,
-        'readOnly' : True
-        } ,
-    {
         'data' : 'lab_head' ,
         'readOnly' : True
         } ,
     {
-        'data' : 'cc_fund' ,
+        'data' : 'scientific_pi' ,
         'readOnly' : True
         } ,
     {
-        'data' : 'scientific_pi' ,
+        'data' : 'consent_parta_status' ,
+        'readOnly' : True
+        } ,
+    {
+        'data' : 'consent_partc_status' ,
         'readOnly' : True
         } ,
     {
@@ -267,11 +224,11 @@ nonClinicalColumns = [
         'readOnly' : True
         } ,
     {
-        'data' : 'seqiencing_site' ,
+        'data' : 'clinical_trial' ,
         'readOnly' : True
         } ,
     {
-        'data' : 'pi_request_date' ,
+        'data' : 'seqiencing_site' ,
         'readOnly' : True
         } ,
     {
@@ -288,14 +245,12 @@ nonClinicalColumns = [
         } ,
     ]
 
-adminColHeaders = ['IGO ID' , 'User Sample ID' , 'CMO Sample ID' , 'CMO Patient ID' , 'DMP Sample ID' ,
-                    'DMP Patient ID' , 'MRN' , 'Sex' , 'Sample Type' , 'Sample Class' ,
-                    'Tumor Type' , 'Parental Tumor Type' , 'Tumor Site' , 'Mol Accession #' , 'Collection Yr' ,
-                    'Date DMP Request' , 'DMP Request ID' , 'IGO Request ID' , 'Date IGO Received' ,
-                    'IGO Complete Date' , 'Application' , 'Baitset' , 'Sequencer' , 'Project Name' , 'Data Analyst' ,
-                    'Lab Head' , 'CC/Fund' , 'Scientific PI' , 'Consent Part A' , 'Consent Part C' , 'Sample Status' ,
-                    'Access Level' , 'Clinical Trial' , 'Sequencing Site' , 'PI Request Date' , 'Pipeline' ,
-                    'Tissue Type' , 'Collaboration Center']
+adminColHeaders = ['IGO ID' , 'User Sample ID' , 'User Sample ID-historical', 'Duplicate sample', 'WES Sample ID' ,'CMO Sample ID' , 'CMO Patient ID' , 'DMP Sample ID' , 'DMP Patient ID' , 'MRN' , 'Sex' ,
+                   'Sample Type' , 'Sample Class' , 'Tumor Type' , 'Parental Tumor Type' , 'Tumor Site' , 'Mol Accession #' , 'Collection Yr' ,
+                   'Date DMP Request' , 'DMP Request ID' , 'IGO Request ID' , 'Date IGO Received' , 'IGO Complete Date' , 'Application' ,
+                   'Baitset' , 'Sequencer' , 'Project Name' , 'Data Analyst' , 'Lab Head' , 'CC/Fund' , 'Scientific PI' , 'Consent Part A' ,
+                   'Consent Part C' , 'Sample Status' , 'Access Level' , 'Clinical Trial' , 'Sequencing Site' , 'PI Request Date' , 'Pipeline' ,
+                   'Tissue Type' , 'Collaboration Center']
 adminColumns = [
     {
         'data' : 'sampleid' ,
@@ -304,6 +259,18 @@ adminColumns = [
         } ,
     {
         'data' : 'user_sampleid' ,
+        'readOnly' : True
+        } ,
+{
+        'data' : 'user_sampleid_historical' ,
+        'readOnly' : True
+        } ,
+{
+        'data' : 'duplicate_sample' ,
+        'readOnly' : True
+        } ,
+{
+        'data' : 'wes_sampleid' ,
         'readOnly' : True
         } ,
     {

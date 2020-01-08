@@ -13,4 +13,4 @@ elif ENV == 'prod':
     DEBUG = False
 # dev, this is how python runs the app
 if __name__ == '__main__':
-    app.run(debug=DEBUG )
+    app.run(debug=DEBUG, threaded=True)

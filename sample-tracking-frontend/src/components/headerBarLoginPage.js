@@ -7,6 +7,12 @@ import {withRouter} from 'react-router';
 import {logout} from '../actions/userActions';
 
 class HeaderBarLoginPage extends Component{
+  constructor(props) {
+    super(props);
+    this.state = {
+      user : this.props.user
+    }
+  }
 
   logout = (user) =>{
     var config = {
@@ -32,7 +38,7 @@ class HeaderBarLoginPage extends Component{
                 Sample Tracker
               </Col>
               <Col span={4} style={{padding:'auto', color:'black', fontSize:35, fontFamily:'sans-serif'}}>
-                {this.props.user && this.props.user.username ?
+                {this.state.user && this.state.user.username && this.state.user.access_token ?
                 <Button ghost icon="logout" onClick={()=> this.logout()}>LOG OUT</Button> : null}
               </Col> 
             </Row>

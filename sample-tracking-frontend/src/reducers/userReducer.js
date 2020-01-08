@@ -50,6 +50,14 @@ const initialState = {
             error: action.error,
             isFetching: false
           });
+        case 'SESSION_END_SUCCESS':
+          return Object.assign({}, state,{
+            userData: action.data,
+            isError: true,
+            error: action.error,
+            isFetching: false
+          });
+
         default:
           return state;
       }
