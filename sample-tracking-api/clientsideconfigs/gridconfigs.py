@@ -133,7 +133,7 @@ clinicalColumns = [
         } ,
     ]
 
-nonClinicalColHeaders = ['WES Sample ID' , 'CMO Sample ID' , 'Sex' , 'Sample Type' , 'Sample Class' , 'DMP Sample ID', 'DMP Patient ID'
+nonClinicalColHeaders = ['WES Sample ID' , 'CMO Sample ID' , 'Sex' , 'Sample Type' , 'Sample Class' , 'DMP Sample ID', 'DMP Patient ID',
                         'Tumor Type' , 'Parental Tumor Type' , 'Tumor Site' , 'Collection Yr' , 'DMP Request ID' , 'Application' ,
                         'Baitset' , 'Sequencer' ,  'Lab Head' , 'Scientific PI' , 'Consent Part A' , 'Consent Part C' , 'Sample Status' ,
                         'Access Level', 'Clinical Trial', 'Sequencing Site' ,  'Pipeline' , 'Tissue Type' , 'Collaboration Center']

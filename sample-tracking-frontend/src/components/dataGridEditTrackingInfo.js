@@ -57,6 +57,7 @@ class DataGridEditTrackingInfo extends React.Component {
       role: this.props.role,
       confirmVisible: false,
       spareRowAdded: false,
+      dataRowsEdited: new Set(),
     }
     this.downloadData = this.downloadData.bind(this);
   }
@@ -68,8 +69,24 @@ class DataGridEditTrackingInfo extends React.Component {
     return 900;
   }
 
+  handleDownload = () => {
+    this.setState({ confirmVisible: true });
+  }
+
+  //When a row cell is edited add the id of that row object to state in a Set(). We will use this Set object to filter data rows to save to DB to make save operation faster.
+  handleEdit = (changes, source) => {
+    changes && changes.map((change) => {
+      this.setState({dataRowsEdited:new Set([...this.state.dataRowsEdited, this.state.tableData[change[0]].id])});
+      this.setState({ isSaveButtonDisabled: false });
+    })
+  }
+
+  //First filter the table for only rows that were edited and needs to be saved. Save the filtered rows.
   saveChanges = () => {
-    this.props.save_changes(this.state.tableData, this.props.user.access_token);
+    const rowsToSave = this.state.tableData.filter((item)=> {
+      return this.state.dataRowsEdited.has(item.id);
+    });
+    this.props.save_changes(rowsToSave, this.props.user.access_token);
     this.setState({ isSaveButtonDisabled: true });
   }
 
@@ -130,17 +147,6 @@ class DataGridEditTrackingInfo extends React.Component {
       });
   }
 
-  handleDownload = () => {
-    this.setState({ confirmVisible: true });
-  }
-
-  handleEdit = (changes, source) => {
-    //console.log(changes);
-    if (changes) {
-      this.setState({ isSaveButtonDisabled: false });
-    }
-  }
-
   filterResults = (e) => {
     let searchtext = e.target.value;
     if (searchtext) {
@@ -175,7 +181,7 @@ class DataGridEditTrackingInfo extends React.Component {
               <Button type="primary" icon="download" style={styles.button} onClick={() => this.handleDownload()}>Download Data</Button>
               <Search
                 placeholder="find in table"
-                onSearch={value => console.log(value)}
+                //onSearch={value => console.log(value)}
                 onChange={e => this.filterResults(e)}
                 style={styles.searchbox}
               />

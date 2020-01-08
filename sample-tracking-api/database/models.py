@@ -1,11 +1,14 @@
 import datetime
 
 from flask_sqlalchemy import SQLAlchemy
+import sqlalchemy as sa
+from sqlalchemy_continuum import make_versioned
 
 db = SQLAlchemy()
-
+make_versioned(user_cls=None)
 
 class User(db.Model):
+    __versioned__ = {}
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(80), unique=True, nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
@@ -14,6 +17,8 @@ class User(db.Model):
 
 
 class Sample(db.Model):
+    __versioned__ = {}
+    __tablename__ = 'sample'
     id = db.Column(db.Integer, primary_key=True)
     sampleid = db.Column(db.String(300))  # pulled from LIMS Sample table
     user_sampleid = db.Column(db.String(300))  # pulled from LIMS Sample table
@@ -56,6 +61,10 @@ class Sample(db.Model):
     pipeline = db.Column(db.String(300))  # entered by PM's
     tissue_type = db.Column(db.String(300))  # entered by PM's
     collaboration_center = db.Column(db.String(300))  # entered by PM's
+    date_created = db.Column(db.String(300))
+    created_by = db.Column(db.String(300))
+    date_updated = db.Column(db.String(300))
+    updated_by = db.Column(db.String(300))
     lims_sample_recordid = db.Column(db.String(300))  # entered by PM's
     lims_tracker_recordid = db.Column(db.String(300), nullable=False)
 
@@ -65,7 +74,7 @@ class Sample(db.Model):
                  igo_requestid=None, date_igo_received=None, date_igo_complete=None, application_requested=None, baitset_used=None,
                  sequencer_type=None, project_title=None, data_analyst=None, lab_head=None, cc_fund=None, scientific_pi=None, consent_parta_status=None,
                  consent_partc_status=None, sample_status=None, access_level="MSK Public", clinical_trial=None, seqiencing_site=None, pi_request_date=None,
-                 pipeline=None, tissue_type=None, collaboration_center=None, lims_sample_recordid=None, lims_tracker_recordid=None
+                 pipeline=None, tissue_type=None, collaboration_center=None, date_created= None, created_by=None, date_updated = None, updated_by=None, lims_sample_recordid=None, lims_tracker_recordid=None
                  ):
 
         self.sampleid = sampleid
@@ -109,6 +118,10 @@ class Sample(db.Model):
         self.pipeline = pipeline
         self.tissue_type = tissue_type
         self.collaboration_center = collaboration_center
+        self.date_created = date_created
+        self.created_by = created_by
+        self.date_updated = date_updated
+        self.updated_by = updated_by
         self.lims_sample_recordid = lims_sample_recordid
         self.lims_tracker_recordid = lims_tracker_recordid
 
@@ -148,3 +161,38 @@ class AppLog(db.Model):
         db.session.add(self)
         db.session.commit()
         db.session.flush()
+
+    @staticmethod
+    def info(message, user):
+        applog = AppLog()
+        applog.level = "INFO"
+        applog.process = "root"
+        applog.user = user
+        applog.message = message
+        db.session.add(applog)
+        db.session.commit()
+        db.session.flush()
+
+    @staticmethod
+    def warning(message, user):
+        applog = AppLog()
+        applog.level = "WARNING"
+        applog.process = "root"
+        applog.user = user
+        applog.message = message
+        db.session.add(applog)
+        db.session.commit()
+        db.session.flush()
+
+    @staticmethod
+    def error(message, user):
+        applog = AppLog()
+        applog.level = "ERROR"
+        applog.process = "root"
+        applog.user = user
+        applog.message = message
+        db.session.add(applog)
+        db.session.commit()
+        db.session.flush()
+
+sa.orm.configure_mappers()

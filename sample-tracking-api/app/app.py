@@ -1,108 +1,5 @@
-import datetime
-import decimal
-import json
-import time
-from datetime import timedelta
-import logging as LOG
-import ldap
-from flask_cors import CORS
-from flask import request , make_response , jsonify , Flask , send_from_directory
-from flask_jwt_extended import (
-    JWTManager , jwt_required , get_jwt_identity ,
-    create_access_token , create_refresh_token ,
-    jwt_refresh_token_required , get_raw_jwt
-    )
-from requests.adapters import HTTPAdapter
-from urllib3 import PoolManager
-import ssl
-import requests
-import os , yaml
-from userutils.userutils import get_user_fullname , get_user_group , get_user_title
-from database.models import db , Sample , AppLog
-import clientsideconfigs.gridconfigs as gridconfigs
 
-app = Flask(__name__)
-app.config['PROPAGATE_EXCEPTIONS'] = True
-
-CORS(app)
-
-
-class MyAdapter(HTTPAdapter) :
-    def init_poolmanager(self , connections , maxsize , block=False) :
-        self.poolmanager = PoolManager(num_pools=connections ,
-                                       maxsize=maxsize ,
-                                       block=block ,
-                                       ssl_version=ssl.PROTOCOL_SSLv23)
-
-
-s = requests.Session()
-s.mount('https://' , MyAdapter())
-
-####################################### app configuration settings ###################################
-
-config = os.path.join(os.path.dirname(os.path.realpath(__file__)) , "lims_user_config")
-config_options = yaml.safe_load(open(config , "r"))
-USER = config_options['username']
-PASSW = config_options['password']
-ENV = config_options['env']
-PORT = config_options['port_dev']
-LIMS_API_ROOT = config_options['lims_end_point_dev']
-if (ENV== 'dev'):
-    PORT = config_options['port_dev']
-    LIMS_API_ROOT = config_options['lims_end_point_dev']
-    app.config['SQLALCHEMY_DATABASE_URI'] = config_options['db_uri_dev']
-elif (ENV== 'prod'):
-    PORT = config_options['port_prod']
-    LIMS_API_ROOT = config_options['lims_end_point_prod']
-    app.config['SQLALCHEMY_DATABASE_URI'] = config_options['db_uri_prod']
-elif (ENV == 'local'):
-    PORT = config_options['port_dev']
-    LIMS_API_ROOT = config_options['lims_end_point_local']
-    app.config['SQLALCHEMY_DATABASE_URI'] = config_options['db_uri_local']
-
-print(PORT)
-print (LIMS_API_ROOT)
-print (app.config['SQLALCHEMY_DATABASE_URI'])
-AUTH_LDAP_URL = config_options['auth_ldap_url']
-ldap.set_option(ldap.OPT_X_TLS_REQUIRE_CERT , ldap.OPT_X_TLS_NEVER)
-app.config['SECRET_KEY'] = 'the quick brown fox jumps over the lazy dog'
-app.config['SQLALCHEMY_ECHO'] = False
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-
-app.config['JWT_SECRET_KEY'] = config_options['secret_key']  # Change this!
-app.config['JWT_BLACKLIST_ENABLED'] = True
-app.config['JWT_BLACKLIST_TOKEN_CHECKS'] = ['access' , 'refresh']
-app.config['JWT_ACCESS_TOKEN_EXPIRES'] = False
-jwt = JWTManager(app)
-CORS(app)
-
-blacklist = set()
-
-##################################### Logging settings ###############################################
-log_file_path = ''
-if ENV=='local' :
-    log_file_path = config_options['log_file_local']
-elif ENV == 'prod' or ENV == 'dev' :
-    log_file_path = config_options['log_file_prod']
-
-LOG.basicConfig(level=LOG.INFO ,
-                filename=log_file_path.format(datetime.datetime.now().date()) ,
-                format='%(asctime)s  %(levelname)-10s %(processName)s  %(name)s %(message)s')
-
-##################################### DB Initialization###############################################
-
-with app.app_context() :
-    db.init_app(app)
-    db.create_all()
-
-#################################### APP CONSTANTS ###################################################
-
-# ADMIN_GROUPS = ['AHDHD'] # add another admin group from PM's when available
-ADMIN_GROUPS = ['zzPDL_SKI_IGO_DATA' , 'GRP_SKI_CMO_WESRecapture']
-CLINICAL_GROUPS = ['clinical_group_update_when_available']
-
-
-######################################################################################################
+from app import *
 
 @app.route("/" , methods=['GET' , 'POST'])
 def index() :
@@ -111,7 +8,11 @@ def index() :
     :return:
     '''
     log_entry = LOG.info("testing")
-    AppLog.log(AppLog(level="INFO" , process="Root" , user="Admin" , message="Testing the logging to db."))
+    AppLog.info(message="Testing the app.", user="api")
+    #samples = db.session.query(Sample).filter(sa.not_(Sample.sample_status.like('%Failed%')), sa.not_(Sample.sampleid == '')).all()
+    #samples = db.session.query(Sample).filter(sa.not_(Sample.sample_status.like('%Failed%'))).all()
+    #samples = db.session.query(Sample).all()
+    #return jsonify(totalrecords = len(samples))
     return jsonify(columnHeaders=gridconfigs.clinicalColHeaders , columns=gridconfigs.clinicalColumns ,
                    settings=gridconfigs.settings) , 200
 
@@ -155,8 +56,9 @@ def login() :
                 role = 'clinical'
             conn.unbind_s()
             LOG.info("Successfully authenticated and logged {} into the app with role {}.".format(username , role))
-            AppLog.log(AppLog(level="INFO" , process="Root" , user=username ,
-                              message="Successfully authenticated and logged into the app."))
+
+            AppLog.info(message="Successfully authenticated and logged into the app.", user = username)
+
             access_token = create_access_token(identity=username)
             refresh_token = create_refresh_token(identity=username)
             response = make_response(
@@ -170,12 +72,12 @@ def login() :
             response.headers.add('Access-Control-Allow-Origin' , '*')
             AppLog.log(AppLog(level="WARNING" , process="Root" , user=username ,
                               message="Invalid username or password."))
+            AppLog.warning(message="Invalid username or password.", user=username)
             return make_response(response)
         except ldap.OPERATIONS_ERROR as e :
             response = make_response(jsonify(valid=False) , 200 , None)
             response.headers.add('Access-Control-Allow-Origin' , '*')
-            AppLog.log(AppLog(level="ERROR" , process="Root" , user=username ,
-                              message="ldap OPERATION ERROR occured. {}".format(e)))
+            AppLog.error(message="ldap OPERATION ERROR occured. {}".format(e), user=username )
             return make_response(response)
 
 
@@ -203,12 +105,10 @@ def refresh() :
             'access_token' : create_access_token(identity=current_user) ,
             'refresh_token' : create_refresh_token(identity=current_user)
             }
-        AppLog.log(AppLog(level="INFO" , process="Root" , user=current_user ,
-                          message="Successfully refreshed jwt token for user " + current_user))
+        AppLog.info(message="Successfully refreshed jwt token for user " + current_user, user=current_user)
         return jsonify(response) , 200
     except Exception as e :
-        AppLog.log(AppLog(level="ERROR" , process="Root" , user=current_user ,
-                          message="Failed to refresh access token for user " + current_user))
+        AppLog.error( message="Failed to refresh access token for user " + current_user, user=current_user)
         response = {
             'access_token' : "" ,
             'refresh_token' : "" ,
@@ -224,12 +124,10 @@ def logout() :
     try :
         if request.method == "POST" :
             user_data = request.get_json(silent=True)
-            print(user_data)
             current_user = get_jwt_identity()
             jti = get_raw_jwt()['jti']
             blacklist.add(jti)
-            AppLog.log(AppLog(level="INFO" , process="Root" , user=current_user ,
-                              message="Successfully logged out user " + current_user))
+            AppLog.info(message="Successfully logged out user " + current_user, user=current_user)
             response = make_response(
                 jsonify(success=True ,
                         valid=True ,
@@ -241,10 +139,7 @@ def logout() :
             response.headers.add('Access-Control-Allow-Origin' , '*')
             return response
     except Exception as e :
-        AppLog.log(AppLog(level="ERROR" ,
-                          process="Root" ,
-                          user=current_user ,
-                          message="Error while logging out user " + current_user))
+        AppLog.error(message="Error while logging out user " + current_user, user=current_user)
         response = make_response(
             jsonify(valid=False ,
                     username=None ,
@@ -264,28 +159,36 @@ def logout2() :
     return jsonify({ "success" : True , "msg" : "Successfully logged out" }) , 200
 
 
+
+
+def get_tracker_data():
+    "hello"
+    timestamp = 0
+
+
 @app.route("/get_wes_data" , methods=['GET'])
 def get_wes_data() :
     """
     End point to get WES Sample data from LIMS using timestamp. User can either pass "timestamp" parameter (miliseconds) to this endpoint
     to fetch sample data that was created after the timestamp provided. Or user can call the endpoint without any parameters and the end point will fetch data for last 24 hours.
     :return:
+
     """
     try :
-        timestamp = 0
         if request.args.get("timestamp") is not None :
             timestamp = request.args.get("timestamp")
             LOG.info("Starting WES Sample query using time stamp: " + timestamp + ", provided to the endpoint query")
-            AppLog.log(AppLog(level="INFO" , process="werkzeug" , user='api',
-                              message="Starting WES Sample query using time stamp: " + timestamp + ", provided to the endpoint query"))
+            AppLog.info(
+                message="Starting WES Sample query using time stamp: " + timestamp + ", provided to the endpoint query" ,
+                user='api' , )
         else :
             timestamp = time.mktime((datetime.datetime.today() - timedelta(
-                days=1.1)).timetuple()) * 1000  # 1.1 to account for lost during the firing of query. It is better to have some time overlap to get all the data.
-            LOG.info("Starting WES Sample query after calculating time: " + str(
-                timestamp) + ", provided to the endpoint by user.")
-            AppLog.log(AppLog(level="INFO" , process="werkzeug" , user='api',
-                              message="Starting WES Sample query after calculating time: " + str(
-                                  timestamp) + ", provided to the endpoint by user."))
+                days=1.1)).timetuple()) * 1000  # 1.1 to account for time lost during the initialization of query. It is better to have some time overlap to get all the data.
+            LOG.info("Starting WES Sample query after calculating time: {} provided to the endpoint by user.".format(
+                str(timestamp)))
+            AppLog.info(
+                message="Starting WES Sample query after calculating time: {} provided to the endpoint by user.".format(
+                    str(timestamp)) , user="api")
         if int(timestamp) > 0 :
             print(timestamp)
             LOG.info(
@@ -295,13 +198,12 @@ def get_wes_data() :
             data = r.content.decode("utf-8" , "strict")
             ids = save_to_db(data)
             LOG.info("Added {0} new records to the Sample Tracking Database".format(ids))
-            AppLog.log(AppLog(level="INFO" , process="werkzeug" , user='api',
-                              message="Added {0} new records to the Sample Tracking Database".format(ids)))
+            AppLog.info(message="Added {0} new records to the Sample Tracking Database".format(ids), user="api")
             response = make_response(jsonify(data=(str(ids))) , 200 , None)
             response.headers.add('Access-Control-Allow-Origin', '*')
             return response
     except Exception as e :
-        AppLog.log(AppLog(level="ERROR" , process="werkzeug" , user='api', message=repr(e)))
+        AppLog.error(message=repr(e), user='api')
         LOG.error(e , exc_info=True)
         response = make_response(jsonify(data="" , error="There was a problem processing the request.") , 200 , None)
         response.headers.add('Access-Control-Allow-Origin', '*')
@@ -375,19 +277,19 @@ def save_to_db(data) :
                                 pipeline=item.get("pipeline") , tissue_type=item.get("tissueType") ,
                                 collaboration_center=item.get("collaborationCenter") ,
                                 lims_sample_recordid=item.get("limsSampleRecordId") ,
-                                lims_tracker_recordid=item.get("limsTrackerRecordId")
+                                lims_tracker_recordid=item.get("limsTrackerRecordId"),
+                                date_created = str(datetime.datetime.now()),
+                                created_by = 'api',
+                                date_updated = str(datetime.datetime.now()),
                                 )
                 db.session.add(sample)
                 db.session.commit()
                 db.session.flush()
                 record_ids.append(item.get("limsTrackerRecordId"))
-        AppLog.log(AppLog(level="INFO" , process="root" , user='api',
-                          message="Added {} new records to the Sample Tracking Database".format(len(record_ids))))
+        AppLog.info(message="Added {} new records to the Sample Tracking Database".format(len(record_ids)), user="api")
         return len(record_ids)
     except Exception as e :
-        AppLog.log(AppLog(level="ERROR" , process="root" , user='api',
-                          message="{} Error occured while adding records to the Sample Tracking Database.\n{}".format(
-                              e)))
+        AppLog.error(message="{} Error occured while adding records to the Sample Tracking Database.\n{}".format(e), user="api")
         return None
 
 
@@ -449,6 +351,8 @@ def api_update_sample(db , item) :
                 sample.access_level="MSK public"
             if item.get("limsSampleRecordId") is not None and sample.lims_sample_recordid is None :
                 sample.lims_sample_recordid = item.get("limsSampleRecordId")
+            sample.date_updated = str(datetime.datetime.now())
+            sample.updated_by = 'api'
             db.session.commit()
             db.session.flush()
     except Exception as e :
@@ -465,11 +369,11 @@ def save_sample_changes() :
     try :
         if request.method == "POST" :
             sample_data = request.get_json(silent=True)
+            username = get_jwt_identity()
             for item in sample_data :
-                user_update_sample(db.session , item)
-            AppLog.log(
-                AppLog(level="INFO" , process="root" , user=get_jwt_identity(), message="updated {} samples by user".format(len(sample_data))))
-            LOG.info("update {} samples by user".format(len(sample_data)))
+                user_update_sample(db.session , item, username)
+            AppLog.info(message="updated {} samples by user".format(len(sample_data)), user=username)
+            LOG.info("update {} samples by user {}".format(len(sample_data), username))
             response = make_response(
                 jsonify(
                     success=True ,
@@ -480,8 +384,7 @@ def save_sample_changes() :
             return response
     except Exception as e :
         LOG.error(repr(e))
-        AppLog.log(
-            AppLog(level="ERROR" , process="root" , user=get_jwt_identity(), message="error while updating the samples {}".format(repr(e))))
+        AppLog.error(message="error while updating the samples {}".format(e.with_traceback()), user="api")
         response = make_response(
             jsonify(success=False ,
                     message="Save operation failed. Plese try again later." ,
@@ -491,7 +394,7 @@ def save_sample_changes() :
         return response
 
 
-def user_update_sample(session , item) :
+def user_update_sample(session , item, username) :
     '''
     Sometimes users will update some editable columns on the clientside. These updated values should be updated to the database.
     Only the fields that are editable on the front end will be updated.
@@ -499,6 +402,7 @@ def user_update_sample(session , item) :
     :param item:
     :return:
     '''
+    print(username)
     try :
         sample = session.query(Sample).filter_by(id=item.get("id")).first()
         if sample is not None :
@@ -511,11 +415,14 @@ def user_update_sample(session , item) :
             sample.pipeline = item.get("pipeline")
             sample.tissue_type = item.get("tissue_type")
             sample.collaboration_center = item.get("collaboration_center")
+            sample.date_updated = str(datetime.datetime.now())
+            sample.updated_by = username
             session.commit()
             session.flush()
 
     except Exception as e :
         LOG.error(e , exc_info=True)
+        AppLog.error(message=e, user="api")
 
 
 def alchemy_encoder(obj) :
@@ -558,18 +465,13 @@ def download_data() :
         try :
             LOG.info("User {} with role {} downloaded data for {} samples".format(username , role ,
                                                                                       num_samples))
-            AppLog.log(
-                AppLog(level="INFO" , process="root" , user=username,
-                       message="User {} with role {} downloaded data for {} samples".format(username , role ,
-                                                                                            num_samples)))
+            AppLog.info(message="User {} with role {} downloaded data for {} samples".format(username , role , num_samples), user=username)
             response = make_response(jsonify(
                 success=True ), 200 , None)
             response.headers.add('Access-Control-Allow-Origin' , '*')
             return response
         except Exception as e :
-            AppLog.log(
-                AppLog(level="ERROR" , process="root" , user=username,
-                       message="Error occured while logging the data download event\n{}".format(e)))
+            AppLog.error(message="Error occured while logging the data download event\n{}".format(e), user=username)
             response = make_response(jsonify(
                 success=False) , 200 , None)
             response.headers.add('Access-Control-Allow-Origin' , '*')
@@ -594,49 +496,47 @@ def search_data() :
         username = get_jwt_identity()
         colHeaders , columns , settings = get_column_configs(user_role)
         try:
+            result = None
             if search_keywords is not None and search_keywords == "*":
-                result = db.session.query(Sample).all()
+                if user_role != 'admin':
+                    result = db.session.query(Sample).filter(sa.not_(Sample.sample_status.like('%Failed%')), sa.not_(Sample.sampleid == '')).all()
+                else:
+                    result = db.session.query(Sample).all()
                 response = make_response(jsonify(
                     data=(json.dumps([r.__dict__ for r in result], default=alchemy_encoder, sort_keys=True, indent=4,
                                      separators=(',', ': '))), colHeaders=colHeaders, columns=columns,
                     settings=settings), 200, None)
                 response.headers.add('Access-Control-Allow-Origin', '*')
-                AppLog.log(
-                    AppLog(level="INFO", process="root", user=username,
-                           message="User {} with role {} searched using wildcard {}".format(username, user_role, search_keywords)))
+                AppLog.info(message="User {} with role {} searched using wildcard {}".format(username, user_role, search_keywords), user=username)
                 return response
 
             elif search_keywords is not None and search_type.lower() == "mrn":
                 search_keywords = [x.strip() for x in search_keywords.split(',')]
-                result = db.session.query(Sample).filter(Sample.mrn.in_((search_keywords))).all()
+                if user_role != 'admin':
+                    result = db.session.query(Sample).filter(Sample.mrn.in_((search_keywords)), sa.not_(Sample.sample_status.like('%Failed%')), sa.not_(Sample.sampleid == '')).all()
+                else:
+                    result = db.session.query(Sample).filter(Sample.mrn.in_((search_keywords))).all()
                 response = make_response(jsonify(
                     data=(json.dumps([r.__dict__ for r in result] , default=alchemy_encoder , sort_keys=True , indent=4 ,
                                      separators=(',' , ': '))) , colHeaders=colHeaders , columns=columns ,
                     settings=settings , ) , 200 , None)
                 response.headers.add('Access-Control-Allow-Origin', '*')
-                AppLog.log(
-                    AppLog(level="INFO" , process="root" , user=username,
-                           message="User {} with role {} searched using kewords {} and searchtype {}".format(username ,
-                                                                                                             user_role ,
-                                                                                                             search_keywords ,
-                                                                                                             search_type)))
+                AppLog.info(message="User {} with role {} searched using kewords {} and searchtype {}".format(username ,user_role ,search_keywords ,search_type), user=username)
                 return response
             elif search_keywords is not None and search_type.lower() == "tumor type" and exact_match:
                 search_keywords = [x.strip() for x in search_keywords.split(',')]
                 search_results = []
-                result = db.session.query(Sample).filter(Sample.tumor_type.in_(search_keywords)).all()
-                search_results.append(result)
+                if user_role != 'admin':
+                    result = db.session.query(Sample).filter(Sample.tumor_type.in_((search_keywords)), sa.not_(Sample.sample_status.like('%Failed%')), sa.not_(Sample.sampleid == '')).all()
+                else:
+                    result = db.session.query(Sample).filter(Sample.tumor_type.in_(search_keywords)).all()
+                search_results.extend(result)
                 response = make_response(jsonify(
                     data=(json.dumps([r.__dict__ for r in search_results], default=alchemy_encoder, sort_keys=True, indent=4,
                                      separators=(',', ': '))), colHeaders=colHeaders, columns=columns,
                     settings=settings), 200, None)
                 response.headers.add('Access-Control-Allow-Origin' , '*')
-                AppLog.log(
-                    AppLog(level="INFO" , process="root", user=username,
-                           message="User {} with role {} searched using kewords {} and searchtype {}".format(username ,
-                                                                                                             user_role ,
-                                                                                                             search_keywords ,
-                                                                                                             search_type)))
+                AppLog.info(message="User {} with role {} searched using kewords {} and searchtype {}".format(username, user_role, search_keywords, search_type), user=username)
                 return response
             elif search_keywords is not None and search_type.lower() == "tumor type" and not exact_match:
                 search_keywords = [x.strip() for x in search_keywords.split(',')]
@@ -644,60 +544,60 @@ def search_data() :
                 for item in search_keywords :
                     search_word_like = "%{}%".format(item)
                     print(search_word_like)
-                    result = db.session.query(Sample).filter(Sample.tumor_type.like(search_word_like)).all()
+                    if user_role != 'admin' :
+                        result = db.session.query(Sample).filter(Sample.tumor_type.like(search_word_like), sa.not_(Sample.sample_status.like('%Failed%')), sa.not_(Sample.sampleid == '')).all()
+                    else:
+                        result = db.session.query(Sample).filter(Sample.tumor_type.like(search_word_like)).all()
                     search_results.extend(result)
                 response = make_response(jsonify(
                     data=(json.dumps([r.__dict__ for r in search_results] , default=alchemy_encoder , sort_keys=True , indent=4 ,
                                      separators=(',' , ': '))) , colHeaders=colHeaders , columns=columns ,
                     settings=settings) , 200 , None)
                 response.headers.add('Access-Control-Allow-Origin' , '*')
-                AppLog.log(
-                    AppLog(level="INFO" , process="root" , user=username,
-                           message="User {} with role {} searched using kewords {} and searchtype {}".format(username ,
-                                                                                                             user_role ,
-                                                                                                             search_keywords ,
-                                                                                                             search_type)))
+                AppLog.info(message="User {} with role {} searched using kewords {} and searchtype {}".format(username , user_role, search_keywords, search_type), user=username)
                 return response
             elif search_keywords is not None and search_type.lower() == "dmpid" :
                 search_keywords = [x.strip() for x in search_keywords.split(',')]
-                result = db.session.query(Sample).filter(Sample.dmp_sampleid.in_((search_keywords))).all()
+                if user_role != 'admin' :
+                    result = db.session.query(Sample).filter(Sample.dmp_sampleid.in_(search_keywords), sa.not_(Sample.sample_status.like('%Failed%')), sa.not_(Sample.sampleid == '')).all()
+                else :
+                    result = db.session.query(Sample).filter(Sample.dmp_sampleid.in_((search_keywords))).all()
                 response = make_response(jsonify(
                     data=(json.dumps([r.__dict__ for r in result] , default=alchemy_encoder , sort_keys=True , indent=4 ,
                                      separators=(',' , ': '))) , colHeaders=colHeaders , columns=columns ,
                     settings=settings) , 200 , None)
                 response.headers.add('Access-Control-Allow-Origin' , '*')
-                AppLog.log(
-                    AppLog(level="INFO" , process="root" , user=username,
-                           message="User {} with role {} searched using kewords {} and searchtype {}".format(username ,
-                                                                                                             user_role ,
-                                                                                                             search_keywords ,
-                                                                                                             search_type)))
+                AppLog.info(message="User {} with role {} searched using kewords {} and searchtype {}".format(username, user_role, search_keywords, search_type), user=username)
                 return response
             else :
                 response = make_response(
                     jsonify(json.dumps(data="Sorry, 'Search Type' '{}' is not supported.".format(search_type)) , 200 ,
                             None))
                 response.headers.add('Access-Control-Allow-Origin' , '*')
-                AppLog.log(
-                    AppLog(level="INFO" , process="root" , user=username,
-                           message="User {} with role {} searched using kewords {} and searchtype {}".format(username ,
-                                                                                                             user_role ,
-                                                                                                             search_keywords ,
-                                                                                                             search_type)))
+                AppLog.info(message="User {} with role {} searched using kewords {} and searchtype {}".format(username, user_role, search_keywords ,search_type), user=username)
                 return response
         except Exception as e:
             response = make_response(
                 jsonify(json.dumps(data="Sorry, error occured while searching using {}.".format(search_type)) , 200 ,
                         None))
             response.headers.add('Access-Control-Allow-Origin' , '*')
-            AppLog.log(
-                AppLog(level="INFO" , process="root" , user=username,
-                       message="User {} with role {} searched using kewords {} and searchtype {}, it cuased error {}".format(username ,
-                                                                                                         user_role ,
-                                                                                                         search_keywords ,
-                                                                                                         search_type, e)))
+            AppLog.error(message="User {} with role {} searched using kewords {} and searchtype {}, it cuased error {}".format(username , user_role , search_keywords , search_type, e), user=username)
             return response
 
+
+@app.route("/get_reverse/<name>")
+def get_reverse(name):
+    result = reverse.delay(name)
+    result.wait()
+    print (result)
+    # response = make_response(jsonify(data=result))
+    # response.headers.add('Access-Control-Allow-Origin' , '*')
+    return "response"
+
+
+@celery.task()
+def reverse(name):
+    return name[::-1]
 #################################### scheduler to run at interval ####################################
 # scheduler = BackgroundScheduler()
 # scheduler.add_job(func=get_wes_data, trigger="interval", minutes=15)
