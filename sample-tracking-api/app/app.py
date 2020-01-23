@@ -1,5 +1,6 @@
 
 from app import *
+from app_tasks.app_tasks import reverse
 
 @app.route("/" , methods=['GET' , 'POST'])
 def index() :
@@ -51,6 +52,8 @@ def login() :
             user_groups = get_user_group(result)
             # check user role
             if len(set(user_groups).intersection(set(ADMIN_GROUPS))) > 0 :
+                role = 'admin'
+            elif len(set(user_groups).intersection(set(ADMIN_GROUPS))) > 0 and len(set(user_groups).intersection(set(CLINICAL_GROUPS))) > 0 :
                 role = 'admin'
             elif len(set(user_groups).intersection(set(CLINICAL_GROUPS))) > 0 :
                 role = 'clinical'
@@ -228,7 +231,7 @@ def save_to_db(data) :
                 ''' check if the record already exists and is non IGO processed Sample. If a sample was not processed by IGO, 
                                                     it should only have "limsTrackerRecordId" value. '''
                 print("running partial existing block")
-                partial_existing = Sample.query.filter_by(lims_tracker_recordid=item.get("limsTrackerRecordId")).first()
+                partial_existing = Sample.query.filter(sa.and_(Sample.lims_sample_recordid == '', Sample.lims_tracker_recordid==item.get("limsTrackerRecordId"))).first()
 
                 '''If a non IGO sample exists, this means that the sample values have changed in DMP tracker and LIMS since last build of DB, then update the values on existing record.'''
                 if partial_existing :
@@ -239,8 +242,8 @@ def save_to_db(data) :
                 ''' check if the record already exists and is IGO processed Sample. If a sample was processed by IGO, 
                                 it should have both "limsSampleRecordId" and "limsTrackerRecordId" values. '''
 
-                existing = Sample.query.filter_by(lims_sample_recordid=item.get("limsSampleRecordId") ,
-                                                  lims_tracker_recordid=item.get("limsTrackerRecordId")).first()
+                existing = Sample.query.filter(sa.and_(Sample.lims_sample_recordid==item.get("limsSampleRecordId") ,
+                                                  Sample.lims_tracker_recordid==item.get("limsTrackerRecordId"))).first()
                 if existing:
                     print("running existing block")
                     api_update_sample(db , item)
@@ -303,16 +306,16 @@ def api_update_sample(db , item) :
     try :
         sample = None
         if item.get("limsSampleRecordId") is not None and item.get("limsTrackerRecordId") is not None :
-            sample = db.session.query(Sample).filter_by(lims_sample_recordid=item.get("limsSampleRecordId") ,
-                                                        lims_tracker_recordid=item.get("limsTrackerRecordId")).first()
+            sample = db.session.query(Sample).filter(sa.and_(Sample.lims_sample_recordid == item.get("limsSampleRecordId") ,
+                                                        Sample.lims_tracker_recordid == item.get("limsTrackerRecordId"))).first()
             print("updating sample with both record ids")
         elif item.get("limsSampleRecordId") is None and item.get("limsTrackerRecordId") is not None :
             print(item.get("sampleId"))
-            sample = db.session.query(Sample).filter_by(lims_sample_recordid=item.get("limsSampleRecordId"), lims_tracker_recordid=item.get("limsTrackerRecordId")).first()
+            sample = db.session.query(Sample).filter(sa.and_(Sample.lims_sample_recordid == item.get("limsSampleRecordId"), Sample.lims_tracker_recordid == item.get("limsTrackerRecordId"))).first()
             print("updating sample with no sample record id")
 
         if sample is not None :
-            sample = db.session.query(Sample).filter_by(lims_tracker_recordid=item.get("limsTrackerRecordId")).first()
+            #sample = db.session.query(Sample).filter(lims_tracker_recordid=item.get("limsTrackerRecordId")).first()
             sample.sampleid = item.get("sampleId")
             sample.user_sampleid = item.get("userSampleId")
             sample.user_sampleid_historical = item.get("userSampleidHistorical")
@@ -499,7 +502,7 @@ def search_data() :
             result = None
             if search_keywords is not None and search_keywords == "*":
                 if user_role != 'admin':
-                    result = db.session.query(Sample).filter(sa.not_(Sample.sample_status.like('%Failed%')), sa.not_(Sample.sampleid == '')).all()
+                    result = db.session.query(Sample).filter(sa.and_(sa.not_(Sample.sample_status.like('%Failed%')), sa.not_(Sample.sampleid == ''))).all()
                 else:
                     result = db.session.query(Sample).all()
                 response = make_response(jsonify(
@@ -513,7 +516,7 @@ def search_data() :
             elif search_keywords is not None and search_type.lower() == "mrn":
                 search_keywords = [x.strip() for x in search_keywords.split(',')]
                 if user_role != 'admin':
-                    result = db.session.query(Sample).filter(Sample.mrn.in_((search_keywords)), sa.not_(Sample.sample_status.like('%Failed%')), sa.not_(Sample.sampleid == '')).all()
+                    result = db.session.query(Sample).filter(sa.and_(Sample.mrn.in_((search_keywords)), sa.not_(Sample.sample_status.like('%Failed%')), sa.not_(Sample.sampleid == ''))).all()
                 else:
                     result = db.session.query(Sample).filter(Sample.mrn.in_((search_keywords))).all()
                 response = make_response(jsonify(
@@ -527,7 +530,7 @@ def search_data() :
                 search_keywords = [x.strip() for x in search_keywords.split(',')]
                 search_results = []
                 if user_role != 'admin':
-                    result = db.session.query(Sample).filter(Sample.tumor_type.in_((search_keywords)), sa.not_(Sample.sample_status.like('%Failed%')), sa.not_(Sample.sampleid == '')).all()
+                    result = db.session.query(Sample).filter(sa.and_(Sample.tumor_type.in_((search_keywords)), sa.not_(Sample.sample_status.like('%Failed%')), sa.not_(Sample.sampleid == ''))).all()
                 else:
                     result = db.session.query(Sample).filter(Sample.tumor_type.in_(search_keywords)).all()
                 search_results.extend(result)
@@ -585,19 +588,19 @@ def search_data() :
             return response
 
 
+
+
 @app.route("/get_reverse/<name>")
 def get_reverse(name):
     result = reverse.delay(name)
     result.wait()
-    print (result)
-    # response = make_response(jsonify(data=result))
-    # response.headers.add('Access-Control-Allow-Origin' , '*')
-    return "response"
+    print(result.get())
+    response = make_response(jsonify(data=result.get()))
+    response.headers.add('Access-Control-Allow-Origin' , '*')
+    return response
 
 
-@celery.task()
-def reverse(name):
-    return name[::-1]
+
 #################################### scheduler to run at interval ####################################
 # scheduler = BackgroundScheduler()
 # scheduler.add_job(func=get_wes_data, trigger="interval", minutes=15)

@@ -15,6 +15,7 @@ from flask_jwt_extended import (
     jwt_refresh_token_required , get_raw_jwt
     )
 from flask_migrate import Migrate
+from flask_migrate import Migrate
 from requests.adapters import HTTPAdapter
 from urllib3 import PoolManager
 import ssl
@@ -28,7 +29,6 @@ app = Flask(__name__)
 app.config['PROPAGATE_EXCEPTIONS'] = True
 
 CORS(app)
-
 
 class MyAdapter(HTTPAdapter) :
     def init_poolmanager(self , connections , maxsize , block=False) :
@@ -98,35 +98,8 @@ with app.app_context() :
     db.init_app(app)
     db.create_all()
 
-
-
 #################################### APP CONSTANTS ###################################################
 
 ADMIN_GROUPS = ['AHDHD'] # add another admin group from PM's when available
-#ADMIN_GROUPS = ['zzPDL_SKI_IGO_DATA' , 'GRP_SKI_CMO_WESRecapture']
-CLINICAL_GROUPS = ['clinical_group_update_when_available']
-
-
-################################## Celery Task Config ##################################################
-
-def make_celery(app):
-    celery = Celery(
-        app.import_name,
-        backend=app.config['CELERY_RESULT_BACKEND'],
-        broker=app.config['CELERY_BROKER_URL']
-    )
-    celery.conf.update(app.config)
-
-    class ContextTask(celery.Task):
-        def __call__(self, *args, **kwargs):
-            with app.app_context():
-                return self.run(*args, **kwargs)
-
-    celery.Task = ContextTask
-    return celery
-
-app.config.update(
-    CELERY_BROKER_URL = 'redis://localhost:6379/0',
-    CELERY_RESULT_BACKEND = 'db+mysql+pymysql://root:panda2021@localhost/sample-tracker',
-)
-celery = make_celery(app)
+ADMIN_GROUPS = [] #['zzPDL_SKI_IGO_DATA' , 'GRP_SKI_CMO_WESRecapture']
+CLINICAL_GROUPS = ['DDDD']
