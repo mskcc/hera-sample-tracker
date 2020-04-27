@@ -6,7 +6,6 @@ from datetime import timedelta
 import sqlalchemy as sa
 import logging as LOG
 import ldap
-from celery import Celery
 from flask_cors import CORS
 from flask import request , make_response , jsonify , Flask , send_from_directory
 from flask_jwt_extended import (
@@ -21,7 +20,7 @@ import ssl
 import requests
 import os , yaml
 from userutils.userutils import get_user_fullname , get_user_group , get_user_title
-from database.models import db , Sample , AppLog
+from database.models import db , Dmpdata, Cvrdata, Sample , AppLog
 import clientsideconfigs.gridconfigs as gridconfigs
 
 app = Flask(__name__)
@@ -40,6 +39,7 @@ class MyAdapter(HTTPAdapter) :
 
 s = requests.Session()
 s.mount('https://' , MyAdapter())
+
 
 ####################################### app configuration settings ###################################
 
@@ -65,7 +65,6 @@ elif ENV == 'local':
 
 print(PORT)
 print (LIMS_API_ROOT)
-print (app.config['SQLALCHEMY_DATABASE_URI'])
 AUTH_LDAP_URL = config_options['auth_ldap_url']
 ldap.set_option(ldap.OPT_X_TLS_REQUIRE_CERT , ldap.OPT_X_TLS_NEVER)
 app.config['SECRET_KEY'] = 'the quick brown fox jumps over the lazy dog'
@@ -81,6 +80,7 @@ CORS(app)
 
 blacklist = set()
 
+
 ##################################### Logging settings ###############################################
 log_file_path = ''
 if ENV=='local' :
@@ -92,6 +92,7 @@ LOG.basicConfig(level=LOG.INFO ,
                 filename=log_file_path.format(datetime.datetime.now().date()) ,
                 format='%(asctime)s  %(levelname)-10s %(processName)s  %(name)s %(message)s')
 
+
 ##################################### DB Initialization###############################################
 
 with app.app_context() :
@@ -99,34 +100,8 @@ with app.app_context() :
     db.create_all()
 
 
-
 #################################### APP CONSTANTS ###################################################
 
-ADMIN_GROUPS = ['AHDHD'] # add another admin group from PM's when available
-#ADMIN_GROUPS = ['zzPDL_SKI_IGO_DATA' , 'GRP_SKI_CMO_WESRecapture']
+#ADMIN_GROUPS = ['AHDHD'] # add another admin group from PM's when available
+ADMIN_GROUPS = ['zzPDL_SKI_IGO_DATA' , 'GRP_SKI_CMO_WESRecapture']
 CLINICAL_GROUPS = ['clinical_group_update_when_available']
-
-
-################################## Celery Task Config ##################################################
-
-def make_celery(app):
-    celery = Celery(
-        app.import_name,
-        backend=app.config['CELERY_RESULT_BACKEND'],
-        broker=app.config['CELERY_BROKER_URL']
-    )
-    celery.conf.update(app.config)
-
-    class ContextTask(celery.Task):
-        def __call__(self, *args, **kwargs):
-            with app.app_context():
-                return self.run(*args, **kwargs)
-
-    celery.Task = ContextTask
-    return celery
-
-app.config.update(
-    CELERY_BROKER_URL = 'redis://localhost:6379/0',
-    CELERY_RESULT_BACKEND = 'db+mysql+pymysql://root:panda2021@localhost/sample-tracker',
-)
-celery = make_celery(app)

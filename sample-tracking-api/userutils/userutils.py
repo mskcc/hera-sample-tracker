@@ -20,3 +20,4 @@ def get_user_group(result):
     groups = re.sub('CN=Users', '', str(result))
     # returns all matching groups
     return p.findall(groups)
+
