@@ -17,10 +17,12 @@ class Dmpdata(db.Model):
     user_sampleid = db.Column(db.String(300))
     duplicate_sample = db.Column(db.String(300))  # pulled from LIMS DMPSampleTracker table
     wes_sampleid = db.Column(db.String(300))  # pulled from LIMS DMPSampleTracker table
+    source_dna_type = db.Column(db.String(300))  # pulled from LIMS DMPSampleTracker table
     date_dmp_request = db.Column(db.String(300))  # pulled from LIMS DMPSampleTracker table
     dmp_requestid = db.Column(db.String(300))  # pulled from LIMS DMPSampleTracker table
     project_title = db.Column(db.String(300))  # pulled from LIMS DMPSampleTracker table
     data_analyst = db.Column(db.String(300))  # entered by PM's
+    data_custodian = db.Column(db.String(300))  # pulled from LIMS DMPSampleTracker table
     cc_fund = db.Column(db.String(300))  # pulled from LIMS DMPSampleTracker table
     scientific_pi = db.Column(db.String(300))  # entered by PM's
     access_level = db.Column(db.String(300), default="MSK Public")  # default "MSK Public", updated by PM's
@@ -28,6 +30,8 @@ class Dmpdata(db.Model):
     seqiencing_site = db.Column(db.String(300))  # entered by PM's
     pi_request_date = db.Column(db.String(300))  # entered by PM's
     pipeline = db.Column(db.String(300))  # entered by PM's
+    tempo_qc_status = db.Column(db.String(300))  # pulled from LIMS DMPSampleTracker table
+    tempo_output_delivery_date = db.Column(db.String(300))  # pulled from LIMS DMPSampleTracker table
     tissue_type = db.Column(db.String(300))  # entered by PM's
     collaboration_center = db.Column(db.String(300))  # entered by PM's
     date_created = db.Column(db.String(300))
@@ -65,6 +69,7 @@ class Sample(db.Model):
     __tablename__ = 'sample'
     id = db.Column(db.Integer, primary_key=True, unique=True)
     sampleid = db.Column(db.String(300))  # pulled from LIMS Sample table
+    alt_id = db.Column(db.String(300)) # pulled from LIMS Sample table
     cmo_sampleid = db.Column(db.String(300))  # pulled from LIMS Sample table
     cmo_patientid = db.Column(db.String(300))  # pulled from LIMS SampleCMOInfoRecords table
     sample_type = db.Column(db.String(300))  # pulled from LIMS SampleCMOInfoRecords table
@@ -88,19 +93,20 @@ class Sample(db.Model):
 
 class Dmpsampledata():
 
-    def __init__(self, id=None, sampleid=None, user_sampleid=None, user_sampleid_historical=None, duplicate_sample=None,
+    def __init__(self, id=None, sampleid=None, alt_id=None, user_sampleid=None, user_sampleid_historical=None, duplicate_sample=None,
                  wes_sampleid=None, cmo_sampleid=None, cmo_patientid=None, dmp_sampleid=None,
-                 dmp_patientid=None, mrn=None, sex=None, sample_type=None, sample_class=None, tumor_type=None,
+                 dmp_patientid=None, mrn=None, sex=None, source_dna_type=None, sample_class=None, tumor_type=None,
                  parental_tumortype=None,tumor_site=None, molecular_accession_num=None, collection_year=None,
                  date_dmp_request=None,dmp_requestid=None,igo_requestid=None, date_igo_received=None,
                  date_igo_complete=None, application_requested=None, baitset_used=None, sequencer_type=None,
-                 project_title=None, data_analyst=None, lab_head=None, cc_fund=None, scientific_pi=None,
+                 project_title=None, data_analyst=None, data_custodian=None, lab_head=None, cc_fund=None, scientific_pi=None,
                  consent_parta_status=None, consent_partc_status=None, sample_status=None, access_level="MSK Public",
-                 clinical_trial=None, seqiencing_site=None, pi_request_date=None, pipeline=None, tissue_type=None,
-                 collaboration_center=None, lims_sample_recordid=None, lims_tracker_recordid=None
+                 seqiencing_site=None, pi_request_date=None, tempo_qc_status=None,
+                 tempo_output_delivery_date=None, tissue_type=None, lims_sample_recordid=None, lims_tracker_recordid=None
                  ):
         self.id = id
         self.sampleid = sampleid
+        self.alt_id = alt_id
         self.user_sampleid = user_sampleid
         self.user_sampleid_historical = user_sampleid_historical
         self.duplicate_sample = duplicate_sample
@@ -111,7 +117,7 @@ class Dmpsampledata():
         self.dmp_patientid = dmp_patientid
         self.mrn = mrn
         self.sex = sex
-        self.sample_type = sample_type
+        self.source_dna_type = source_dna_type;
         self.sample_class = sample_class
         self.tumor_type = tumor_type
         self.parental_tumortype = parental_tumortype
@@ -128,6 +134,7 @@ class Dmpsampledata():
         self.sequencer_type = sequencer_type
         self.project_title = project_title
         self.data_analyst = data_analyst
+        self.data_custodian = data_custodian
         self.lab_head = lab_head
         self.cc_fund = cc_fund
         self.scientific_pi = scientific_pi
@@ -135,12 +142,11 @@ class Dmpsampledata():
         self.consent_partc_status = consent_partc_status
         self.sample_status = sample_status
         self.access_level = access_level
-        self.clinical_trial = clinical_trial
         self.seqiencing_site = seqiencing_site
         self.pi_request_date = pi_request_date
-        self.pipeline = pipeline
+        self.tempo_qc_status = tempo_qc_status
+        self.tempo_output_delivery_date = tempo_output_delivery_date
         self.tissue_type = tissue_type
-        self.collaboration_center = collaboration_center
         self.lims_sample_recordid = lims_sample_recordid
         self.lims_tracker_recordid = lims_tracker_recordid
 
@@ -163,15 +169,16 @@ def create_sample_object(dmpdata, cvrdata, sample):
     sample_object.dmp_requestid = dmpdata.dmp_requestid
     sample_object.project_title = dmpdata.project_title
     sample_object.data_analyst = dmpdata.data_analyst
+    sample_object.data_custodian = dmpdata.data_custodian
     sample_object.cc_fund = dmpdata.cc_fund
     sample_object.scientific_pi = dmpdata.scientific_pi
     sample_object.access_level = dmpdata.access_level
-    sample_object.clinical_trial = dmpdata.clinical_trial
     sample_object.seqiencing_site = dmpdata.seqiencing_site
     sample_object.pi_request_date = dmpdata.pi_request_date
-    sample_object.pipeline = dmpdata.pipeline
+    sample_object.tempo_qc_status = dmpdata.tempo_qc_status
+    sample_object.tempo_output_delivery_date = dmpdata.tempo_output_delivery_date
     sample_object.tissue_type = dmpdata.tissue_type
-    sample_object.collaboration_center = dmpdata.collaboration_center
+    sample_object.source_dna_type = dmpdata.source_dna_type
     sample_object.dmp_sampleid = cvrdata.dmp_sampleid
     sample_object.dmp_patientid = cvrdata.dmp_patientid
     sample_object.mrn = cvrdata.mrn
@@ -182,22 +189,22 @@ def create_sample_object(dmpdata, cvrdata, sample):
     sample_object.molecular_accession_num = cvrdata.molecular_accession_num
     sample_object.consent_parta_status = cvrdata.consent_parta_status
     sample_object.consent_partc_status = cvrdata.consent_partc_status
-    sample_object.sampleid = sample.sampleid if sample is not None else ''
-    sample_object.cmo_sampleid = sample.cmo_sampleid if sample is not None else ''
-    sample_object.cmo_patientid = sample.cmo_patientid if sample is not None else ''
-    sample_object.sample_type = sample.sample_type if sample is not None else ''
-    sample_object.parental_tumortype = sample.parental_tumortype if sample is not None else ''
-    sample_object.collection_year = sample.collection_year if sample is not None else ''
-    sample_object.igo_requestid = sample.igo_requestid if sample is not None else ''
-    sample_object.date_igo_received = sample.date_igo_received if sample is not None else ''
-    sample_object.date_igo_complete = sample.date_igo_complete if sample is not None else ''
-    sample_object.application_requested = sample.application_requested if sample is not None else ''
-    sample_object.baitset_used = sample.baitset_used if sample is not None else ''
-    sample_object.sequencer_type = sample.sequencer_type if sample is not None else ''
-    sample_object.lab_head = sample.lab_head if sample is not None else ''
-    sample_object.sample_status = sample.sample_status if sample is not None else ''
+    sample_object.sampleid = sample.sampleid if sample else ''
+    sample_object.alt_id = sample.alt_id if sample else ''
+    sample_object.cmo_sampleid = sample.cmo_sampleid if sample else ''
+    sample_object.cmo_patientid = sample.cmo_patientid if sample else ''
+    sample_object.parental_tumortype = sample.parental_tumortype if sample else ''
+    sample_object.collection_year = sample.collection_year if sample else ''
+    sample_object.igo_requestid = sample.igo_requestid if sample else ''
+    sample_object.date_igo_received = sample.date_igo_received if sample else ''
+    sample_object.date_igo_complete = sample.date_igo_complete if sample else ''
+    sample_object.application_requested = sample.application_requested if sample else ''
+    sample_object.baitset_used = sample.baitset_used if sample else ''
+    sample_object.sequencer_type = sample.sequencer_type if sample else ''
+    sample_object.lab_head = sample.lab_head if sample else ''
+    sample_object.sample_status = sample.sample_status if sample else ''
     sample_object.lims_tracker_recordid = dmpdata.lims_tracker_recordid
-    sample_object.lims_sample_recordid = sample.lims_sample_recordid if sample is not None else ''
+    sample_object.lims_sample_recordid = sample.lims_sample_recordid if sample else ''
     return sample_object
 
 
@@ -213,7 +220,7 @@ def filter_qc_application(sample_objects):
     for obj in sample_objects:
         if obj.igo_requestid:
             project = obj.igo_requestid.split("_")[0]
-            groups[project+"__" + obj.dmp_sampleid].append(obj)
+            groups[project + "__" + obj.dmp_sampleid].append(obj)
         else:
             groups["solo"].append(obj)
     for key in groups.keys():
@@ -255,6 +262,10 @@ def get_sample_objects(objlist, filter_failed):
             sample = samples[0]
             sample_object = create_sample_object(dmpdata, cvrdata, sample)
             sample_objects.append(sample_object)
+        elif len(samples) > 1 and not has_mixed_application(samples):
+            for sample in samples:
+                sample_object = create_sample_object(dmpdata, cvrdata, sample)
+                sample_objects.append(sample_object)
         else:
             sample = None
             sample_object = create_sample_object(dmpdata, cvrdata, sample)
@@ -280,7 +291,7 @@ def has_mixed_application(sample_list):
 
 def get_desired_sample(sample_list):
     """
-    Method to get samples with desired application_reqested value. Most desired application_requested value that matches
+    Method to get samples with desired application_requested value. Most desired application_requested value that matches
     '%exome%' followed by '%library%' and then anything else.
     :param sample_list
     """

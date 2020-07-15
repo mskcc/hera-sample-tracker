@@ -59,12 +59,13 @@ elif ENV== 'prod':
     LIMS_API_ROOT = config_options['lims_end_point_prod']
     app.config['SQLALCHEMY_DATABASE_URI'] = config_options['db_uri_prod']
 elif ENV == 'local':
-    PORT = config_options['port_dev']
+    PORT = config_options['port_local']
     LIMS_API_ROOT = config_options['lims_end_point_local']
     app.config['SQLALCHEMY_DATABASE_URI'] = config_options['db_uri_local']
 
 print(PORT)
 print (LIMS_API_ROOT)
+
 AUTH_LDAP_URL = config_options['auth_ldap_url']
 ldap.set_option(ldap.OPT_X_TLS_REQUIRE_CERT , ldap.OPT_X_TLS_NEVER)
 app.config['SECRET_KEY'] = 'the quick brown fox jumps over the lazy dog'
