@@ -256,11 +256,11 @@ adminColumns = [
         'readOnly': True,
     },
     {
-        'data': 'igo_requestid',
+        'data': 'alt_id',
         'readOnly': True
     },
     {
-        'data': 'alt_id',
+        'data': 'igo_requestid',
         'readOnly': True
     },
     {

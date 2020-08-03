@@ -174,6 +174,7 @@ def save_to_db(data):
         data_to_json = json.loads(data)
         new_record_ids = []
         for item in data_to_json:
+            print("AltID: ", item.get("altId"))
             dmp_recordid = item.get('limsTrackerRecordId');
             tracker_record = Dmpdata.query.filter_by(lims_tracker_recordid=dmp_recordid).first()
             if tracker_record is None:
@@ -236,7 +237,7 @@ def save_to_db(data):
                         new_cvrdata_record.id),
                     user="api")
 
-                if item.get('limsSampleRecordId') is not '':
+                if item.get('limsSampleRecordId') != '':
                     new_sample_record = Sample(
                         sampleid=item.get('sampleId'),
                         alt_id=item.get("altId"),
@@ -320,13 +321,13 @@ def update_record(record, item):
                 user="api")
 
         '''find if the record has related sample record, if found, update it, if not found then add sample record'''
-        if item.get('limsSampleRecordId') is not '':
+        if item.get('limsSampleRecordId') != '':
             sampledata = Sample.query.filter_by(lims_sample_recordid=item.get('limsSampleRecordId')).first()
             print(sampledata)
             if sampledata is not None:
                 print("started updating Sample record")
                 sampledata.sampleid = item.get('sampleId')
-                sampledata.alt_di = item.get("altId")
+                sampledata.alt_id = item.get("altId")
                 sampledata.cmo_sampleid = item.get('cmoSampleId')
                 sampledata.cmo_patientid = item.get('cmoPatientId')
                 sampledata.parental_tumortype = item.get('parentalTumorType')
@@ -518,7 +519,7 @@ def search_data():
                     db_data = db.session.query(Dmpdata) \
                         .outerjoin(Cvrdata, Cvrdata.lims_tracker_recordid == Dmpdata.lims_tracker_recordid) \
                         .outerjoin(Sample, Sample.lims_tracker_recordid == Dmpdata.lims_tracker_recordid) \
-                        .filter(~Sample.sample_status.like('%Fail%'), Cvrdata.tempo_qc_status =="Pass").all()
+                        .filter(~Sample.sample_status.like('%Fail%'), Dmpdata.tempo_qc_status =="Pass").all()
                     result = get_sample_objects(db_data, filter_failed=True)
                     print ("total unfiltered", len(db_data))
                     print("total results: ", len(result))
@@ -549,7 +550,7 @@ def search_data():
                         .outerjoin(Cvrdata, Cvrdata.lims_tracker_recordid == Dmpdata.lims_tracker_recordid) \
                         .outerjoin(Sample, Sample.lims_tracker_recordid == Dmpdata.lims_tracker_recordid) \
                         .filter(Cvrdata.mrn.in_(search_keywords), ~Sample.sample_status.like('%Failed%'),
-                                Sample.sampleid != '', Cvrdata.tempo_qc_status == "Pass").all()
+                                Sample.sampleid != '', Dmpdata.tempo_qc_status == "Pass").all()
                     result = get_sample_objects(db_data, filter_failed=True)
                     print("total results: ", len(result))
                 else:
@@ -578,7 +579,7 @@ def search_data():
                         .outerjoin(Cvrdata, Cvrdata.lims_tracker_recordid == Dmpdata.lims_tracker_recordid) \
                         .outerjoin(Sample, Sample.lims_tracker_recordid == Dmpdata.lims_tracker_recordid) \
                         .filter(Cvrdata.tumor_type.in_(search_keywords), ~Sample.sample_status.like('%Failed%'),
-                                Sample.sampleid != '', Cvrdata.tempo_qc_status =="Pass").all()
+                                Sample.sampleid != '', Dmpdata.tempo_qc_status =="Pass").all()
                     result = get_sample_objects(db_data, filter_failed=True)
                     print("total results: ", len(result))
                 else:
@@ -610,7 +611,7 @@ def search_data():
                             .outerjoin(Cvrdata, Cvrdata.lims_tracker_recordid == Dmpdata.lims_tracker_recordid) \
                             .outerjoin(Sample, Sample.lims_tracker_recordid == Dmpdata.lims_tracker_recordid) \
                             .filter(Cvrdata.tumor_type.like(search_word_like), ~Sample.sample_status.like('%Failed%'),
-                                    Sample.sampleid != '', Cvrdata.tempo_qc_status =="Pass").all()
+                                    Sample.sampleid != '', Dmpdata.tempo_qc_status =="Pass").all()
                         result = get_sample_objects(db_data, filter_failed=True)
                         print("total results: ", len(result))
                     else:
@@ -643,7 +644,7 @@ def search_data():
                         .outerjoin(Cvrdata, Cvrdata.lims_tracker_recordid == Dmpdata.lims_tracker_recordid) \
                         .outerjoin(Sample, Sample.lims_tracker_recordid == Dmpdata.lims_tracker_recordid) \
                         .filter(Cvrdata.dmp_sampleid.in_(search_keywords), ~Sample.sample_status.like('%Failed%'),
-                                Sample.sampleid != '', Cvrdata.tempo_qc_status =="Pass").all()
+                                Sample.sampleid != '', Dmpdata.tempo_qc_status =="Pass").all()
                     result = get_sample_objects(db_data, filter_failed=True)
                     print("total results: ", len(result))
                 else:

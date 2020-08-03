@@ -25,7 +25,7 @@ class Dmpdata(db.Model):
     data_custodian = db.Column(db.String(300))  # pulled from LIMS DMPSampleTracker table
     cc_fund = db.Column(db.String(300))  # pulled from LIMS DMPSampleTracker table
     scientific_pi = db.Column(db.String(300))  # entered by PM's
-    access_level = db.Column(db.String(300), default="MSK Public")  # default "MSK Public", updated by PM's
+    access_level = db.Column(db.String(300), default="MSK Embargo")  # default "MSK Public", updated by PM's
     clinical_trial = db.Column(db.String(300))  # entered by PM's
     seqiencing_site = db.Column(db.String(300))  # entered by PM's
     pi_request_date = db.Column(db.String(300))  # entered by PM's
