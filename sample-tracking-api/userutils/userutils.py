@@ -18,6 +18,7 @@ def get_user_group(result):
     # compiles reg ex pattern into reg ex object
     p = re.compile('CN=(.*?)\,')
     groups = re.sub('CN=Users', '', str(result))
+    print(groups)
     # returns all matching groups
     return p.findall(groups)
 

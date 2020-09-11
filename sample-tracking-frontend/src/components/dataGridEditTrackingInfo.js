@@ -59,6 +59,7 @@ class DataGridEditTrackingInfo extends React.Component {
       spareRowAdded: false,
       dataRowsEdited: new Set(),
     }
+    
     this.downloadData = this.downloadData.bind(this);
   }
 
@@ -72,6 +73,7 @@ class DataGridEditTrackingInfo extends React.Component {
 
   //When a row cell is edited add the id of that row object to state in a Set(). We will use this Set object to filter data rows to save to DB to make save operation faster.
   handleEdit = (changes, source) => {
+    // eslint-disable-next-line array-callback-return
     changes && changes.map((change) => {
       this.setState({dataRowsEdited:new Set([...this.state.dataRowsEdited, this.state.tableData[change[0]].id])});
       this.setState({ isSaveButtonDisabled: false });
@@ -166,6 +168,8 @@ class DataGridEditTrackingInfo extends React.Component {
       'including the Health Insurance Portability and Accountability Act of 1996, as amended (HIPAA).  This transmission is intended for the sole use of approved individuals with permission and training to access this information and PHI. ' +
       'If you are not the intended recipient, please CANCEL this transmission. You are notified that all the transmissions and other activities from this site are logged and closely monitored.  If you have received this transmission in error, ' +
       'please immediately delete this information and any attachments from any computer.';
+    
+      const data = this.state.tableData;
 
     return (
       <div style={{ height: '100%', margin: '15px', alignContent: 'center' }}>
@@ -188,7 +192,7 @@ class DataGridEditTrackingInfo extends React.Component {
             <div style={styles.handsontable}>
               <HotTable
                 className="handsontable"
-                data={this.state.tableData}
+                data={data}
                 colHeaders={this.state.colHeaders}
                 columns={this.state.columnDef}
                 settings={this.state.settings}

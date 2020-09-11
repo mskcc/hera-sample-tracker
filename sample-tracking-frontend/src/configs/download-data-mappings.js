@@ -39,7 +39,13 @@
     'PI Request Date' : 'pi_request_date' , 
     'Pipeline' : 'pipeline',    
     'Tissue Type' : 'tissue_type', 
-    'Collaboration Center' : 'collaboration_center'
+    'Collaboration Center' : 'collaboration_center',
+    'Data Custodian' : 'data_custodian',
+    'Tempo Pipeline Status' : 'tempo_qc_status',
+    'Tempo Output Delivery Date' : 'tempo_output_delivery_date',
+    'Alt ID': 'alt_id',
+    'Source DNA Type': 'source_dna_type',
+    'Molecular Accession No.': 'molecular_accession_num'
 }
 
   

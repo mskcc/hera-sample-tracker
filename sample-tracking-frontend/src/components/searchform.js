@@ -121,11 +121,11 @@ class SearchForm extends Component {
                     </Row>
 
                 </Form>
-                {this.props.user && this.props.user.role === 'user' &&
+                {/* {this.props.user && this.props.user.role === 'user' &&
                     <div style={styles.notification_div}>
                         You are logged in as a regular user. If you are clinician, please email administrators group at '{ADMIN_EMAIL}' to get access to clinical data.
                     </div>
-                }
+                } */}
                 {this.props.isFetching ? <div style={{ marginLeft: '47%', marginTop: '15%', marginRight: '47%' }}><Spin tip="Loading..." size='large' /></div> :
                     this.props.data && <DataGridEditTrackingInfo rowdata={this.props.data} />
                 }

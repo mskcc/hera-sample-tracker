@@ -1,4 +1,5 @@
 import re
+import traceback
 
 from app import *
 from database.models import get_sample_objects
@@ -12,6 +13,7 @@ def index():
     '''
     log_entry = LOG.info("testing")
     AppLog.info(message="Testing the app.", user="api")
+    LOG.info("Index route for testing. Returns grid column headers and settings.")
     return jsonify(columnHeaders=gridconfigs.clinicalColHeaders, columns=gridconfigs.clinicalColumns,
                    settings=gridconfigs.settings), 200
 
@@ -69,14 +71,14 @@ def login():
         except ldap.INVALID_CREDENTIALS:
             response = make_response(jsonify(valid=False), 200, None)
             response.headers.add('Access-Control-Allow-Origin', '*')
-            AppLog.log(AppLog(level="WARNING", process="Root", user=username,
-                              message="Invalid username or password."))
             AppLog.warning(message="Invalid username or password.", user=username)
+            LOG.warning("Invalid username '{}' or password.".format(username))
             return make_response(response)
         except ldap.OPERATIONS_ERROR as e:
             response = make_response(jsonify(valid=False), 200, None)
             response.headers.add('Access-Control-Allow-Origin', '*')
             AppLog.error(message="ldap OPERATION ERROR occured. {}".format(e), user=username)
+            LOG.error("ldap OPERATION ERROR occured. {}".format(traceback.print_exc()))
             return make_response(response)
 
 
@@ -101,6 +103,7 @@ def logout():
             jti = get_raw_jwt()['jti']
             blacklist.add(jti)
             AppLog.info(message="Successfully logged out user " + current_user, user=current_user)
+            LOG.info("Successfully logged out user {}".format(current_user))
             response = make_response(
                 jsonify(success=True,
                         valid=True,
@@ -113,6 +116,7 @@ def logout():
             return response
     except Exception as e:
         AppLog.error(message="Error while logging out user " + current_user, user=current_user)
+        LOG.error("Error while logging out user {}. {}".format(current_user, traceback.print_exc()))
         response = make_response(
             jsonify(valid=False,
                     username=None,
@@ -156,8 +160,8 @@ def get_wes_data():
                       auth=(USER, PASSW), verify=False)
             data = r.content.decode("utf-8", "strict")
             ids = save_to_db(data)
-            LOG.info("Added {0} new records to the Sample Tracking Database".format(ids))
-            AppLog.info(message="Added {0} new records to the Sample Tracking Database".format(ids), user="api")
+            LOG.info("Added {} new records to the Sample Tracking Database".format(ids))
+            AppLog.info(message="Added {} new records to the Sample Tracking Database".format(ids), user="api")
             response = make_response(jsonify(data=(len(ids))), 200, None)
             response.headers.add('Access-Control-Allow-Origin', '*')
             return response
@@ -174,11 +178,24 @@ def save_to_db(data):
         data_to_json = json.loads(data)
         new_record_ids = []
         for item in data_to_json:
+            LOG.info("data: {}".format(item))
             print("AltID: ", item.get("altId"))
-            dmp_recordid = item.get('limsTrackerRecordId');
+            LOG.info("Adding record with AltID: {}".format(item.get("altId")))
+            print("Tempo Status: ", item.get("tempoPipelineQcStatus"))
+            LOG.info("Adding record with Tempo Status: {}".format(item.get("tempoPipelineQcStatus")))
+            print("Tempo output delivery date: ", item.get("tempoOutputDeliveryDate"))
+            LOG.info("Adding record with Tempo output delivery date: {}".format(item.get("tempoOutputDeliveryDate")))
+            print(item)
+            AppLog.info(message="Processing Sample with User Sample ID: {}".format(item.get("userSampleId")),
+                        user="api")
+            dmp_recordid = item.get('limsTrackerRecordId')
             tracker_record = Dmpdata.query.filter_by(lims_tracker_recordid=dmp_recordid).first()
             if tracker_record is None:
                 print("creating new tracker record.")
+                AppLog.info(
+                    message="Creating new  DmpData record with User Sample ID: {}".format(item.get("userSampleId")),
+                    user="api")
+                LOG.info("Creating new  DmpData record with User Sample ID: {}".format(item.get("userSampleId")))
                 new_dmpdata_record = Dmpdata(
                     user_sampleid_historical=item.get('userSampleidHistorical'),
                     user_sampleid=item.get('userSampleId'),
@@ -195,7 +212,7 @@ def save_to_db(data):
                     access_level="MSK Embargo",
                     seqiencing_site=item.get('sequencingSite'),
                     pi_request_date=item.get('piRequestDate'),
-                    tempo_qc_status=item.get("tempoQcStatus"),
+                    tempo_qc_status=item.get("tempoPipelineQcStatus"),
                     tempo_output_delivery_date=item.get("tempoOutputDeliveryDate"),
                     tissue_type=item.get('tissueType'),
                     date_created=str(datetime.datetime.now()),
@@ -212,6 +229,8 @@ def save_to_db(data):
                     message="Added new Dmpdata record with ID: {}".format(
                         new_dmpdata_record.id),
                     user="api")
+                LOG.info("Added new Dmpdata record with ID: {}".format(
+                    new_dmpdata_record.id))
 
                 new_cvrdata_record = Cvrdata(
                     dmp_sampleid=item.get('dmpSampleId'),
@@ -236,6 +255,8 @@ def save_to_db(data):
                     message="Added new Cvrdata record with ID: {}".format(
                         new_cvrdata_record.id),
                     user="api")
+                LOG.info("Added new Cvrdata record with ID: {}".format(
+                    new_cvrdata_record.id))
 
                 if item.get('limsSampleRecordId') != '':
                     new_sample_record = Sample(
@@ -265,6 +286,7 @@ def save_to_db(data):
                     AppLog.info(
                         message="Added new Sample record with  ID: {}".format(new_sample_record.id),
                         user="api")
+                    LOG.info("Added new Sample record with  Sample ID: {} and ID: {}".format(new_sample_record.sampleid, new_sample_record.id))
             elif tracker_record is not None:
                 update_record(tracker_record, item)
         return new_record_ids
@@ -276,6 +298,9 @@ def save_to_db(data):
 def update_record(record, item):
     try:
         print("started updating Dmpdata record")
+        print(item)
+        LOG.info("Updating Tracker record with User Sample ID: {}".format(item.get("userSampleId")))
+        LOG.info(item)
         record.user_sampleid_historical = item.get('userSampleidHistorical')
         record.user_sampleid = item.get('userSampleId')
         record.duplicate_sample = item.get('duplicateSample')
@@ -288,7 +313,7 @@ def update_record(record, item):
         record.tissue_type = item.get('tissueType')
         record.source_dna_type = item.get('sourceDnaType')
         record.data_custodian = item.get("dataCustodian")
-        record.tempo_qc_status = item.get("tempoQcStatus")
+        record.tempo_qc_status = item.get("tempoPipelineQcStatus")
         record.tempo_output_delivery_date = item.get("tempoOutputDeliveryDate")
         record.date_updated = str(datetime.datetime.now())
         record.updated_by = 'api'
@@ -297,6 +322,7 @@ def update_record(record, item):
             message="Update Dmpdata record with ID: {}".format(
                 record.id),
             user="api")
+        LOG.info("Update Dmpdata record with ID: {}".format(record.id))
 
         '''find and update the cvrdata record. An existing Dmpdata record must always have related Cvrdata record'''
         cvrdata = Cvrdata.query.filter_by(lims_tracker_recordid=item.get('limsTrackerRecordId')).first()
@@ -316,9 +342,10 @@ def update_record(record, item):
             cvrdata.updated_by = 'api'
             db.session.commit()
             AppLog.info(
-                message="Update Cvrdata record with ID: {}".format(
+                message="Updated Cvrdata record with ID: {}".format(
                     cvrdata.id),
                 user="api")
+            LOG.info("Updated Cvrdata record with ID: {}".format(cvrdata.id))
 
         '''find if the record has related sample record, if found, update it, if not found then add sample record'''
         if item.get('limsSampleRecordId') != '':
@@ -343,6 +370,7 @@ def update_record(record, item):
                 sampledata.date_updated = str(datetime.datetime.now())
                 sampledata.updated_by = 'api'
                 db.session.commit()
+                LOG.info("Updated Sample record with ID: {}".format(sampledata.id))
             elif sampledata is None:
                 new_sample_record = Sample(
                     sampleid=item.get('sampleId'),
@@ -371,10 +399,11 @@ def update_record(record, item):
                 AppLog.info(
                     message="Added new Sample record with  ID: {}".format(new_sample_record.id),
                     user="api")
+                LOG.info("Added new Sample record with  ID: {}".format(new_sample_record.id))
 
     except Exception as e:
         AppLog.error(message=repr(e), user='api')
-        LOG.error(e, exc_info=True)
+        LOG.error(traceback.print_exc())
 
 
 def user_update_sample(item, username):
@@ -398,9 +427,10 @@ def user_update_sample(item, username):
             dmpdata.date_updated = str(datetime.datetime.now())
             dmpdata.updated_by = username
             db.session.commit()
-            AppLog.info(message="Updated Dmpdata record with ID: {}".format(dmpdata.id), user=username)
+            AppLog.info(message="Updated DmpData record with ID: {}".format(dmpdata.id), user=username)
+            LOG.info("Updated DmpData record with ID: {}".format(dmpdata.id))
     except Exception as e:
-        LOG.error(e, exc_info=True)
+        LOG.error(traceback.print_exc())
         AppLog.error(message=e, user="api")
 
 
@@ -414,6 +444,7 @@ def save_sample_changes():
     try:
         if request.method == "POST":
             sample_data = request.get_json(silent=True)
+            LOG.info("Data to save: {}".format(sample_data))
             username = get_jwt_identity()
             for item in sample_data:
                 user_update_sample(item, username)
@@ -428,7 +459,7 @@ def save_sample_changes():
             response.headers.add('Access-Control-Allow-Origin', '*')
             return response
     except Exception as e:
-        LOG.error(repr(e))
+        LOG.error(traceback.print_exc())
         AppLog.error(message="error while updating the samples {}".format(e.with_traceback()), user="api")
         response = make_response(
             jsonify(success=False,
@@ -487,6 +518,7 @@ def download_data():
             return response
         except Exception as e:
             AppLog.error(message="Error occured while logging the data download event\n{}".format(e), user=username)
+            LOG.error("Error occured while logging the data download event\n{}".format(traceback.print_exc()))
             response = make_response(jsonify(
                 success=False), 200, None)
             response.headers.add('Access-Control-Allow-Origin', '*')
@@ -519,9 +551,9 @@ def search_data():
                     db_data = db.session.query(Dmpdata) \
                         .outerjoin(Cvrdata, Cvrdata.lims_tracker_recordid == Dmpdata.lims_tracker_recordid) \
                         .outerjoin(Sample, Sample.lims_tracker_recordid == Dmpdata.lims_tracker_recordid) \
-                        .filter(~Sample.sample_status.like('%Fail%'), Dmpdata.tempo_qc_status =="Pass").all()
+                        .filter(~Sample.sample_status.like('%Fail%'), Dmpdata.tempo_qc_status == "Pass").all()
                     result = get_sample_objects(db_data, filter_failed=True)
-                    print ("total unfiltered", len(db_data))
+                    print("total unfiltered", len(db_data))
                     print("total results: ", len(result))
                 else:
                     print("admin search")
@@ -541,6 +573,9 @@ def search_data():
                                                                                                                user_role,
                                                                                                                search_keywords),
                             user=username)
+                LOG.info("User {} with role {} made wildcard query using search keywords {}".format(username,
+                                                                                                    user_role,
+                                                                                                    search_keywords))
                 return response
 
             elif search_keywords is not None and search_type.lower() == "mrn":
@@ -570,6 +605,10 @@ def search_data():
                                                                                                               search_keywords,
                                                                                                               search_type),
                             user=username)
+                LOG.info("User {} with role {} searched using kewords {} and searchtype {}".format(username,
+                                                                                                   user_role,
+                                                                                                   search_keywords,
+                                                                                                   search_type))
                 return response
             elif search_keywords is not None and search_type.lower() == "tumor type" and exact_match:
                 search_keywords = [x.strip() for x in re.split(r'[,\n]', search_keywords)]
@@ -579,7 +618,7 @@ def search_data():
                         .outerjoin(Cvrdata, Cvrdata.lims_tracker_recordid == Dmpdata.lims_tracker_recordid) \
                         .outerjoin(Sample, Sample.lims_tracker_recordid == Dmpdata.lims_tracker_recordid) \
                         .filter(Cvrdata.tumor_type.in_(search_keywords), ~Sample.sample_status.like('%Failed%'),
-                                Sample.sampleid != '', Dmpdata.tempo_qc_status =="Pass").all()
+                                Sample.sampleid != '', Dmpdata.tempo_qc_status == "Pass").all()
                     result = get_sample_objects(db_data, filter_failed=True)
                     print("total results: ", len(result))
                 else:
@@ -600,6 +639,10 @@ def search_data():
                                                                                                               search_keywords,
                                                                                                               search_type),
                             user=username)
+                LOG.info("User {} with role {} searched using kewords {} and searchtype {}".format(username,
+                                                                                                   user_role,
+                                                                                                   search_keywords,
+                                                                                                   search_type))
                 return response
             elif search_keywords is not None and search_type.lower() == "tumor type" and not exact_match:
                 search_keywords = [x.strip() for x in re.split(r'[,\n]', search_keywords)]
@@ -611,7 +654,7 @@ def search_data():
                             .outerjoin(Cvrdata, Cvrdata.lims_tracker_recordid == Dmpdata.lims_tracker_recordid) \
                             .outerjoin(Sample, Sample.lims_tracker_recordid == Dmpdata.lims_tracker_recordid) \
                             .filter(Cvrdata.tumor_type.like(search_word_like), ~Sample.sample_status.like('%Failed%'),
-                                    Sample.sampleid != '', Dmpdata.tempo_qc_status =="Pass").all()
+                                    Sample.sampleid != '', Dmpdata.tempo_qc_status == "Pass").all()
                         result = get_sample_objects(db_data, filter_failed=True)
                         print("total results: ", len(result))
                     else:
@@ -636,6 +679,10 @@ def search_data():
                                                                                                               search_keywords,
                                                                                                               search_type),
                             user=username)
+                LOG.info("User {} with role {} searched using kewords {} and searchtype {}".format(username,
+                                                                                                   user_role,
+                                                                                                   search_keywords,
+                                                                                                   search_type))
                 return response
             elif search_keywords is not None and search_type.lower() == "dmpid":
                 search_keywords = [x.strip() for x in re.split(r'[,\s\n]\s*', search_keywords)]
@@ -644,7 +691,7 @@ def search_data():
                         .outerjoin(Cvrdata, Cvrdata.lims_tracker_recordid == Dmpdata.lims_tracker_recordid) \
                         .outerjoin(Sample, Sample.lims_tracker_recordid == Dmpdata.lims_tracker_recordid) \
                         .filter(Cvrdata.dmp_sampleid.in_(search_keywords), ~Sample.sample_status.like('%Failed%'),
-                                Sample.sampleid != '', Dmpdata.tempo_qc_status =="Pass").all()
+                                Sample.sampleid != '', Dmpdata.tempo_qc_status == "Pass").all()
                     result = get_sample_objects(db_data, filter_failed=True)
                     print("total results: ", len(result))
                 else:
@@ -664,6 +711,10 @@ def search_data():
                                                                                                               search_keywords,
                                                                                                               search_type),
                             user=username)
+                LOG.info("User {} with role {} searched using kewords {} and searchtype {}".format(username,
+                                                                                                   user_role,
+                                                                                                   search_keywords,
+                                                                                                   search_type))
                 return response
             else:
                 response = make_response(
@@ -675,6 +726,10 @@ def search_data():
                                                                                                               search_keywords,
                                                                                                               search_type),
                             user=username)
+                LOG.info("User {} with role {} searched using kewords {} and searchtype {}".format(username,
+                                                                                                   user_role,
+                                                                                                   search_keywords,
+                                                                                                   search_type))
                 return response
         except Exception as e:
             response = make_response(
@@ -682,6 +737,7 @@ def search_data():
                         None))
             response.headers.add('Access-Control-Allow-Origin', '*')
             AppLog.error(
-                message="User {} with role {} searched using kewords {} and searchtype {}, it cuased error {}".format(
+                message="User {} with role {} searched using kewords {} and searchtype {}, it cuased error {}. Check logs for details.".format(
                     username, user_role, search_keywords, search_type, e), user=username)
+            LOG.error(traceback.print_exc())
             return response

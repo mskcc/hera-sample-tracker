@@ -223,12 +223,15 @@ def filter_qc_application(sample_objects):
             groups[project + "__" + obj.dmp_sampleid].append(obj)
         else:
             groups["solo"].append(obj)
+    print("grouped data", groups)
     for key in groups.keys():
         if key != "solo":
             values = groups[key]
-            if len(values) >1:
+            if len(values) > 1:
                 for sample in values:
                     if "exome" in sample.application_requested.lower():
+                        after_filter_duplicates.append(sample)
+                    else:
                         after_filter_duplicates.append(sample)
             else:
                 after_filter_duplicates.extend(values)
@@ -247,6 +250,7 @@ def get_sample_objects(objlist, filter_failed):
     for dmpdata in objlist:
         samples = dmpdata.samples
         cvrdata = dmpdata.cvr_data
+        print("samples to create", len(samples))
         if len(samples) > 1 and has_mixed_application(samples):
             desired_samples = get_desired_sample(samples)
             if filter_failed is False:
@@ -297,11 +301,13 @@ def get_desired_sample(sample_list):
     """
     exome_samples = []
     library_samples = []
+
     for samp in sample_list:
+        print(samp.application_requested)
         if 'exome' in samp.application_requested.lower():
             exome_samples.append(samp)
-    for samp in sample_list:
-        if 'library' in samp.application_requested.lower():
+    # for samp in sample_list:
+        if 'library' in samp.application_requested.lower() or 'qc' in samp.application_requested.lower():
             library_samples.append(samp)
     if len(exome_samples) > 0:
         return exome_samples

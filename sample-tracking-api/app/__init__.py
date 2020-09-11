@@ -19,10 +19,13 @@ from urllib3 import PoolManager
 import ssl
 import requests
 import os , yaml
+
+from urllib3.exceptions import InsecureRequestWarning
+
 from userutils.userutils import get_user_fullname , get_user_group , get_user_title
 from database.models import db , Dmpdata, Cvrdata, Sample , AppLog
 import clientsideconfigs.gridconfigs as gridconfigs
-
+requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 app = Flask(__name__)
 app.config['PROPAGATE_EXCEPTIONS'] = True
 
@@ -104,5 +107,6 @@ with app.app_context() :
 #################################### APP CONSTANTS ###################################################
 
 #ADMIN_GROUPS = ['AHDHD'] # add another admin group from PM's when available
-ADMIN_GROUPS = ['zzPDL_SKI_IGO_DATA' , 'GRP_SKI_CMO_WESRecapture']
+#ADMIN_GROUPS = ['zzPDL_SKI_IGO_DATA', 'GRP_SKI_CMO_WESRecapture']
+ADMIN_GROUPS = ['GRP_SKI_CMO_WESRecapture']
 CLINICAL_GROUPS = ['clinical_group_update_when_available']
