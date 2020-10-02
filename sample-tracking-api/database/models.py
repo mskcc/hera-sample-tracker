@@ -69,7 +69,7 @@ class Sample(db.Model):
     __tablename__ = 'sample'
     id = db.Column(db.Integer, primary_key=True, unique=True)
     sampleid = db.Column(db.String(300))  # pulled from LIMS Sample table
-    alt_id = db.Column(db.String(300)) # pulled from LIMS Sample table
+    alt_id = db.Column(db.String(300))  # pulled from LIMS Sample table
     cmo_sampleid = db.Column(db.String(300))  # pulled from LIMS Sample table
     cmo_patientid = db.Column(db.String(300))  # pulled from LIMS SampleCMOInfoRecords table
     sample_type = db.Column(db.String(300))  # pulled from LIMS SampleCMOInfoRecords table
@@ -93,16 +93,19 @@ class Sample(db.Model):
 
 class Dmpsampledata():
 
-    def __init__(self, id=None, sampleid=None, alt_id=None, user_sampleid=None, user_sampleid_historical=None, duplicate_sample=None,
+    def __init__(self, id=None, sampleid=None, alt_id=None, user_sampleid=None, user_sampleid_historical=None,
+                 duplicate_sample=None,
                  wes_sampleid=None, cmo_sampleid=None, cmo_patientid=None, dmp_sampleid=None,
                  dmp_patientid=None, mrn=None, sex=None, source_dna_type=None, sample_class=None, tumor_type=None,
-                 parental_tumortype=None,tumor_site=None, molecular_accession_num=None, collection_year=None,
-                 date_dmp_request=None,dmp_requestid=None,igo_requestid=None, date_igo_received=None,
+                 parental_tumortype=None, tumor_site=None, molecular_accession_num=None, collection_year=None,
+                 date_dmp_request=None, dmp_requestid=None, igo_requestid=None, date_igo_received=None,
                  date_igo_complete=None, application_requested=None, baitset_used=None, sequencer_type=None,
-                 project_title=None, data_analyst=None, data_custodian=None, lab_head=None, cc_fund=None, scientific_pi=None,
+                 project_title=None, data_analyst=None, data_custodian=None, lab_head=None, cc_fund=None,
+                 scientific_pi=None,
                  consent_parta_status=None, consent_partc_status=None, sample_status=None, access_level="MSK Public",
                  seqiencing_site=None, pi_request_date=None, tempo_qc_status=None,
-                 tempo_output_delivery_date=None, tissue_type=None, lims_sample_recordid=None, lims_tracker_recordid=None
+                 tempo_output_delivery_date=None, tissue_type=None, lims_sample_recordid=None,
+                 lims_tracker_recordid=None
                  ):
         self.id = id
         self.sampleid = sampleid
@@ -251,7 +254,7 @@ def get_sample_objects(objlist, filter_failed):
         samples = dmpdata.samples
         cvrdata = dmpdata.cvr_data
         print("samples to create", len(samples))
-        if len(samples) > 1 and has_mixed_application(samples):
+        if len(samples) > 1 and (has_sequencing_status(samples) or has_mixed_application(samples)):
             desired_samples = get_desired_sample(samples)
             if filter_failed is False:
                 for sample in desired_samples:
@@ -293,22 +296,43 @@ def has_mixed_application(sample_list):
     return False
 
 
+def has_sequencing_status(sample_list):
+    """
+        Method to check if Sample Objects in sample_list has completed sequencing status.
+        :param sample_list
+    """
+    failed_sequencing_status = "failed - illumina sequencing analysis"
+    completed_sequencing_status = "data qc - completed"
+    for samp in sample_list:
+        if samp.sample_status and (failed_sequencing_status in samp.application_requested.lower() or
+                                   completed_sequencing_status in samp.sample_status.lower()):
+            return True
+    return False
+
+
 def get_desired_sample(sample_list):
     """
-    Method to get samples with desired application_requested value. Most desired application_requested value that matches
-    '%exome%' followed by '%library%' and then anything else.
+    Method to get samples with desired application_requested value or sample status. Sample status indicating Sequencing
+    completion checked first followed by application_requested value that matches
+    %exome%' followed by '%library%' and then everything else.
     :param sample_list
     """
+    sequenced_samples = []
     exome_samples = []
     library_samples = []
-
+    failed_sequencing_status = "failed - illumina sequencing analysis"
+    completed_sequencing_status = "data qc - completed"
     for samp in sample_list:
         print(samp.application_requested)
+        if failed_sequencing_status in samp.sample_status.lower() or completed_sequencing_status in samp.sample_status.lower():
+            sequenced_samples.append(samp)
         if 'exome' in samp.application_requested.lower():
             exome_samples.append(samp)
-    # for samp in sample_list:
+        # for samp in sample_list:
         if 'library' in samp.application_requested.lower() or 'qc' in samp.application_requested.lower():
             library_samples.append(samp)
+    if len(sequenced_samples) > 0:
+        return sequenced_samples
     if len(exome_samples) > 0:
         return exome_samples
     if len(library_samples) > 0:
