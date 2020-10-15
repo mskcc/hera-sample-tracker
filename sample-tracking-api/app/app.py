@@ -53,8 +53,10 @@ def login():
             # check user role
             if len(set(user_groups).intersection(set(ADMIN_GROUPS))) > 0:
                 role = 'admin'
-            elif len(set(user_groups).intersection(set(CLINICAL_GROUPS))) > 0:
+            else:
                 role = 'clinical'
+            # elif len(set(user_groups).intersection(set(CLINICAL_GROUPS))) > 0:
+            #     role = 'clinical'
             conn.unbind_s()
             LOG.info("Successfully authenticated and logged {} into the app with role {}.".format(username, role))
 
@@ -258,35 +260,35 @@ def save_to_db(data):
                 LOG.info("Added new Cvrdata record with ID: {}".format(
                     new_cvrdata_record.id))
 
-                if item.get('limsSampleRecordId') != '':
-                    new_sample_record = Sample(
-                        sampleid=item.get('sampleId'),
-                        alt_id=item.get("altId"),
-                        cmo_sampleid=item.get('cmoSampleId'),
-                        cmo_patientid=item.get('cmoPatientId'),
-                        parental_tumortype=item.get('parentalTumorType'),
-                        collection_year=item.get('collectionYear'),
-                        igo_requestid=item.get('igoRequestId'),
-                        date_igo_received=item.get('dateIgoReceived'),
-                        date_igo_complete=item.get('igoCompleteDate'),
-                        application_requested=item.get('applicationRequested'),
-                        baitset_used=item.get('baitsetUsed'),
-                        sequencer_type=item.get('sequencerType'),
-                        lab_head=item.get('labHead'),
-                        sample_status=item.get('sampleStatus'),
-                        date_created=str(datetime.datetime.now()),
-                        created_by='api',
-                        date_updated=str(datetime.datetime.now()),
-                        updated_by='api',
-                        lims_sample_recordid=item.get('limsSampleRecordId'),
-                        dmpdata=new_dmpdata_record
-                    )
-                    db.session.add(new_sample_record)
-                    db.session.commit()
-                    AppLog.info(
-                        message="Added new Sample record with  ID: {}".format(new_sample_record.id),
-                        user="api")
-                    LOG.info("Added new Sample record with  Sample ID: {} and ID: {}".format(new_sample_record.sampleid, new_sample_record.id))
+                # if item.get('limsSampleRecordId') != '':
+                new_sample_record = Sample(
+                    sampleid=item.get('sampleId'),
+                    alt_id=item.get("altId"),
+                    cmo_sampleid=item.get('cmoSampleId'),
+                    cmo_patientid=item.get('cmoPatientId'),
+                    parental_tumortype=item.get('parentalTumorType'),
+                    collection_year=item.get('collectionYear'),
+                    igo_requestid=item.get('igoRequestId'),
+                    date_igo_received=item.get('dateIgoReceived'),
+                    date_igo_complete=item.get('igoCompleteDate'),
+                    application_requested=item.get('applicationRequested'),
+                    baitset_used=item.get('baitsetUsed'),
+                    sequencer_type=item.get('sequencerType'),
+                    lab_head=item.get('labHead'),
+                    sample_status=item.get('sampleStatus'),
+                    date_created=str(datetime.datetime.now()),
+                    created_by='api',
+                    date_updated=str(datetime.datetime.now()),
+                    updated_by='api',
+                    lims_sample_recordid=item.get('limsSampleRecordId'),
+                    dmpdata=new_dmpdata_record
+                )
+                db.session.add(new_sample_record)
+                db.session.commit()
+                AppLog.info(
+                    message="Added new Sample record with  ID: {}".format(new_sample_record.id),
+                    user="api")
+                LOG.info("Added new Sample record with  Sample ID: {} and ID: {}".format(new_sample_record.sampleid, new_sample_record.id))
             elif tracker_record is not None:
                 update_record(tracker_record, item)
         return new_record_ids
@@ -311,6 +313,7 @@ def update_record(record, item):
         record.cc_fund = item.get('ccFund')
         record.pi_request_date = item.get('piRequestDate')
         record.tissue_type = item.get('tissueType')
+        record.scientific_pi = item.get('scientificPi')
         record.source_dna_type = item.get('sourceDnaType')
         record.data_custodian = item.get("dataCustodian")
         record.tempo_qc_status = item.get("tempoPipelineQcStatus")
@@ -346,60 +349,58 @@ def update_record(record, item):
                     cvrdata.id),
                 user="api")
             LOG.info("Updated Cvrdata record with ID: {}".format(cvrdata.id))
-
         '''find if the record has related sample record, if found, update it, if not found then add sample record'''
-        if item.get('limsSampleRecordId') != '':
-            sampledata = Sample.query.filter_by(lims_sample_recordid=item.get('limsSampleRecordId')).first()
-            print(sampledata)
-            if sampledata is not None:
-                print("started updating Sample record")
-                sampledata.sampleid = item.get('sampleId')
-                sampledata.alt_id = item.get("altId")
-                sampledata.cmo_sampleid = item.get('cmoSampleId')
-                sampledata.cmo_patientid = item.get('cmoPatientId')
-                sampledata.parental_tumortype = item.get('parentalTumorType')
-                sampledata.collection_year = item.get('collectionYear')
-                sampledata.igo_requestid = item.get('igoRequestId')
-                sampledata.date_igo_received = item.get('dateIgoReceived')
-                sampledata.date_igo_complete = item.get('igoCompleteDate')
-                sampledata.application_requested = item.get('applicationRequested')
-                sampledata.baitset_used = item.get('baitsetUsed')
-                sampledata.sequencer_type = item.get('sequencerType')
-                sampledata.lab_head = item.get('labHead')
-                sampledata.sample_status = item.get('sampleStatus')
-                sampledata.date_updated = str(datetime.datetime.now())
-                sampledata.updated_by = 'api'
-                db.session.commit()
-                LOG.info("Updated Sample record with ID: {}".format(sampledata.id))
-            elif sampledata is None:
-                new_sample_record = Sample(
-                    sampleid=item.get('sampleId'),
-                    alt_id=item.get("altId"),
-                    cmo_sampleid=item.get('cmoSampleId'),
-                    cmo_patientid=item.get('cmoPatientId'),
-                    parental_tumortype=item.get('parentalTumorType'),
-                    collection_year=item.get('collectionYear'),
-                    igo_requestid=item.get('igoRequestId'),
-                    date_igo_received=item.get('dateIgoReceived'),
-                    date_igo_complete=item.get('igoCompleteDate'),
-                    application_requested=item.get('applicationRequested'),
-                    baitset_used=item.get('baitsetUsed'),
-                    sequencer_type=item.get('sequencerType'),
-                    lab_head=item.get('labHead'),
-                    sample_status=item.get('sampleStatus'),
-                    date_created=str(datetime.datetime.now()),
-                    created_by='api',
-                    date_updated=str(datetime.datetime.now()),
-                    updated_by='api',
-                    lims_sample_recordid=item.get('limsSampleRecordId'),
-                    dmpdata=record
-                )
-                db.session.add(new_sample_record)
-                db.session.commit()
-                AppLog.info(
-                    message="Added new Sample record with  ID: {}".format(new_sample_record.id),
-                    user="api")
-                LOG.info("Added new Sample record with  ID: {}".format(new_sample_record.id))
+        sampledata = Sample.query.filter_by(lims_sample_recordid=item.get('limsSampleRecordId'), lims_tracker_recordid=item.get('limsTrackerRecordId')).first()
+        print(sampledata)
+        if sampledata is not None:
+            print("started updating Sample record")
+            sampledata.sampleid = item.get('sampleId')
+            sampledata.alt_id = item.get('altId')
+            sampledata.cmo_sampleid = item.get('cmoSampleId')
+            sampledata.cmo_patientid = item.get('cmoPatientId')
+            sampledata.parental_tumortype = item.get('parentalTumorType')
+            sampledata.collection_year = item.get('collectionYear')
+            sampledata.igo_requestid = item.get('igoRequestId')
+            sampledata.date_igo_received = item.get('dateIgoReceived')
+            sampledata.date_igo_complete = item.get('igoCompleteDate')
+            sampledata.application_requested = item.get('applicationRequested')
+            sampledata.baitset_used = item.get('baitsetUsed')
+            sampledata.sequencer_type = item.get('sequencerType')
+            sampledata.lab_head = item.get('labHead')
+            sampledata.sample_status = item.get('sampleStatus')
+            sampledata.date_updated = str(datetime.datetime.now())
+            sampledata.updated_by = 'api'
+            db.session.commit()
+            LOG.info("Updated Sample record with ID: {}".format(sampledata.id))
+        elif sampledata is None:
+            new_sample_record = Sample(
+                sampleid=item.get('sampleId'),
+                alt_id=item.get("altId"),
+                cmo_sampleid=item.get('cmoSampleId'),
+                cmo_patientid=item.get('cmoPatientId'),
+                parental_tumortype=item.get('parentalTumorType'),
+                collection_year=item.get('collectionYear'),
+                igo_requestid=item.get('igoRequestId'),
+                date_igo_received=item.get('dateIgoReceived'),
+                date_igo_complete=item.get('igoCompleteDate'),
+                application_requested=item.get('applicationRequested'),
+                baitset_used=item.get('baitsetUsed'),
+                sequencer_type=item.get('sequencerType'),
+                lab_head=item.get('labHead'),
+                sample_status=item.get('sampleStatus'),
+                date_created=str(datetime.datetime.now()),
+                created_by='api',
+                date_updated=str(datetime.datetime.now()),
+                updated_by='api',
+                lims_sample_recordid=item.get('limsSampleRecordId'),
+                dmpdata=record
+            )
+            db.session.add(new_sample_record)
+            db.session.commit()
+            AppLog.info(
+                message="Added new Sample record with  ID: {}".format(new_sample_record.id),
+                user="api")
+            LOG.info("Added new Sample record with  ID: {}".format(new_sample_record.id))
 
     except Exception as e:
         AppLog.error(message=repr(e), user='api')
@@ -426,6 +427,13 @@ def user_update_sample(item, username):
             dmpdata.tissue_type = item.get("tissue_type")
             dmpdata.date_updated = str(datetime.datetime.now())
             dmpdata.updated_by = username
+            db.session.commit()
+            AppLog.info(message="Updated DmpData record with ID: {}".format(dmpdata.id), user=username)
+            LOG.info("Updated DmpData record with ID: {}".format(dmpdata.id))
+            if dmpdata.samples is not None:
+                for sample in dmpdata.samples:
+                    sample.baitset_used = item.get("baitset_used")
+                    AppLog.info(message="Updated Sample record with ID: {}".format(sample.id), user=username)
             db.session.commit()
             AppLog.info(message="Updated DmpData record with ID: {}".format(dmpdata.id), user=username)
             LOG.info("Updated DmpData record with ID: {}".format(dmpdata.id))

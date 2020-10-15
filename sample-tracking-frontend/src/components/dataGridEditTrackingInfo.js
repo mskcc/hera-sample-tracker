@@ -95,9 +95,11 @@ class DataGridEditTrackingInfo extends React.Component {
 
   downloadData = () => {
     this.setState({ confirmVisible: false });
+    console.log(column_mappings);
     const dataArray = [];
     const headers = this.state.colHeaders;
     dataArray.push(headers);
+    console.log(headers);
     this.state.tableData.forEach((row) => {
       var arr = [];
       headers.forEach((value) => {

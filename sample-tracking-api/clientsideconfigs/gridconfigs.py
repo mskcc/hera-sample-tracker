@@ -277,8 +277,7 @@ adminColumns = [
         'selectOptions': ['IGO', 'Outside']
     },
     {
-        'data': 'baitset_used',
-        'readOnly': True
+        'data': 'baitset_used'
     },
     {
         'data': 'sequencer_type',

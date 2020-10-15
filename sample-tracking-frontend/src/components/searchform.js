@@ -1,6 +1,6 @@
 
 import React, { Component } from 'react';
-import { Form, Icon, Input, Button, Select, Checkbox, Row, Col, Spin} from 'antd';
+import { Form, Icon, Input, Button, Select, Checkbox, Row, Col, Spin, Typography} from 'antd';
 import { search_data } from '../actions/searchActions';
 import { connect } from 'react-redux';
 import DataGridEditTrackingInfo from '../components/dataGridEditTrackingInfo';
@@ -10,14 +10,10 @@ import { ADMIN_EMAIL } from '../configs/react.configs';
 
 let styles = {
     notification_div: {
-        color: 'red',
-        textAlign: 'center',
-        fontFamily: 'sans-serif',
-        fontSize: 15,
-        margin: 20,
+        color: 'blue',
     }
 }
-
+const {Text} = Typography;
 class SearchForm extends Component {
     constructor(props) {
         super(props);
@@ -33,6 +29,9 @@ class SearchForm extends Component {
     componentDidMount() {
         if (!this.props.user || !this.props.user.access_token) {
             this.props.history.push("/");
+        }
+        if (!this.props.data){
+            // this.fetchAllData();
         }
     }
 
@@ -61,8 +60,18 @@ class SearchForm extends Component {
         this.setState({ [fieldname]: value });
     }
 
-    onChange = (e) => {
+    onChange = () => {
         this.setState({ exactmatch: !this.state.exactmatch });
+    }
+
+    fetchAllData = () =>{
+        const initData = {
+            'searchtext': "*",
+            'searchtype': "mrn",
+            'exactmatch': false,
+            'role': this.props.user.role
+        }
+        this.props.searchData(initData, this.props.user.access_token);
     }
 
     render() {
@@ -74,14 +83,14 @@ class SearchForm extends Component {
                         <Col>
                             <Form.Item>
                                 {getFieldDecorator('searchtext', {
-                                    rules: [{ required: true, message: "Required MRN's or Tumor Type to search." }],
+                                    rules: [{ required: true, message: "Required MRN's or Tumor Type or DMP ID to search." }],
                                     onChange: this.handleInputChange
                                 })(
                                     <Input
                                         prefix={<Icon type="search" style={{ color: 'rgba(0,0,0,.25)' }} />}
                                         size="large"
                                         name="searchtext"
-                                        placeholder="search using comma separated mrn's or tumor type"
+                                        placeholder="enter comma separated mrn's, tumor type or dmp id's"
                                         style={{ width: 450 }}
                                     />,
                                 )}
@@ -93,9 +102,9 @@ class SearchForm extends Component {
                                     rules: [{
                                         required: true, message: 'Please chose searchtype!',
                                     }],
-                                    initialValue: "",
+                                    //initialValue: "",
                                 })(
-                                    <Select placeholder="Search Type" size="large" style={{ minWidth: 150 }} onChange={(value) => this.handleSearchTypeSelectChange(value, 'searchtype')}>
+                                    <Select placeholder="search type" size="large" style={{ minWidth: 150 }} onChange={(value) => this.handleSearchTypeSelectChange(value, 'searchtype')}>
                                         <Select.Option value="MRN">MRN</Select.Option>
                                         <Select.Option value="TUMOR TYPE">TUMOR TYPE</Select.Option>
                                         <Select.Option value="DMPID">DMP ID</Select.Option>
@@ -119,13 +128,14 @@ class SearchForm extends Component {
                         </Col>
 
                     </Row>
-
                 </Form>
-                {/* {this.props.user && this.props.user.role === 'user' &&
-                    <div style={styles.notification_div}>
-                        You are logged in as a regular user. If you are clinician, please email administrators group at '{ADMIN_EMAIL}' to get access to clinical data.
-                    </div>
-                } */}
+                <Row type="flex" justify="center">
+                        <Col span={3} >
+                            <Button type="link" block onClick={() => this.fetchAllData()}>
+                                <Text mark underline strong style={styles.notification_div}>Click here to see all available data</Text>
+                            </Button>
+                        </Col>
+                </Row>
                 {this.props.isFetching ? <div style={{ marginLeft: '47%', marginTop: '15%', marginRight: '47%' }}><Spin tip="Loading..." size='large' /></div> :
                     this.props.data && <DataGridEditTrackingInfo rowdata={this.props.data} />
                 }

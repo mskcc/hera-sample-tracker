@@ -317,22 +317,27 @@ def get_desired_sample(sample_list):
     %exome%' followed by '%library%' and then everything else.
     :param sample_list
     """
-    sequenced_samples = []
+    sequencing_passed_samples = []
+    sequencing_failed_samples = []
     exome_samples = []
     library_samples = []
     failed_sequencing_status = "failed - illumina sequencing analysis"
     completed_sequencing_status = "data qc - completed"
     for samp in sample_list:
         print(samp.application_requested)
-        if failed_sequencing_status in samp.sample_status.lower() or completed_sequencing_status in samp.sample_status.lower():
-            sequenced_samples.append(samp)
+        if completed_sequencing_status in samp.sample_status.lower():
+            sequencing_passed_samples.append(samp)
+        if failed_sequencing_status in samp.sample_status.lower():
+            sequencing_failed_samples.append(samp)
         if 'exome' in samp.application_requested.lower():
             exome_samples.append(samp)
         # for samp in sample_list:
         if 'library' in samp.application_requested.lower() or 'qc' in samp.application_requested.lower():
             library_samples.append(samp)
-    if len(sequenced_samples) > 0:
-        return sequenced_samples
+    if len(sequencing_passed_samples) > 0:
+        return sequencing_passed_samples
+    if len(sequencing_failed_samples) > 0:
+        return sequencing_failed_samples
     if len(exome_samples) > 0:
         return exome_samples
     if len(library_samples) > 0:

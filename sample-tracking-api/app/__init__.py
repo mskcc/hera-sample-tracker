@@ -107,6 +107,6 @@ with app.app_context() :
 #################################### APP CONSTANTS ###################################################
 
 #ADMIN_GROUPS = ['AHDHD'] # add another admin group from PM's when available
-#ADMIN_GROUPS = ['zzPDL_SKI_IGO_DATA', 'GRP_SKI_CMO_WESRecapture']
-ADMIN_GROUPS = ['GRP_SKI_CMO_WESRecapture']
-CLINICAL_GROUPS = ['clinical_group_update_when_available']
+ADMIN_GROUPS = ['zzPDL_SKI_IGO_DATA', 'GRP_SKI_CMO_WESRecapture']
+#ADMIN_GROUPS = ['GRP_SKI_CMO_WESRecapture']
+CLINICAL_GROUPS = ['GRP_SKI_CMO_WESRecapture_Clinical']

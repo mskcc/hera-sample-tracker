@@ -4,7 +4,7 @@
   "private": true,
   "author": "mskcc",
   "license": "ISC",
-  "homepage": "/",
+  "homepage": "sample-tracker",
   "devDependencies": {
     "@babel/core": "7.4.5",
     "@babel/node": "7.4.5",
