@@ -364,11 +364,15 @@ def update_record(record, item):
             sampledata.date_igo_received = item.get('dateIgoReceived')
             sampledata.date_igo_complete = item.get('igoCompleteDate')
             sampledata.application_requested = item.get('applicationRequested')
-            sampledata.baitset_used = item.get('baitsetUsed')
             sampledata.sequencer_type = item.get('sequencerType')
             sampledata.lab_head = item.get('labHead')
             sampledata.sample_status = item.get('sampleStatus')
             sampledata.date_updated = str(datetime.datetime.now())
+            # update baitset only if sample is IGO sample and sequenced at IGO. IGO samples will have a
+            # 'limsSampleRecordId' value in the endpoint data. If the sample was Sequenced at IGO it will also have
+            # status of "Failed - Illumina Sequencing Analysis" or "Data QC - Completed".
+            if item.get('limsSampleRecordId') and item.get('baitsetUsed'):
+                sampledata.baitset_used = item.get('baitsetUsed')
             sampledata.updated_by = 'api'
             db.session.commit()
             LOG.info("Updated Sample record with ID: {}".format(sampledata.id))
