@@ -45,7 +45,6 @@
     "browserslist": "^4.8.2",
     "caniuse-lite": "^1.0.30001015",
     "file-saver": "^2.0.2",
-    "mui-datatables": "^2.15.0",
     "react": "16.8.6",
     "react-data-table-component": "^1.6.1",
     "react-dom": "16.8.6",
