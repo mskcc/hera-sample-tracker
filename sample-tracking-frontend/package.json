@@ -39,7 +39,7 @@
     "@material-ui/core": "^4.11.0",
     "@material-ui/icons": "^4.9.1",
     "antd": "3.19.2",
-    "axios": "^0.19.2",
+    "axios": "^0.21.1",
     "babel-plugin-transform-class-properties": "^6.24.1",
     "babel-plugin-transform-object-rest-spread": "^6.26.0",
     "browserslist": "^4.8.2",
