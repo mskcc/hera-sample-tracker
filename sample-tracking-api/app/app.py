@@ -372,6 +372,7 @@ def update_record(record, item):
             # 'limsSampleRecordId' value in the endpoint data. If the sample was Sequenced at IGO it will also have
             # status of "Failed - Illumina Sequencing Analysis" or "Data QC - Completed".
             if item.get('limsSampleRecordId') and item.get('baitsetUsed'):
+                print("Updating existing baitset for {} from existing value {} to new value {}".format(sampledata.cmo_patientid, sampledata.baitset_used, item.get('baitsetUsed')))
                 sampledata.baitset_used = item.get('baitsetUsed')
             sampledata.updated_by = 'api'
             db.session.commit()

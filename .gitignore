@@ -11,6 +11,7 @@ sample-tracking-api/clientsideconfigs/.DS_Store
 sample-tracking-api/logs/*
 sample-tracking-api/userutils/__pycache__/
 sample-tracking-api/venv/
+sample-tracking-api/env/
 sample-tracking-frontend/.gitignore
 sample-tracking-frontend/README.md
 sample-tracking-frontend/public/
@@ -19,6 +20,15 @@ sample-tracking-frontend/src/index.css
 sample-tracking-frontend/src/serviceWorker.js
 sample-tracking-api/database/__pycache__/models.cpython-37.pyc
 sample-tracking-api/clientsideconfigs/__pycache__/
+sample-tracking-frontend/build/asset-manifest.json
+sample-tracking-frontend/build/favicon.ico
+sample-tracking-frontend/build/logo192.png
+sample-tracking-frontend/build/logo512.png
+sample-tracking-frontend/build/manifest.json
+sample-tracking-frontend/build/precache-manifest.b65ae6489e5fa18736471310a76f9fc0.js
+sample-tracking-frontend/build/robots.txt
+sample-tracking-frontend/build/service-worker.js
+sample-tracking-frontend/build/static/
 
 # NODE
 # Logs
