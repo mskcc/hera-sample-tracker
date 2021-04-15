@@ -136,6 +136,11 @@ class SearchForm extends Component {
                             </Button>
                         </Col>
                 </Row>
+                <Row type="flex" justify="center">
+                        <Col span={10} >
+                            <Text strong>For inquiries regarding access to the WES repository data, please contact the <a href="mailto:skicmopm@mskcc.org?subject=WES repository access enquiry.">CMO PM team</a> (skicmopm@mskcc.org)</Text>
+                        </Col>
+                </Row>
                 {this.props.isFetching ? <div style={{ marginLeft: '47%', marginTop: '15%', marginRight: '47%' }}><Spin tip="Loading..." size='large' /></div> :
                     this.props.data && <DataGridEditTrackingInfo rowdata={this.props.data} />
                 }

@@ -180,24 +180,15 @@ def save_to_db(data):
         data_to_json = json.loads(data)
         new_record_ids = []
         for item in data_to_json:
-            LOG.info("data: {}".format(item))
-            print("AltID: ", item.get("altId"))
-            LOG.info("Adding record with AltID: {}".format(item.get("altId")))
-            print("Tempo Status: ", item.get("tempoPipelineQcStatus"))
-            LOG.info("Adding record with Tempo Status: {}".format(item.get("tempoPipelineQcStatus")))
-            print("Tempo output delivery date: ", item.get("tempoOutputDeliveryDate"))
-            LOG.info("Adding record with Tempo output delivery date: {}".format(item.get("tempoOutputDeliveryDate")))
             print(item)
             AppLog.info(message="Processing Sample with User Sample ID: {}".format(item.get("userSampleId")),
                         user="api")
             dmp_recordid = item.get('limsTrackerRecordId')
             tracker_record = Dmpdata.query.filter_by(lims_tracker_recordid=dmp_recordid).first()
             if tracker_record is None:
-                print("creating new tracker record.")
                 AppLog.info(
                     message="Creating new  DmpData record with User Sample ID: {}".format(item.get("userSampleId")),
                     user="api")
-                LOG.info("Creating new  DmpData record with User Sample ID: {}".format(item.get("userSampleId")))
                 new_dmpdata_record = Dmpdata(
                     user_sampleid_historical=item.get('userSampleidHistorical'),
                     user_sampleid=item.get('userSampleId'),
@@ -226,14 +217,10 @@ def save_to_db(data):
                 db.session.add(new_dmpdata_record)
                 db.session.commit()
                 new_record_ids.append(new_dmpdata_record.id)
-
                 AppLog.info(
                     message="Added new Dmpdata record with ID: {}".format(
                         new_dmpdata_record.id),
                     user="api")
-                LOG.info("Added new Dmpdata record with ID: {}".format(
-                    new_dmpdata_record.id))
-
                 new_cvrdata_record = Cvrdata(
                     dmp_sampleid=item.get('dmpSampleId'),
                     dmp_patientid=item.get('dmpPatientId'),
@@ -257,8 +244,6 @@ def save_to_db(data):
                     message="Added new Cvrdata record with ID: {}".format(
                         new_cvrdata_record.id),
                     user="api")
-                LOG.info("Added new Cvrdata record with ID: {}".format(
-                    new_cvrdata_record.id))
 
                 # if item.get('limsSampleRecordId') != '':
                 new_sample_record = Sample(
@@ -288,7 +273,6 @@ def save_to_db(data):
                 AppLog.info(
                     message="Added new Sample record with  ID: {}".format(new_sample_record.id),
                     user="api")
-                LOG.info("Added new Sample record with  Sample ID: {} and ID: {}".format(new_sample_record.sampleid, new_sample_record.id))
             elif tracker_record is not None:
                 update_record(tracker_record, item)
         return new_record_ids
@@ -299,10 +283,6 @@ def save_to_db(data):
 
 def update_record(record, item):
     try:
-        print("started updating Dmpdata record")
-        print(item)
-        LOG.info("Updating Tracker record with User Sample ID: {}".format(item.get("userSampleId")))
-        LOG.info(item)
         record.user_sampleid_historical = item.get('userSampleidHistorical')
         record.user_sampleid = item.get('userSampleId')
         record.duplicate_sample = item.get('duplicateSample')
@@ -325,12 +305,9 @@ def update_record(record, item):
             message="Update Dmpdata record with ID: {}".format(
                 record.id),
             user="api")
-        LOG.info("Update Dmpdata record with ID: {}".format(record.id))
-
         '''find and update the cvrdata record. An existing Dmpdata record must always have related Cvrdata record'''
         cvrdata = Cvrdata.query.filter_by(lims_tracker_recordid=item.get('limsTrackerRecordId')).first()
         if cvrdata is not None:
-            print("started updating Cvrdata record")
             cvrdata.dmp_sampleid = item.get('dmpSampleId')
             cvrdata.dmp_patientid = item.get('dmpPatientId')
             cvrdata.mrn = item.get('mrn')
@@ -348,7 +325,6 @@ def update_record(record, item):
                 message="Updated Cvrdata record with ID: {}".format(
                     cvrdata.id),
                 user="api")
-            LOG.info("Updated Cvrdata record with ID: {}".format(cvrdata.id))
         '''find if the record has related sample record, if found, update it, if not found then add sample record'''
         sampledata = Sample.query.filter_by(lims_sample_recordid=item.get('limsSampleRecordId'), lims_tracker_recordid=item.get('limsTrackerRecordId')).first()
         print(sampledata)
@@ -372,10 +348,10 @@ def update_record(record, item):
             # 'limsSampleRecordId' value in the endpoint data. If the sample was Sequenced at IGO it will also have
             # status of "Failed - Illumina Sequencing Analysis" or "Data QC - Completed".
             if item.get('limsSampleRecordId') and item.get('baitsetUsed'):
+                print("Updating existing baitset for {} from existing value {} to new value {}".format(sampledata.cmo_patientid, sampledata.baitset_used, item.get('baitsetUsed')))
                 sampledata.baitset_used = item.get('baitsetUsed')
             sampledata.updated_by = 'api'
             db.session.commit()
-            LOG.info("Updated Sample record with ID: {}".format(sampledata.id))
         elif sampledata is None:
             new_sample_record = Sample(
                 sampleid=item.get('sampleId'),
@@ -418,7 +394,6 @@ def user_update_sample(item, username):
     :param item:
     :return:
     '''
-    print(username)
     try:
         dmpdata = db.session.query(Dmpdata).filter_by(id=item.get("id")).first()
         if dmpdata is not None:

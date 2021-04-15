@@ -204,7 +204,7 @@ class DataGridEditTrackingInfo extends React.Component {
                 height={this.setGridHeight(this.state.tableData)}
                 wordWrap={false}
                 autoRowSize={false}
-                search={true}
+                // search={true}
                 currentRowClassName='currentRow'
                 currentColClassName='currentCol'
               />
