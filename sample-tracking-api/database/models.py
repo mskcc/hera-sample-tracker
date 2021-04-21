@@ -217,7 +217,6 @@ def filter_qc_application(sample_objects):
     Request within a Project. Note: A project can have multiple child Requests.
     :param sample_objects
     """
-    print("total objects to filter for qc application", len(sample_objects))
     after_filter_duplicates = []
     groups = defaultdict(list)
     for obj in sample_objects:
@@ -226,7 +225,6 @@ def filter_qc_application(sample_objects):
             groups[project + "__" + obj.dmp_sampleid].append(obj)
         else:
             groups["solo"].append(obj)
-    print("grouped data", groups)
     for key in groups.keys():
         if key != "solo":
             values = groups[key]
@@ -323,7 +321,6 @@ def get_desired_sample(sample_list):
     failed_sequencing_status = "failed - illumina sequencing analysis"
     completed_sequencing_status = "data qc - completed"
     for samp in sample_list:
-        print(samp.application_requested)
         if completed_sequencing_status in samp.sample_status.lower():
             sequencing_passed_samples.append(samp)
         if failed_sequencing_status in samp.sample_status.lower():
