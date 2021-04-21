@@ -752,8 +752,8 @@ def update_tempo_status():
                     response.headers.add('Access-Control-Allow-Origin', '*')
                     return response
                 else:
-                    response = make_response(jsonify(success=True,
-                                                     message=""), 200)
+                    response = make_response(jsonify(success=False,
+                                                     message="No matching records for cmo_id and igo_id found."), 200)
                     response.headers.add('Access-Control-Allow-Origin', '*')
                     return response
             else:
