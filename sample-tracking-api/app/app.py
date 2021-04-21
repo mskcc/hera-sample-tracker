@@ -753,7 +753,7 @@ def update_tempo_status():
                     return response
                 else:
                     response = make_response(jsonify(success=False,
-                                                     message="No matching records for cmo_id and igo_id found."), 200)
+                                                     message="No matching records for cmo_id and igo_id found."), 400)
                     response.headers.add('Access-Control-Allow-Origin', '*')
                     return response
             else:
