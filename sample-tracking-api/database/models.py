@@ -253,7 +253,6 @@ def get_sample_objects(objlist, filter_failed):
     for dmpdata in objlist:
         samples = dmpdata.samples
         cvrdata = dmpdata.cvr_data
-        print("samples to create", len(samples))
         if len(samples) > 1 and (has_sequencing_status(samples) or has_mixed_application(samples)):
             desired_samples = get_desired_sample(samples)
             if filter_failed is False:
