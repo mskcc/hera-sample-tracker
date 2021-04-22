@@ -245,7 +245,8 @@ adminColumns = [
     },
     {
         'data': 'tempo_qc_status',
-        'readOnly': True
+        'editor': 'select',
+        'selectOptions': ['Pass', 'Failed', 'Not Run']
     },
     {
         'data': 'sex',

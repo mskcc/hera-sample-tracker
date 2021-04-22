@@ -180,7 +180,6 @@ def save_to_db(data):
         data_to_json = json.loads(data)
         new_record_ids = []
         for item in data_to_json:
-            print(item)
             AppLog.info(message="Processing Sample with User Sample ID: {}".format(item.get("userSampleId")),
                         user="api")
             dmp_recordid = item.get('limsTrackerRecordId')
@@ -205,7 +204,7 @@ def save_to_db(data):
                     access_level="MSK Embargo",
                     seqiencing_site=item.get('sequencingSite'),
                     pi_request_date=item.get('piRequestDate'),
-                    tempo_qc_status=item.get("tempoPipelineQcStatus"),
+                    tempo_qc_status=item.get("tempoPipelineQcStatus") if item.get('tempoPipelineQcStatus') else "NOT RUN",
                     tempo_output_delivery_date=item.get("tempoOutputDeliveryDate"),
                     tissue_type=item.get('tissueType'),
                     date_created=str(datetime.datetime.now()),
@@ -296,7 +295,8 @@ def update_record(record, item):
         record.scientific_pi = item.get('scientificPi')
         record.source_dna_type = item.get('sourceDnaType')
         record.data_custodian = item.get("dataCustodian")
-        record.tempo_qc_status = item.get("tempoPipelineQcStatus")
+        if not record.tempo_qc_status:
+            record.tempo_qc_status = item.get("tempoPipelineQcStatus")
         record.tempo_output_delivery_date = item.get("tempoOutputDeliveryDate")
         record.date_updated = str(datetime.datetime.now())
         record.updated_by = 'api'
@@ -327,9 +327,7 @@ def update_record(record, item):
                 user="api")
         '''find if the record has related sample record, if found, update it, if not found then add sample record'''
         sampledata = Sample.query.filter_by(lims_sample_recordid=item.get('limsSampleRecordId'), lims_tracker_recordid=item.get('limsTrackerRecordId')).first()
-        print(sampledata)
         if sampledata is not None:
-            print("started updating Sample record")
             sampledata.sampleid = item.get('sampleId')
             sampledata.alt_id = item.get('altId')
             sampledata.cmo_sampleid = item.get('cmoSampleId')
@@ -348,7 +346,6 @@ def update_record(record, item):
             # 'limsSampleRecordId' value in the endpoint data. If the sample was Sequenced at IGO it will also have
             # status of "Failed - Illumina Sequencing Analysis" or "Data QC - Completed".
             if item.get('limsSampleRecordId') and item.get('baitsetUsed'):
-                print("Updating existing baitset for {} from existing value {} to new value {}".format(sampledata.cmo_patientid, sampledata.baitset_used, item.get('baitsetUsed')))
                 sampledata.baitset_used = item.get('baitsetUsed')
             sampledata.updated_by = 'api'
             db.session.commit()
@@ -380,7 +377,6 @@ def update_record(record, item):
             AppLog.info(
                 message="Added new Sample record with  ID: {}".format(new_sample_record.id),
                 user="api")
-            LOG.info("Added new Sample record with  ID: {}".format(new_sample_record.id))
 
     except Exception as e:
         AppLog.error(message=repr(e), user='api')
@@ -404,18 +400,17 @@ def user_update_sample(item, username):
             dmpdata.seqiencing_site = item.get("seqiencing_site")
             dmpdata.pi_request_date = item.get("pi_request_date")
             dmpdata.tissue_type = item.get("tissue_type")
+            dmpdata.tempo_qc_status = item.get("tempo_qc_status")
             dmpdata.date_updated = str(datetime.datetime.now())
             dmpdata.updated_by = username
             db.session.commit()
             AppLog.info(message="Updated DmpData record with ID: {}".format(dmpdata.id), user=username)
-            LOG.info("Updated DmpData record with ID: {}".format(dmpdata.id))
             if dmpdata.samples is not None:
                 for sample in dmpdata.samples:
                     sample.baitset_used = item.get("baitset_used")
                     AppLog.info(message="Updated Sample record with ID: {}".format(sample.id), user=username)
             db.session.commit()
             AppLog.info(message="Updated DmpData record with ID: {}".format(dmpdata.id), user=username)
-            LOG.info("Updated DmpData record with ID: {}".format(dmpdata.id))
     except Exception as e:
         LOG.error(traceback.print_exc())
         AppLog.error(message=e, user="api")
@@ -431,12 +426,10 @@ def save_sample_changes():
     try:
         if request.method == "POST":
             sample_data = request.get_json(silent=True)
-            LOG.info("Data to save: {}".format(sample_data))
             username = get_jwt_identity()
             for item in sample_data:
                 user_update_sample(item, username)
             AppLog.info(message="Updated {} samples by user".format(len(sample_data)), user=username)
-            LOG.info("Updated {} samples by user {}".format(len(sample_data), username))
             response = make_response(
                 jsonify(
                     success=True,
@@ -488,14 +481,11 @@ def download_data():
     '''
     if request.method == "POST":
         query_data = request.get_json(silent=True)
-        print(query_data)
         num_samples = query_data.get('data_length')
         user = query_data.get('user')
         username = user.get('username')
         role = user.get('role')
         try:
-            LOG.info("User {} with role {} downloaded data for {} samples".format(username, role,
-                                                                                  num_samples))
             AppLog.info(
                 message="User {} with role {} downloaded data for {} samples".format(username, role, num_samples),
                 user=username)
@@ -727,4 +717,57 @@ def search_data():
                 message="User {} with role {} searched using kewords {} and searchtype {}, it cuased error {}. Check logs for details.".format(
                     username, user_role, search_keywords, search_type, e), user=username)
             LOG.error(traceback.print_exc())
+            return response
+
+
+@app.route("/update_tempo_status", methods=['POST'])
+def update_tempo_status():
+    """
+    Endpoint to update tempo status on the Dmpdata object related to Sample. Find Sample using cmo_id and igo_id passed
+    by the request. If matching Sample is found, find related Dmpdata and update tempo_qc_status value to tempo_status
+    passed by request.
+    @param cmo_id : cmo_id for the sample to update. It is required.
+    @param igo_id : igo_id for the ample to update. It is required.
+    @param tempo_status: status to update to
+    """
+    if request.method == "POST":
+        parms = request.get_json(force=True)
+        print("Tempo status update parameters: ", parms)
+        cmo_id = parms.get('cmo_id')
+        igo_id = parms.get('igo_id')
+        tempo_status = parms.get('tempo_status')
+        try:
+            if cmo_id and igo_id and tempo_status:
+                db_data = db.session.query(Sample).filter(Sample.sampleid == igo_id, Sample.cmo_sampleid==cmo_id).all()
+                LOG.info(msg="found {} records to update tempo status".format(len(db_data)))
+                if db_data:
+                    for item in db_data:
+                        dmp_tracker_data = item.dmpdata
+                        dmp_tracker_data.tempo_qc_status=tempo_status
+                        dmp_tracker_data.date_updated = str(datetime.datetime.now())
+                        dmp_tracker_data.updated_by = "tempo pipeline"
+                        db.session.commit()
+                    response = make_response(jsonify(success=True,
+                                         message="successfully updated tempo status."), 200)
+                    response.headers.add('Access-Control-Allow-Origin', '*')
+                    return response
+                else:
+                    response = make_response(jsonify(success=False,
+                                                     message="No matching records for cmo_id and igo_id found."), 400)
+                    response.headers.add('Access-Control-Allow-Origin', '*')
+                    return response
+            else:
+                message = "Missing parameter values. Valid cmo_id, igo_id and tempo_status values are required to update" \
+                          " tempo status."
+                response = make_response(jsonify(success=False,
+                                             message=message), 400)
+                response.headers.add('Access-Control-Allow-Origin', '*')
+                return response
+        except Exception as e:
+            response = make_response(
+                jsonify(success=False,
+                        message="Server error. failed to update tempo status"), 500)
+            response.headers.add('Access-Control-Allow-Origin', '*')
+            print(e)
+            LOG.error(traceback.print_exc(e))
             return response
