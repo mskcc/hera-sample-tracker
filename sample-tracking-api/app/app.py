@@ -53,10 +53,10 @@ def login():
             # check user role
             if len(set(user_groups).intersection(set(ADMIN_GROUPS))) > 0:
                 role = 'admin'
-            elif len(set(user_groups).intersection(set(CLINICAL_GROUPS))) > 0:
-                role = 'clinical'
             else:
-                role = 'user'
+                role = 'clinical'
+            # elif len(set(user_groups).intersection(set(CLINICAL_GROUPS))) > 0:
+            #     role = 'clinical'
             conn.unbind_s()
             LOG.info("Successfully authenticated and logged {} into the app with role {}.".format(username, role))
 
@@ -205,6 +205,7 @@ def save_to_db(data):
                     seqiencing_site=item.get('sequencingSite'),
                     pi_request_date=item.get('piRequestDate'),
                     tempo_qc_status=item.get("tempoPipelineQcStatus") if item.get('tempoPipelineQcStatus') else "NOT RUN",
+                    pm_redaction=item.get("pmRedaction",""),
                     tempo_output_delivery_date=item.get("tempoOutputDeliveryDate"),
                     tissue_type=item.get('tissueType'),
                     date_created=str(datetime.datetime.now()),
@@ -297,6 +298,8 @@ def update_record(record, item):
         record.data_custodian = item.get("dataCustodian")
         if not record.tempo_qc_status:
             record.tempo_qc_status = item.get("tempoPipelineQcStatus")
+        if not record.pm_redaction:
+            record.pm_redaction = item.get("pmRedaction")
         record.tempo_output_delivery_date = item.get("tempoOutputDeliveryDate")
         record.date_updated = str(datetime.datetime.now())
         record.updated_by = 'api'
@@ -401,6 +404,7 @@ def user_update_sample(item, username):
             dmpdata.pi_request_date = item.get("pi_request_date")
             dmpdata.tissue_type = item.get("tissue_type")
             dmpdata.tempo_qc_status = item.get("tempo_qc_status")
+            dmpdata.pm_redaction = item.get("pm_redaction")
             dmpdata.date_updated = str(datetime.datetime.now())
             dmpdata.updated_by = username
             db.session.commit()
@@ -528,7 +532,7 @@ def search_data():
                     db_data = db.session.query(Dmpdata) \
                         .outerjoin(Cvrdata, Cvrdata.lims_tracker_recordid == Dmpdata.lims_tracker_recordid) \
                         .outerjoin(Sample, Sample.lims_tracker_recordid == Dmpdata.lims_tracker_recordid) \
-                        .filter(~Sample.sample_status.like('%Fail%'), Dmpdata.tempo_qc_status == "Pass").all()
+                        .filter(~Sample.sample_status.like('%Fail%'), ~Dmpdata.tempo_qc_status.like('%Fail%'), Dmpdata.pm_redaction == "").all()
                     result = get_sample_objects(db_data, filter_failed=True)
                     print("total unfiltered", len(db_data))
                     print("total results: ", len(result))
@@ -562,7 +566,7 @@ def search_data():
                         .outerjoin(Cvrdata, Cvrdata.lims_tracker_recordid == Dmpdata.lims_tracker_recordid) \
                         .outerjoin(Sample, Sample.lims_tracker_recordid == Dmpdata.lims_tracker_recordid) \
                         .filter(Cvrdata.mrn.in_(search_keywords), ~Sample.sample_status.like('%Failed%'),
-                                Sample.sampleid != '', Dmpdata.tempo_qc_status == "Pass").all()
+                                Sample.sampleid != '', ~Dmpdata.tempo_qc_status.like('%Fail%'), Dmpdata.pm_redaction == "").all()
                     result = get_sample_objects(db_data, filter_failed=True)
                     print("total results: ", len(result))
                 else:
@@ -595,7 +599,7 @@ def search_data():
                         .outerjoin(Cvrdata, Cvrdata.lims_tracker_recordid == Dmpdata.lims_tracker_recordid) \
                         .outerjoin(Sample, Sample.lims_tracker_recordid == Dmpdata.lims_tracker_recordid) \
                         .filter(Cvrdata.tumor_type.in_(search_keywords), ~Sample.sample_status.like('%Failed%'),
-                                Sample.sampleid != '', Dmpdata.tempo_qc_status == "Pass").all()
+                                Sample.sampleid != '', ~Dmpdata.tempo_qc_status.like('%Fail%'), Dmpdata.pm_redaction == "").all()
                     result = get_sample_objects(db_data, filter_failed=True)
                     print("total results: ", len(result))
                 else:
@@ -631,7 +635,7 @@ def search_data():
                             .outerjoin(Cvrdata, Cvrdata.lims_tracker_recordid == Dmpdata.lims_tracker_recordid) \
                             .outerjoin(Sample, Sample.lims_tracker_recordid == Dmpdata.lims_tracker_recordid) \
                             .filter(Cvrdata.tumor_type.like(search_word_like), ~Sample.sample_status.like('%Failed%'),
-                                    Sample.sampleid != '', Dmpdata.tempo_qc_status == "Pass").all()
+                                    Sample.sampleid != '', ~Dmpdata.tempo_qc_status.like('%Fail%'), Dmpdata.pm_redaction == "").all()
                         result = get_sample_objects(db_data, filter_failed=True)
                         print("total results: ", len(result))
                     else:
@@ -668,7 +672,7 @@ def search_data():
                         .outerjoin(Cvrdata, Cvrdata.lims_tracker_recordid == Dmpdata.lims_tracker_recordid) \
                         .outerjoin(Sample, Sample.lims_tracker_recordid == Dmpdata.lims_tracker_recordid) \
                         .filter(Cvrdata.dmp_sampleid.in_(search_keywords), ~Sample.sample_status.like('%Failed%'),
-                                Sample.sampleid != '', Dmpdata.tempo_qc_status == "Pass").all()
+                                Sample.sampleid != '', ~Dmpdata.tempo_qc_status.like('%Fail%'), Dmpdata.pm_redaction == "").all()
                     result = get_sample_objects(db_data, filter_failed=True)
                     print("total results: ", len(result))
                 else:

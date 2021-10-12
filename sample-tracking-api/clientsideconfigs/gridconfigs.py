@@ -1,7 +1,7 @@
 ###############################################################HandsonTable Column configs #############################################################################
 
 clinicalColHeaders = ['MRN', 'Mol Accession #', 'DMP Sample ID', 'CMO Sample ID', 'Sample Class', 'Tumor Type',
-                      'Parental Tumor Type', 'Tumor Site',  'User Sample ID', 'Tempo Pipeline Status', 'IGO Request ID',
+                      'Parental Tumor Type', 'Tumor Site',  'User Sample ID', 'Tempo QC Status', 'IGO Request ID',
                       'DMP Request ID', 'Sequencing Site', 'Baitset',  'Project Name', 'Lab Head', 'Scientific PI',
                       'Data Custodian', 'Data Analyst', 'Tempo Output Delivery Date', 'Access Level', 'Consent Part A',
                       'Consent Part C'
@@ -177,7 +177,7 @@ nonClinicalColumns = [
 adminColHeaders = ['MRN', 'Mol Accession #', 'DMP Patient ID', 'DMP Sample ID', 'CMO Patient ID', 'CMO Sample ID',
                    'Sample Class', 'Tumor Type', 'Parental Tumor Type', 'Tumor Site', 'User Sample ID',
                    'User Sample ID-historical', 'WES Sample ID', 'Source DNA Type', 'Sample Status',
-                   'Tempo Pipeline Status', 'Sex', 'IGO ID', 'Alt ID', 'IGO Request ID', 'DMP Request ID', 'Application',
+                   'Tempo QC Status', 'PM Redaction', 'Sex', 'IGO ID', 'Alt ID', 'IGO Request ID', 'DMP Request ID', 'Application',
                    'Sequencing Site', 'Baitset', 'Sequencer', 'IGO Complete Date', 'Project Name', 'Lab Head',
                    'Scientific PI', 'Data Custodian', 'Data Analyst', 'CC/Fund', 'Tempo Output Delivery Date',
                    'Access Level', 'Consent Part A', 'Consent Part C']
@@ -247,6 +247,11 @@ adminColumns = [
         'data': 'tempo_qc_status',
         'editor': 'select',
         'selectOptions': ['Pass', 'Failed', 'Not Run']
+    },
+    {
+        'data': 'pm_redaction',
+        'editor': 'select',
+        'selectOptions': ['CCS_DMP_Duplicate','HERA_BUG']
     },
     {
         'data': 'sex',
