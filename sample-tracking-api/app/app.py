@@ -53,10 +53,10 @@ def login():
             # check user role
             if len(set(user_groups).intersection(set(ADMIN_GROUPS))) > 0:
                 role = 'admin'
-            elif len(set(user_groups).intersection(set(CLINICAL_GROUPS))) > 0:
-                role = 'clinical'
             else:
-                role = 'user'
+                role = 'clinical'
+            # elif len(set(user_groups).intersection(set(CLINICAL_GROUPS))) > 0:
+            #     role = 'clinical'
             conn.unbind_s()
             LOG.info("Successfully authenticated and logged {} into the app with role {}.".format(username, role))
 
@@ -204,8 +204,10 @@ def save_to_db(data):
                     access_level="MSK Embargo",
                     seqiencing_site=item.get('sequencingSite'),
                     pi_request_date=item.get('piRequestDate'),
-                    tempo_qc_status=item.get("tempoPipelineQcStatus") if item.get('tempoPipelineQcStatus') else "NOT RUN",
-                    tempo_output_delivery_date=item.get("tempoOutputDeliveryDate"),
+                    tempo_qc_status='NOT RUN',
+                    pm_redaction='',
+                    tempo_output_delivery_date=item.get("tempoOutputDeliveryDate",''),
+                    tempo_analysis_update='',
                     tissue_type=item.get('tissueType'),
                     date_created=str(datetime.datetime.now()),
                     created_by='api',
@@ -295,8 +297,6 @@ def update_record(record, item):
         record.scientific_pi = item.get('scientificPi')
         record.source_dna_type = item.get('sourceDnaType')
         record.data_custodian = item.get("dataCustodian")
-        if not record.tempo_qc_status:
-            record.tempo_qc_status = item.get("tempoPipelineQcStatus")
         record.tempo_output_delivery_date = item.get("tempoOutputDeliveryDate")
         record.date_updated = str(datetime.datetime.now())
         record.updated_by = 'api'
@@ -401,6 +401,8 @@ def user_update_sample(item, username):
             dmpdata.pi_request_date = item.get("pi_request_date")
             dmpdata.tissue_type = item.get("tissue_type")
             dmpdata.tempo_qc_status = item.get("tempo_qc_status")
+            dmpdata.pm_redaction = item.get("pm_redaction")
+            dmpdata.tempo_analysis_update = item.get("tempo_analysis_update")
             dmpdata.date_updated = str(datetime.datetime.now())
             dmpdata.updated_by = username
             db.session.commit()
@@ -528,7 +530,7 @@ def search_data():
                     db_data = db.session.query(Dmpdata) \
                         .outerjoin(Cvrdata, Cvrdata.lims_tracker_recordid == Dmpdata.lims_tracker_recordid) \
                         .outerjoin(Sample, Sample.lims_tracker_recordid == Dmpdata.lims_tracker_recordid) \
-                        .filter(~Sample.sample_status.like('%Fail%'), Dmpdata.tempo_qc_status == "Pass").all()
+                        .filter(~Sample.sample_status.like('%Fail%'), ~Dmpdata.tempo_qc_status.like('%Fail%'), ~Dmpdata.tempo_qc_status.isin(["NOT RUN",""]), Dmpdata.pm_redaction == "").all()
                     result = get_sample_objects(db_data, filter_failed=True)
                     print("total unfiltered", len(db_data))
                     print("total results: ", len(result))
@@ -562,7 +564,7 @@ def search_data():
                         .outerjoin(Cvrdata, Cvrdata.lims_tracker_recordid == Dmpdata.lims_tracker_recordid) \
                         .outerjoin(Sample, Sample.lims_tracker_recordid == Dmpdata.lims_tracker_recordid) \
                         .filter(Cvrdata.mrn.in_(search_keywords), ~Sample.sample_status.like('%Failed%'),
-                                Sample.sampleid != '', Dmpdata.tempo_qc_status == "Pass").all()
+                                Sample.sampleid != '', ~Dmpdata.tempo_qc_status.like('%Fail%'), ~Dmpdata.tempo_qc_status.isin(["NOT RUN",""]), Dmpdata.pm_redaction == "").all()
                     result = get_sample_objects(db_data, filter_failed=True)
                     print("total results: ", len(result))
                 else:
@@ -595,7 +597,7 @@ def search_data():
                         .outerjoin(Cvrdata, Cvrdata.lims_tracker_recordid == Dmpdata.lims_tracker_recordid) \
                         .outerjoin(Sample, Sample.lims_tracker_recordid == Dmpdata.lims_tracker_recordid) \
                         .filter(Cvrdata.tumor_type.in_(search_keywords), ~Sample.sample_status.like('%Failed%'),
-                                Sample.sampleid != '', Dmpdata.tempo_qc_status == "Pass").all()
+                                Sample.sampleid != '', ~Dmpdata.tempo_qc_status.like('%Fail%'), ~Dmpdata.tempo_qc_status.isin(["NOT RUN",""]), Dmpdata.pm_redaction == "").all()
                     result = get_sample_objects(db_data, filter_failed=True)
                     print("total results: ", len(result))
                 else:
@@ -631,7 +633,7 @@ def search_data():
                             .outerjoin(Cvrdata, Cvrdata.lims_tracker_recordid == Dmpdata.lims_tracker_recordid) \
                             .outerjoin(Sample, Sample.lims_tracker_recordid == Dmpdata.lims_tracker_recordid) \
                             .filter(Cvrdata.tumor_type.like(search_word_like), ~Sample.sample_status.like('%Failed%'),
-                                    Sample.sampleid != '', Dmpdata.tempo_qc_status == "Pass").all()
+                                    Sample.sampleid != '', ~Dmpdata.tempo_qc_status.like('%Fail%'), ~Dmpdata.tempo_qc_status.isin(["NOT RUN",""]), Dmpdata.pm_redaction == "").all()
                         result = get_sample_objects(db_data, filter_failed=True)
                         print("total results: ", len(result))
                     else:
@@ -668,7 +670,7 @@ def search_data():
                         .outerjoin(Cvrdata, Cvrdata.lims_tracker_recordid == Dmpdata.lims_tracker_recordid) \
                         .outerjoin(Sample, Sample.lims_tracker_recordid == Dmpdata.lims_tracker_recordid) \
                         .filter(Cvrdata.dmp_sampleid.in_(search_keywords), ~Sample.sample_status.like('%Failed%'),
-                                Sample.sampleid != '', Dmpdata.tempo_qc_status == "Pass").all()
+                                Sample.sampleid != '', ~Dmpdata.tempo_qc_status.like('%Fail%'), ~Dmpdata.tempo_qc_status.isin(["NOT RUN",""]), Dmpdata.pm_redaction == "").all()
                     result = get_sample_objects(db_data, filter_failed=True)
                     print("total results: ", len(result))
                 else:
@@ -767,6 +769,114 @@ def update_tempo_status():
             response = make_response(
                 jsonify(success=False,
                         message="Server error. failed to update tempo status"), 500)
+            response.headers.add('Access-Control-Allow-Origin', '*')
+            print(e)
+            LOG.error(traceback.print_exc(e))
+            return response
+
+@app.route("/update_tempo_delivery_date", methods=['POST'])
+def update_tempo_delivery_date():
+    """
+    Endpoint to update Tempo Output Delivery Date on the Dmpdata object related to Sample. 
+    Find Sample using cmo_id and igo_id passed by the request. 
+    If matching Sample is found, find related Dmpdata and update tempo_output_delivery_date 
+    value to delivery_date passed by request. 
+    Do not overwrite non-empty values. 
+    @param cmo_id : cmo_id for the sample to update. It is required.
+    @param igo_id : igo_id for the sample to update. It is required.
+    @param delivery_date: date as string. 
+    """
+    if request.method == "POST":
+        parms = request.get_json(force=True)
+        print("Tempo delivery parameters: ", parms)
+        cmo_id = parms.get('cmo_id')
+        igo_id = parms.get('igo_id')
+        delivery_date = parms.get('delivery_date', str(datetime.datetime.now()))
+        try:
+            if cmo_id and igo_id and delivery_date:
+                db_data = db.session.query(Sample).filter(Sample.sampleid == igo_id, Sample.cmo_sampleid==cmo_id).all()
+                LOG.info(msg="found {} records to update tempo delivery date".format(len(db_data)))
+                if db_data:
+                    for item in db_data:
+                        dmp_tracker_data = item.dmpdata
+                        if dmp_tracker_data.tempo_output_delivery_date in [None, ""]:
+                            dmp_tracker_data.tempo_output_delivery_date=delivery_date
+                            dmp_tracker_data.date_updated = str(datetime.datetime.now())
+                            dmp_tracker_data.updated_by = "tempo pipeline"
+                            db.session.commit()
+                    response = make_response(jsonify(success=True,
+                                         message="successfully updated tempo status."), 200)
+                    response.headers.add('Access-Control-Allow-Origin', '*')
+                    return response
+                else:
+                    response = make_response(jsonify(success=False,
+                                                     message="No matching records for cmo_id and igo_id found."), 400)
+                    response.headers.add('Access-Control-Allow-Origin', '*')
+                    return response
+            else:
+                message = "Missing parameter values. Valid cmo_id, igo_id and delivery_date values are required to update" \
+                          " tempo output delivery date."
+                response = make_response(jsonify(success=False,
+                                             message=message), 400)
+                response.headers.add('Access-Control-Allow-Origin', '*')
+                return response
+        except Exception as e:
+            response = make_response(
+                jsonify(success=False,
+                        message="Server error. Failed to update tempo output delivery date."), 500)
+            response.headers.add('Access-Control-Allow-Origin', '*')
+            print(e)
+            LOG.error(traceback.print_exc(e))
+            return response
+
+@app.route("/update_tempo_analysis_complete", methods=['POST'])
+def update_tempo_analysis_complete():
+    """
+    Endpoint to update Tempo Analysis Update on the Dmpdata object related to Sample. 
+    Find Sample using cmo_id and igo_id passed by the request. 
+    If matching Sample is found, find related Dmpdata and update tempo_analysis_update 
+    value to analysis_date passed by request. 
+    @param cmo_id : cmo_id for the sample to update. It is required.
+    @param igo_id : igo_id for the sample to update. It is required.
+    @param analysis_date: date as string.
+    """
+    if request.method == "POST":
+        parms = request.get_json(force=True)
+        print("Tempo analysis complete parameters: ", parms)
+        cmo_id = parms.get('cmo_id')
+        igo_id = parms.get('igo_id')
+        analysis_date = parms.get('analysis_date', str(datetime.datetime.now()))
+        try:
+            if cmo_id and igo_id:
+                db_data = db.session.query(Sample).filter(Sample.sampleid == igo_id, Sample.cmo_sampleid==cmo_id).all()
+                LOG.info(msg="found {} records to update tempo analysis update date".format(len(db_data)))
+                if db_data:
+                    for item in db_data:
+                        dmp_tracker_data = item.dmpdata
+                        dmp_tracker_data.tempo_analysis_update = analysis_date
+                        dmp_tracker_data.date_updated = str(datetime.datetime.now())
+                        dmp_tracker_data.updated_by = "tempo pipeline"
+                        db.session.commit()
+                    response = make_response(jsonify(success=True,
+                                         message="successfully updated tempo analysis update date."), 200)
+                    response.headers.add('Access-Control-Allow-Origin', '*')
+                    return response
+                else:
+                    response = make_response(jsonify(success=False,
+                                                     message="No matching records for cmo_id and igo_id found."), 400)
+                    response.headers.add('Access-Control-Allow-Origin', '*')
+                    return response
+            else:
+                message = "Missing parameter values. Valid cmo_id, igo_id and analysis_date values are required to update" \
+                          " tempo analysis update date."
+                response = make_response(jsonify(success=False,
+                                             message=message), 400)
+                response.headers.add('Access-Control-Allow-Origin', '*')
+                return response
+        except Exception as e:
+            response = make_response(
+                jsonify(success=False,
+                        message="Server error. Failed to update tempo analysis update date."), 500)
             response.headers.add('Access-Control-Allow-Origin', '*')
             print(e)
             LOG.error(traceback.print_exc(e))
