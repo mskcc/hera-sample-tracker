@@ -204,7 +204,7 @@ def save_to_db(data):
                     access_level="MSK Embargo",
                     seqiencing_site=item.get('sequencingSite'),
                     pi_request_date=item.get('piRequestDate'),
-                    tempo_qc_status=item.get("tempoPipelineQcStatus") if item.get('tempoPipelineQcStatus') else "NOT RUN",
+                    tempo_qc_status=item.get("tempoPipelineQcStatus",""), 
                     pm_redaction=item.get("pmRedaction",""),
                     tempo_output_delivery_date=item.get("tempoOutputDeliveryDate"),
                     tissue_type=item.get('tissueType'),
