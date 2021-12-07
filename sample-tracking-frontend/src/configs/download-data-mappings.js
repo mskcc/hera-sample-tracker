@@ -44,6 +44,7 @@
     'Tempo QC Status' : 'tempo_qc_status',
     'PM Redaction' : 'pm_redaction',
     'Tempo Output Delivery Date' : 'tempo_output_delivery_date',
+    'Tempo Analysis Update' : 'tempo_analysis_update',
     'Alt ID': 'alt_id',
     'Source DNA Type': 'source_dna_type',
     'Molecular Accession No.': 'molecular_accession_num'

@@ -180,7 +180,7 @@ adminColHeaders = ['MRN', 'Mol Accession #', 'DMP Patient ID', 'DMP Sample ID', 
                    'Tempo QC Status', 'PM Redaction', 'Sex', 'IGO ID', 'Alt ID', 'IGO Request ID', 'DMP Request ID', 'Application',
                    'Sequencing Site', 'Baitset', 'Sequencer', 'IGO Complete Date', 'Project Name', 'Lab Head',
                    'Scientific PI', 'Data Custodian', 'Data Analyst', 'CC/Fund', 'Tempo Output Delivery Date',
-                   'Access Level', 'Consent Part A', 'Consent Part C']
+                   'Tempo Analysis Update', 'Access Level', 'Consent Part A', 'Consent Part C']
 
 adminColumns = [
     {
@@ -318,6 +318,10 @@ adminColumns = [
     {
         'data': 'tempo_output_delivery_date',
         'readOnly': True
+    },
+    {
+        'data': 'tempo_analysis_update',
+        'readOnly':True
     },
     {
         'data': 'access_level',

@@ -33,6 +33,7 @@ class Dmpdata(db.Model):
     tempo_qc_status = db.Column(db.String(300))  # pulled from LIMS DMPSampleTracker table
     pm_redaction = db.Column(db.String(300)) # entered by PM's
     tempo_output_delivery_date = db.Column(db.String(300))  # pulled from LIMS DMPSampleTracker table
+    tempo_analysis_update = db.Column(db.String(300))
     tissue_type = db.Column(db.String(300))  # entered by PM's
     collaboration_center = db.Column(db.String(300))  # entered by PM's
     date_created = db.Column(db.String(300))
@@ -105,7 +106,7 @@ class Dmpsampledata():
                  scientific_pi=None,
                  consent_parta_status=None, consent_partc_status=None, sample_status=None, access_level="MSK Public",
                  seqiencing_site=None, pi_request_date=None, tempo_qc_status=None, pm_redaction=None
-                 tempo_output_delivery_date=None, tissue_type=None, lims_sample_recordid=None,
+                 tempo_output_delivery_date=None, tempo_analysis_update=None, tissue_type=None, lims_sample_recordid=None,
                  lims_tracker_recordid=None
                  ):
         self.id = id
@@ -151,6 +152,7 @@ class Dmpsampledata():
         self.tempo_qc_status = tempo_qc_status
         self.pm_redaction = pm_redaction
         self.tempo_output_delivery_date = tempo_output_delivery_date
+	self.tempo_analysis_update = tempo_analysis_update
         self.tissue_type = tissue_type
         self.lims_sample_recordid = lims_sample_recordid
         self.lims_tracker_recordid = lims_tracker_recordid
@@ -183,6 +185,7 @@ def create_sample_object(dmpdata, cvrdata, sample):
     sample_object.tempo_qc_status = dmpdata.tempo_qc_status
     sample_object.pm_redaction = dmpdata.pm_redaction
     sample_object.tempo_output_delivery_date = dmpdata.tempo_output_delivery_date
+    sample_object.tempo_analysis_update = dmpdata.tempo_analysis_update
     sample_object.tissue_type = dmpdata.tissue_type
     sample_object.source_dna_type = dmpdata.source_dna_type
     sample_object.dmp_sampleid = cvrdata.dmp_sampleid
