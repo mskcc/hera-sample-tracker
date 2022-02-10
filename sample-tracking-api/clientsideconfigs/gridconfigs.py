@@ -250,8 +250,9 @@ adminColumns = [
     },
     {
         'data': 'pm_redaction',
-        'editor': 'select',
-        'selectOptions': ['CCS_DMP_Duplicate','HERA_BUG']
+        'type': 'autocomplete',
+        'source': ['CCS_DMP_DUPLICATE','HERA_BUG','NOT_CONSENTED'],
+        'strict': False
     },
     {
         'data': 'sex',
