@@ -259,7 +259,7 @@ adminColumns = [
     {
         'data': 'pm_redaction',
         'type': 'autocomplete',
-        'source': ['CCS_DMP_Duplicate','HERA_BUG','NOT_CONSENTED'],
+        'source': ['CCS_DMP_DUPLICATE','HERA_BUG','NOT_CONSENTED'],
         'strict': False
     },
     {
