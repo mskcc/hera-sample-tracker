@@ -3,7 +3,7 @@
 clinicalColHeaders = ['MRN', 'Mol Accession #', 'DMP Sample ID', 'CMO Sample ID', 'Sample Class', 'Tumor Type',
                       'Parental Tumor Type', 'Tumor Site',  'User Sample ID', 'Tempo QC Status', 'IGO Request ID',
                       'DMP Request ID', 'Sequencing Site', 'Baitset',  'Project Name', 'Lab Head', 'Scientific PI',
-                      'Data Custodian', 'Data Analyst', 'Tempo Output Delivery Date', 'Access Level', 'Consent Part A',
+                      'Data Custodian', 'Data Analyst', 'Tempo Output Delivery Date', 'Embargo End Date', 'Access Level', 'Consent Part A',
                       'Consent Part C'
                       ]
 
@@ -89,6 +89,10 @@ clinicalColumns = [
         'readOnly': True
     },
     {
+        'data': 'embargo_end_date',
+        'readOnly': True
+    },
+    {
         'data': 'access_level',
         'readOnly': True
     },
@@ -105,7 +109,7 @@ clinicalColumns = [
 
 nonClinicalColHeaders = ['DMP Sample ID', 'User Sample ID', 'CMO Sample ID', 'Molecular Accession No.', 'Sex', 'Tumor Type',
                          'Parental Tumor Type', 'Tumor Site', 'Sample Class', 'Sequencing Site', 'Baitset', 'Data Custodian',
-                         'Tempo Output Delivery Date', 'Access Level', 'Consent Part A', 'Consent Part C']
+                         'Tempo Output Delivery Date', 'Embargo End Date', 'Access Level', 'Consent Part A', 'Consent Part C']
 
 nonClinicalColumns = [
     {
@@ -161,6 +165,10 @@ nonClinicalColumns = [
         'readOnly': True
     },
     {
+        'data': 'embargo_end_date',
+        'readOnly': True
+    },
+    {
         'data': 'access_level',
         'readOnly': True
     },
@@ -179,7 +187,7 @@ adminColHeaders = ['MRN', 'Mol Accession #', 'DMP Patient ID', 'DMP Sample ID', 
                    'User Sample ID-historical', 'WES Sample ID', 'Source DNA Type', 'Sample Status',
                    'Tempo QC Status', 'PM Redaction', 'Sex', 'IGO ID', 'Alt ID', 'IGO Request ID', 'DMP Request ID', 'Application',
                    'Sequencing Site', 'Baitset', 'Sequencer', 'IGO Complete Date', 'Project Name', 'Lab Head',
-                   'Scientific PI', 'Data Custodian', 'Data Analyst', 'CC/Fund', 'Tempo Output Delivery Date',
+                   'Scientific PI', 'Data Custodian', 'Data Analyst', 'CC/Fund', 'Tempo Output Delivery Date', 'Embargo End Date',
                    'Tempo Analysis Update', 'Access Level', 'Consent Part A', 'Consent Part C']
 
 adminColumns = [
@@ -250,8 +258,9 @@ adminColumns = [
     },
     {
         'data': 'pm_redaction',
-        'editor': 'select',
-        'selectOptions': ['CCS_DMP_Duplicate','HERA_BUG']
+        'type': 'autocomplete',
+        'source': ['CCS_DMP_Duplicate','HERA_BUG','NOT_CONSENTED'],
+        'strict': False
     },
     {
         'data': 'sex',
@@ -317,6 +326,10 @@ adminColumns = [
     },
     {
         'data': 'tempo_output_delivery_date',
+        'readOnly': True
+    },
+    {
+        'data': 'embargo_end_date',
         'readOnly': True
     },
     {
