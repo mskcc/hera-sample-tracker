@@ -807,9 +807,11 @@ def update_tempo_delivery_date():
         igo_id = parms.get('igo_id')
         delivery_date = parms.get('delivery_date', datetime.datetime.now().strftime("%m-%d-%Y"))
         try:
-            if cmo_id and igo_id and delivery_date and embargo_end_date:
+            if cmo_id and igo_id and delivery_date:
                 delivery_date = delivery_date[:10]
                 embargo_end_date = calculate_outdate(delivery_date)
+                if embargo_end_date == "":
+                    raise ValueError("Valid Embargo End Date could not be calculated.")
                 db_data = db.session.query(Sample).filter(Sample.sampleid == igo_id, Sample.cmo_sampleid==cmo_id).all()
                 LOG.info(msg="found {} records to update tempo delivery date".format(len(db_data)))
                 if db_data:
