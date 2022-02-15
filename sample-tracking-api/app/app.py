@@ -816,10 +816,10 @@ def update_tempo_delivery_date():
                     for item in db_data:
                         dmp_tracker_data = item.dmpdata
                         older_date = False
-                            try:
-                               older_date = (datetime.datetime.strptime(delivery_date,"%m-%d-%Y")-datetime.datetime.strptime(dmp_tracker_data.tempo_output_delivery_date,"%m-%d-%Y")).days < 0
-                            except:
-                                pass
+                        try:
+                            older_date = (datetime.datetime.strptime(delivery_date,"%m-%d-%Y")-datetime.datetime.strptime(dmp_tracker_data.tempo_output_delivery_date,"%m-%d-%Y")).days < 0
+                        except:
+                            pass
                         if dmp_tracker_data.tempo_output_delivery_date in [None, ""] or older_date:
                             dmp_tracker_data.tempo_output_delivery_date=str(delivery_date)
                             dmp_tracker_data.date_updated = str(datetime.datetime.now())
