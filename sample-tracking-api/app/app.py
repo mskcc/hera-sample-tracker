@@ -806,12 +806,14 @@ def update_tempo_delivery_date():
         cmo_id = parms.get('cmo_id')
         igo_id = parms.get('igo_id')
         delivery_date = parms.get('delivery_date', datetime.datetime.now().strftime("%m-%d-%Y"))
+        class UnparseableDate(ValueError):
+            pass
         try:
             if cmo_id and igo_id and delivery_date:
                 delivery_date = delivery_date[:10]
                 embargo_end_date = calculate_outdate(delivery_date)
                 if embargo_end_date == "":
-                    raise ValueError("Valid Embargo End Date could not be calculated.")
+                    raise UnparseableDate("Valid Embargo End Date could not be calculated.")
                 db_data = db.session.query(Sample).filter(Sample.sampleid == igo_id, Sample.cmo_sampleid==cmo_id).all()
                 LOG.info(msg="found {} records to update tempo delivery date".format(len(db_data)))
                 if db_data:
@@ -824,6 +826,7 @@ def update_tempo_delivery_date():
                             pass
                         if dmp_tracker_data.tempo_output_delivery_date in [None, ""] or older_date:
                             dmp_tracker_data.tempo_output_delivery_date=str(delivery_date)
+                            dmp_tracker_data.embargo_end_date=str(embargo_end_date)
                             dmp_tracker_data.date_updated = str(datetime.datetime.now())
                             dmp_tracker_data.updated_by = "tempo pipeline"
                             db.session.commit()
@@ -843,6 +846,13 @@ def update_tempo_delivery_date():
                                              message=message), 400)
                 response.headers.add('Access-Control-Allow-Origin', '*')
                 return response
+        except UnparseableDate:
+            response = make_response(
+                jsonify(success=False,
+                        message="Valid Embargo End Date could not be calculated."),500)
+            response.headers.add('Access-Control-Allow-Origin', '*')
+            return response
+
         except Exception as e:
             response = make_response(
                 jsonify(success=False,
