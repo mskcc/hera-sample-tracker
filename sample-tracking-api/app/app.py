@@ -846,11 +846,13 @@ def update_tempo_delivery_date():
                                              message=message), 400)
                 response.headers.add('Access-Control-Allow-Origin', '*')
                 return response
-        except UnparseableDate:
+        except UnparseableDate as u:
             response = make_response(
                 jsonify(success=False,
-                        message="Valid Embargo End Date could not be calculated."),500)
+                        message="Error: " + u),500)
             response.headers.add('Access-Control-Allow-Origin', '*')
+            print(u)
+            LOG.error(traceback.print_exc(u))
             return response
 
         except Exception as e:
@@ -878,7 +880,7 @@ def update_tempo_analysis_complete():
         print("Tempo analysis complete parameters: ", parms)
         cmo_id = parms.get('cmo_id')
         igo_id = parms.get('igo_id')
-        analysis_date = parms.get('analysis_date', str(datetime.datetime.now()))
+        analysis_date = parms.get('analysis_date', datetime.datetime.now().strftime("%m-%d-%Y"))
         try:
             if cmo_id and igo_id:
                 analysis_date = analysis_date[:10]
