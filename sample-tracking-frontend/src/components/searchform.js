@@ -1,4 +1,4 @@
-/* eslint-disable */ 
+
 import React, { Component } from 'react';
 import { Form, Icon, Input, Button, Select, Checkbox, Row, Col, Spin, Typography} from 'antd';
 import { search_data } from '../actions/searchActions';
