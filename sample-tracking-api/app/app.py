@@ -540,7 +540,7 @@ def search_data():
                     db_data = db.session.query(Dmpdata) \
                         .outerjoin(Cvrdata, Cvrdata.lims_tracker_recordid == Dmpdata.lims_tracker_recordid) \
                         .outerjoin(Sample, Sample.lims_tracker_recordid == Dmpdata.lims_tracker_recordid) \
-                        .filter(~Sample.sample_status.like('%Fail%'), ~Dmpdata.tempo_qc_status.like('%Fail%'), ~Dmpdata.tempo_qc_status.isin(["NOT RUN",""]), Dmpdata.pm_redaction == "").all()
+                        .filter(~Sample.sample_status.like('%Fail%'), ~Dmpdata.tempo_qc_status.like('%Fail%'), ~Dmpdata.tempo_qc_status.in_(["NOT RUN",""]), Dmpdata.pm_redaction == "").all()
                     result = get_sample_objects(db_data, filter_failed=True)
                     print("total unfiltered", len(db_data))
                     print("total results: ", len(result))
@@ -574,7 +574,7 @@ def search_data():
                         .outerjoin(Cvrdata, Cvrdata.lims_tracker_recordid == Dmpdata.lims_tracker_recordid) \
                         .outerjoin(Sample, Sample.lims_tracker_recordid == Dmpdata.lims_tracker_recordid) \
                         .filter(Cvrdata.mrn.in_(search_keywords), ~Sample.sample_status.like('%Failed%'),
-                                Sample.sampleid != '', ~Dmpdata.tempo_qc_status.like('%Fail%'), ~Dmpdata.tempo_qc_status.isin(["NOT RUN",""]), Dmpdata.pm_redaction == "").all()
+                                Sample.sampleid != '', ~Dmpdata.tempo_qc_status.like('%Fail%'), ~Dmpdata.tempo_qc_status.in_(["NOT RUN",""]), Dmpdata.pm_redaction == "").all()
                     result = get_sample_objects(db_data, filter_failed=True)
                     print("total results: ", len(result))
                 else:
@@ -607,7 +607,7 @@ def search_data():
                         .outerjoin(Cvrdata, Cvrdata.lims_tracker_recordid == Dmpdata.lims_tracker_recordid) \
                         .outerjoin(Sample, Sample.lims_tracker_recordid == Dmpdata.lims_tracker_recordid) \
                         .filter(Cvrdata.tumor_type.in_(search_keywords), ~Sample.sample_status.like('%Failed%'),
-                                Sample.sampleid != '', ~Dmpdata.tempo_qc_status.like('%Fail%'), ~Dmpdata.tempo_qc_status.isin(["NOT RUN",""]), Dmpdata.pm_redaction == "").all()
+                                Sample.sampleid != '', ~Dmpdata.tempo_qc_status.like('%Fail%'), ~Dmpdata.tempo_qc_status.in_(["NOT RUN",""]), Dmpdata.pm_redaction == "").all()
                     result = get_sample_objects(db_data, filter_failed=True)
                     print("total results: ", len(result))
                 else:
@@ -643,7 +643,7 @@ def search_data():
                             .outerjoin(Cvrdata, Cvrdata.lims_tracker_recordid == Dmpdata.lims_tracker_recordid) \
                             .outerjoin(Sample, Sample.lims_tracker_recordid == Dmpdata.lims_tracker_recordid) \
                             .filter(Cvrdata.tumor_type.like(search_word_like), ~Sample.sample_status.like('%Failed%'),
-                                    Sample.sampleid != '', ~Dmpdata.tempo_qc_status.like('%Fail%'), ~Dmpdata.tempo_qc_status.isin(["NOT RUN",""]), Dmpdata.pm_redaction == "").all()
+                                    Sample.sampleid != '', ~Dmpdata.tempo_qc_status.like('%Fail%'), ~Dmpdata.tempo_qc_status.in_(["NOT RUN",""]), Dmpdata.pm_redaction == "").all()
                         result = get_sample_objects(db_data, filter_failed=True)
                         print("total results: ", len(result))
                     else:
@@ -680,7 +680,7 @@ def search_data():
                         .outerjoin(Cvrdata, Cvrdata.lims_tracker_recordid == Dmpdata.lims_tracker_recordid) \
                         .outerjoin(Sample, Sample.lims_tracker_recordid == Dmpdata.lims_tracker_recordid) \
                         .filter(Cvrdata.dmp_sampleid.in_(search_keywords), ~Sample.sample_status.like('%Failed%'),
-                                Sample.sampleid != '', ~Dmpdata.tempo_qc_status.like('%Fail%'), ~Dmpdata.tempo_qc_status.isin(["NOT RUN",""]), Dmpdata.pm_redaction == "").all()
+                                Sample.sampleid != '', ~Dmpdata.tempo_qc_status.like('%Fail%'), ~Dmpdata.tempo_qc_status.in_(["NOT RUN",""]), Dmpdata.pm_redaction == "").all()
                     result = get_sample_objects(db_data, filter_failed=True)
                     print("total results: ", len(result))
                 else:
