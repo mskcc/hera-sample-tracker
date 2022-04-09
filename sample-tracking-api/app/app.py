@@ -925,15 +925,20 @@ def update_cmo_id():
     Do not overwrite non-empty values unless the date is determined to be earlier.
     @param cmo_id : cmo_id for the sample to update. It is required.
     @param igo_id : igo_id for the sample to update. It is required.
+    @param overwrite : boolean value indicated whether previous value for
+    cmo_sampleid and cmo_patientid should be overwritten. Default to False.
     """
     if request.method == "POST":
         parms = request.get_json(force=True)
         print("Tempo delivery parameters: ", parms)
         cmo_id = parms.get('cmo_id')
         igo_id = parms.get('igo_id')
+        overwrite = parms.get('overwrite',False)
         class UnparseableCmo(ValueError):
             pass
         try:
+            if not isinstance(overwrite,bool):
+                raise ValueError("Invalid overwrite value")
             if cmo_id and igo_id:
                 cmo_id_styled = cmo_id.replace("_","-")
                 if cmo_id_styled.startswith("s-C-"):
@@ -944,7 +949,7 @@ def update_cmo_id():
                 LOG.info(msg="found {} records to update CMO ID".format(len(db_data)))
                 if db_data:
                     for item in db_data:
-                        if item.cmo_sampleid in [None, ""]:
+                        if item.cmo_sampleid in [None, ""] or overwrite == True:
                             item.cmo_sampleid = cmo_id_styled
                             item.cmo_patientid = cmo_id_styled[:8]
                             item.date_updated = str(datetime.datetime.now())
@@ -978,9 +983,18 @@ def update_cmo_id():
         except Exception as e:
             response = make_response(
                 jsonify(success=False,
-                        message="Server error. Failed to update CMO ID."), 500)
+                        message="Server error. Failed to update CMO ID. " + e), 500)
             response.headers.add('Access-Control-Allow-Origin', '*')
             print(e)
             LOG.error(traceback.print_exc(e))
+            return response
+
+        except ValueError as v:
+            response = make_response(
+                jsonify(success=False,
+                        message="Server error. Failed to update CMO ID. " + v), 500)
+            response.headers.add('Access-Control-Allow-Origin', '*')
+            print(v)
+            LOG.error(traceback.print_exc(v))
             return response
 
