@@ -930,7 +930,7 @@ def update_cmo_id():
     """
     if request.method == "POST":
         parms = request.get_json(force=True)
-        print("Tempo delivery parameters: ", parms)
+        print("CMO ID update parameters: ", parms)
         cmo_id = parms.get('cmo_id')
         igo_id = parms.get('igo_id')
         overwrite = parms.get('overwrite',False)
