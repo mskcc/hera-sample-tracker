@@ -251,8 +251,8 @@ def save_to_db(data):
                 new_sample_record = Sample(
                     sampleid=item.get('sampleId'),
                     alt_id=item.get("altId"),
-                    cmo_sampleid=item.get('cmoSampleId'),
-                    cmo_patientid=item.get('cmoPatientId'),
+                    cmo_sampleid=item.get("cmoSampleId",""),
+                    cmo_patientid=item.get("cmoPatientId",""),
                     parental_tumortype=item.get('parentalTumorType'),
                     collection_year=item.get('collectionYear'),
                     igo_requestid=item.get('igoRequestId'),
@@ -332,8 +332,10 @@ def update_record(record, item):
         if sampledata is not None:
             sampledata.sampleid = item.get('sampleId')
             sampledata.alt_id = item.get('altId')
-            sampledata.cmo_sampleid = item.get('cmoSampleId')
-            sampledata.cmo_patientid = item.get('cmoPatientId')
+            cmo_sampleid = item.get('cmoSampleId',None)
+            cmo_patientid = item.get('cmoPatientId',None)
+            sampledata.cmo_sampleid = cmo_sampleid if cmo_sampleid else sampledata.get("cmo_sampleid","")
+            sampledata.cmo_patientid = cmo_patientid if cmo_patientid else sampledata.get("cmo_patientid","")
             sampledata.parental_tumortype = item.get('parentalTumorType')
             sampledata.collection_year = item.get('collectionYear')
             sampledata.igo_requestid = item.get('igoRequestId')
@@ -355,8 +357,6 @@ def update_record(record, item):
             new_sample_record = Sample(
                 sampleid=item.get('sampleId'),
                 alt_id=item.get("altId"),
-                cmo_sampleid=item.get('cmoSampleId'),
-                cmo_patientid=item.get('cmoPatientId'),
                 parental_tumortype=item.get('parentalTumorType'),
                 collection_year=item.get('collectionYear'),
                 igo_requestid=item.get('igoRequestId'),
@@ -919,4 +919,88 @@ def update_tempo_analysis_complete():
             LOG.error(traceback.print_exc(e))
             return response
 
+@app.route("/update_cmo_id", methods=['POST'])
+def update_cmo_id():
+    """
+    Endpoint to update CMO Patient ID on the Dmpdata object related to Sample.
+    Find Sample using igo_id passed by the request.
+    If matching Sample is found, update cmo_sampleid and cmo_patientid
+    value to cmo_id passed by request.
+    Do not overwrite non-empty values unless the date is determined to be earlier.
+    @param cmo_id : cmo_id for the sample to update. It is required.
+    @param igo_id : igo_id for the sample to update. It is required.
+    @param overwrite : boolean value indicated whether previous value for 
+    cmo_sampleid and cmo_patientid should be overwritten. Default to False.
+    """
+    if request.method == "POST":
+        parms = request.get_json(force=True)
+        print("CMO ID update parameters: ", parms)
+        cmo_id = parms.get('cmo_id')
+        igo_id = parms.get('igo_id')
+        overwrite = parms.get('overwrite',False)
+        class UnparseableCmo(ValueError):
+            pass
+        class BoolValueError(ValueError):
+            pass
+        try:
+            if not isinstance(overwrite,bool):
+                raise BoolValueError("Invalid overwrite value, boolean required.")
+            if cmo_id and igo_id:
+                cmo_id_styled = cmo_id.replace("_","-")
+                if cmo_id_styled.startswith("s-C-"):
+                    cmo_id_styled = cmo_id_styled[2:]
+                if len(re.findall('^C-[A-Z0-9]{6}-\w\d{3}-d',cmo_id_styled)) != 1:
+                    raise UnparseableCmo("Not a valid CMO ID")
+                db_data = db.session.query(Sample).filter(Sample.sampleid == igo_id).all()
+                LOG.info(msg="found {} records to update CMO ID".format(len(db_data)))
+                if db_data:
+                    for item in db_data:
+                        if item.cmo_sampleid in [None, ""] or overwrite == True:
+                            item.cmo_sampleid = cmo_id_styled
+                            item.cmo_patientid = cmo_id_styled[:8]
+                            item.date_updated = str(datetime.datetime.now())
+                            item.updated_by = "tempo pipeline"
+                            db.session.commit()
+                    response = make_response(jsonify(success=True,
+                                         message="successfully updated tempo status."), 200)
+                    response.headers.add('Access-Control-Allow-Origin', '*')
+                    return response
+                else:
+                    response = make_response(jsonify(success=False,
+                                                     message="No matching records for cmo_id and igo_id found."), 400)
+                    response.headers.add('Access-Control-Allow-Origin', '*')
+                    return response
+            else:
+                message = "Missing parameter values. Valid cmo_id and igo_id are required to update" \
+                          " CMO Sample ID and CMO Patient ID."
+                response = make_response(jsonify(success=False,
+                                             message=message), 400)
+                response.headers.add('Access-Control-Allow-Origin', '*')
+                return response
+        except UnparseableCmo as u:
+            response = make_response(
+                jsonify(success=False,
+                        message="Error: " + u),500)
+            response.headers.add('Access-Control-Allow-Origin', '*')
+            print(u)
+            LOG.error(traceback.print_exc(u))
+            return response
+
+        except Exception as e:
+            response = make_response(
+                jsonify(success=False,
+                        message="Server error. Failed to update CMO ID. " + e), 500)
+            response.headers.add('Access-Control-Allow-Origin', '*')
+            print(e)
+            LOG.error(traceback.print_exc(e))
+            return response
+
+        except BoolValueError as v:
+            response = make_response(
+                jsonify(success=False,
+                        message="Server error. Failed to update CMO ID. " + v), 500)
+            response.headers.add('Access-Control-Allow-Origin', '*')
+            print(v)
+            LOG.error(traceback.print_exc(v))
+            return response
 
