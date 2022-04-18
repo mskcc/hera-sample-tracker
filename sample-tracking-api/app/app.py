@@ -53,10 +53,10 @@ def login():
             # check user role
             if len(set(user_groups).intersection(set(ADMIN_GROUPS))) > 0:
                 role = 'admin'
-            else:
+            elif len(set(user_groups).intersection(set(CLINICAL_GROUPS))) > 0:
                 role = 'clinical'
-            # elif len(set(user_groups).intersection(set(CLINICAL_GROUPS))) > 0:
-            #     role = 'clinical'
+            else:
+                role = 'user'
             conn.unbind_s()
             LOG.info("Successfully authenticated and logged {} into the app with role {}.".format(username, role))
 
