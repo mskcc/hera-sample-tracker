@@ -298,8 +298,6 @@ def update_record(record, item):
         record.scientific_pi = item.get('scientificPi')
         record.source_dna_type = item.get('sourceDnaType')
         record.data_custodian = item.get("dataCustodian")
-        record.tempo_output_delivery_date = item.get("tempoOutputDeliveryDate")
-        record.embargo_end_date = calculate_outdate(record.tempo_output_delivery_date)
         record.date_updated = str(datetime.datetime.now())
         record.updated_by = 'api'
         db.session.commit()
@@ -332,10 +330,6 @@ def update_record(record, item):
         if sampledata is not None:
             sampledata.sampleid = item.get('sampleId')
             sampledata.alt_id = item.get('altId')
-            cmo_sampleid = item.get('cmoSampleId',None)
-            cmo_patientid = item.get('cmoPatientId',None)
-            sampledata.cmo_sampleid = cmo_sampleid if cmo_sampleid else sampledata.get("cmo_sampleid","")
-            sampledata.cmo_patientid = cmo_patientid if cmo_patientid else sampledata.get("cmo_patientid","")
             sampledata.parental_tumortype = item.get('parentalTumorType')
             sampledata.collection_year = item.get('collectionYear')
             sampledata.igo_requestid = item.get('igoRequestId')
