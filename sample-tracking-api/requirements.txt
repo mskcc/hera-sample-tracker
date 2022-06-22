@@ -26,7 +26,7 @@ Jinja2==2.11.2
 lml==0.0.9
 Mako==1.1.0
 MarkupSafe==1.1.1
-numpy==1.19.4
+numpy==1.22.0
 openpyxl==3.0.4
 pyasn1==0.4.8
 pyasn1-modules==0.2.8
