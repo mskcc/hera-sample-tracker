@@ -15,7 +15,6 @@ sample-tracking-api/env/
 sample-tracking-frontend/.gitignore
 sample-tracking-frontend/README.md
 sample-tracking-frontend/public/
-sample-tracking-frontend/sample-tracking-frontend.py
 sample-tracking-frontend/src/index.css
 sample-tracking-frontend/src/serviceWorker.js
 sample-tracking-api/database/__pycache__/models.cpython-37.pyc
