@@ -339,7 +339,7 @@ adminColumns = [
     {
         'data': 'access_level',
         'editor': 'select',
-        'selectOptions': ['MSK Embargo', 'MSK public', 'Published']
+        'selectOptions': ['MSK Embargo', 'MSK Public', 'Published']
     },
     {
         'data': 'consent_parta_status',
