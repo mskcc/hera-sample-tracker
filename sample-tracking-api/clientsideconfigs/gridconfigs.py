@@ -1,7 +1,7 @@
 ###############################################################HandsonTable Column configs #############################################################################
 
-clinicalColHeaders = ['MRN', 'Mol Accession #', 'DMP Sample ID', 'CMO Sample ID', 'Sample Class', 'Tumor Type',
-                      'Parental Tumor Type', 'Tumor Site',  'User Sample ID', 'Tempo QC Status', 'IGO Request ID',
+clinicalColHeaders = ['MRN', 'Mol Accession #', 'Tempo QC Status', 'DMP Sample ID', 'CMO Sample ID', 'Sample Class', 'Tumor Type',
+                      'Parental Tumor Type', 'Tumor Site',  'User Sample ID', 'IGO Request ID',
                       'DMP Request ID', 'Sequencing Site', 'Baitset',  'Project Name', 'Lab Head', 'Scientific PI',
                       'Data Custodian', 'Data Analyst', 'Tempo Output Delivery Date', 'Embargo End Date', 'Access Level', 'Consent Part A',
                       'Consent Part C'
@@ -14,6 +14,10 @@ clinicalColumns = [
     },
     {
         'data': 'molecular_accession_num',
+        'readOnly': True
+    },
+    {
+        'data': 'tempo_qc_status',
         'readOnly': True
     },
     {
@@ -42,10 +46,6 @@ clinicalColumns = [
     },
     {
         'data': 'user_sampleid',
-        'readOnly': True
-    },
-    {
-        'data': 'tempo_qc_status',
         'readOnly': True
     },
     {
@@ -182,10 +182,10 @@ nonClinicalColumns = [
     },
 ]
 
-adminColHeaders = ['MRN', 'Mol Accession #', 'DMP Patient ID', 'DMP Sample ID', 'CMO Patient ID', 'CMO Sample ID',
+adminColHeaders = ['MRN', 'Mol Accession #', 'Tempo QC Status', 'DMP Patient ID', 'DMP Sample ID', 'CMO Patient ID', 'CMO Sample ID',
                    'Sample Class', 'Tumor Type', 'Parental Tumor Type', 'Tumor Site', 'User Sample ID',
                    'User Sample ID-historical', 'WES Sample ID', 'Source DNA Type', 'Sample Status',
-                   'Tempo QC Status', 'PM Redaction', 'Sex', 'IGO ID', 'Alt ID', 'IGO Request ID', 'DMP Request ID', 'Application',
+                   'PM Redaction', 'Sex', 'IGO ID', 'Alt ID', 'IGO Request ID', 'DMP Request ID', 'Application',
                    'Sequencing Site', 'Baitset', 'Sequencer', 'IGO Complete Date', 'Project Name', 'Lab Head',
                    'Scientific PI', 'Data Custodian', 'Data Analyst', 'CC/Fund', 'Tempo Output Delivery Date', 'Embargo End Date',
                    'Tempo Analysis Update', 'Access Level', 'Consent Part A', 'Consent Part C']
@@ -198,6 +198,11 @@ adminColumns = [
     {
         'data': 'molecular_accession_num',
         'readOnly': True
+    },
+    {
+        'data': 'tempo_qc_status',
+        'editor': 'select',
+        'selectOptions': ['Pass', 'Failed', 'Not Run']
     },
     {
         'data': 'dmp_patientid',
@@ -250,11 +255,6 @@ adminColumns = [
     {
         'data': 'sample_status',
         'readOnly': True
-    },
-    {
-        'data': 'tempo_qc_status',
-        'editor': 'select',
-        'selectOptions': ['Pass', 'Failed', 'Not Run']
     },
     {
         'data': 'pm_redaction',
@@ -339,7 +339,7 @@ adminColumns = [
     {
         'data': 'access_level',
         'editor': 'select',
-        'selectOptions': ['MSK Embargo', 'MSK public', 'Published']
+        'selectOptions': ['MSK Embargo', 'MSK Public', 'Published']
     },
     {
         'data': 'consent_parta_status',
