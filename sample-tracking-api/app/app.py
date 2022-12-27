@@ -140,12 +140,19 @@ def get_wes_data():
 
     """
     try:
-        if request.args.get("timestamp") is not None:
-            timestamp = request.args.get("timestamp")
-            LOG.info("Starting WES Sample query using time stamp: " + timestamp + ", provided to the endpoint query")
-            AppLog.info(
-                message="Starting WES Sample query using time stamp: " + timestamp + ", provided to the endpoint query",
-                user='api', )
+        timestamp = request.args.get("timestamp", None)
+        timestamp2 = request.args.get("timestamp2", None)
+        if timestamp:
+            if timestamp2:
+                LOG.info("Starting WES Sample query using time stamp: " + timestamp + " and time stamp 2: " + timestamp2 + ", provided to the endpoint query")
+                AppLog.info(
+                    message="Starting WES Sample query using time stamp: " + timestamp + " and time stamp 2: " + timestamp2 + ", provided to the endpoint query",
+                    user='api', )
+            else:
+                LOG.info("Starting WES Sample query using time stamp: " + timestamp + ", provided to the endpoint query")
+                AppLog.info(
+                    message="Starting WES Sample query using time stamp: " + timestamp + ", provided to the endpoint query",
+                    user='api', )
         else:
             timestamp = time.mktime((datetime.datetime.today() - timedelta(
                 days=1.1)).timetuple()) * 1000  # 1.1 to account for time lost during the initialization of query. It is better to have some time overlap to get all the data.
@@ -155,11 +162,12 @@ def get_wes_data():
                 message="Starting WES Sample query after calculating time: {} provided to the endpoint by user.".format(
                     str(timestamp)), user="api")
         if int(timestamp) > 0:
-            print(timestamp)
+            query = LIMS_API_ROOT + "/LimsRest/getWESSampleData?timestamp=" + str(int(timestamp))
+            if timestamp2:
+                query += "&timestamp2=" + str(int(timestamp2))
             LOG.info(
-                "Starting query : " + LIMS_API_ROOT + "/LimsRest/getWESSampleData?timestamp=" + str(int(timestamp)))
-            r = s.get(LIMS_API_ROOT + "/LimsRest/getWESSampleData?timestamp=" + str(int(timestamp)),
-                      auth=(USER, PASSW), verify=False)
+                "Starting query : " + query) 
+            r = s.get(query, auth=(USER, PASSW), verify=False)
             data = r.content.decode("utf-8", "strict")
             ids = save_to_db(data)
             LOG.info("Added {} new records to the Sample Tracking Database".format(ids))
