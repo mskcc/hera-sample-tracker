@@ -78,6 +78,12 @@ class SearchForm extends Component {
         const { getFieldDecorator } = this.props.form;
         return (
             <div>
+                <Row type="flex" justify="center">
+                        <Col span={10} >
+                            <h3><Text mark strong>Please note that the sample tracker was last updated on 07/01/2023. For questions about recently sequenced samples, or data requests, please contact the CMO PM team at <a href="mailto:skicmopm@mskcc.org">skicmopm@mskcc.org</a>.</Text></h3>
+                        </Col>
+                </Row>
+                <br/>
                 <Form layout="inline" onSubmit={this.handleSubmit} style={{ marginTop: 40, marginBottom: 20 }}>
                     <Row type='flex' justify="center">
                         <Col>
